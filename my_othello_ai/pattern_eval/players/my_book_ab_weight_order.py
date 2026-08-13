@@ -1,10 +1,20 @@
 class MyPlayer(BasePlayer):
     BOARD_INDEXES = range(8)
-    SEARCH_DEPTH = 5
+    SEARCH_DEPTH = 6
     SIMPLE_ALPHA_BETA_DEPTH = 2
     PROBCUT_MIN_DEPTH = 3
     PROBCUT_MARGIN = 0.16
     PROBCUT_SHALLOW_DEPTHS = (0, 0, 0, 1, 2, 1, 2, 3, 4, 3, 4, 3, 4, 5, 6)
+    ORDER_WEIGHTS = (
+        (120, -20, 20, 5, 5, 20, -20, 120),
+        (-20, -40, -5, -5, -5, -5, -40, -20),
+        (20, -5, 15, 3, 3, 15, -5, 20),
+        (5, -5, 3, 3, 3, 3, -5, 5),
+        (5, -5, 3, 3, 3, 3, -5, 5),
+        (20, -5, 15, 3, 3, 15, -5, 20),
+        (-20, -40, -5, -5, -5, -5, -40, -20),
+        (120, -20, 20, 5, 5, 20, -20, 120),
+    )
 
     DIRECTIONS = (
         (-1, -1), (-1, 0), (-1, 1),
@@ -302,6 +312,7 @@ class MyPlayer(BasePlayer):
         alpha = float("-inf")
         beta = float("inf")
 
+        moves = self._order_moves_by_weight(moves)
         for move in moves:
             next_board = self._apply_move(board, move, self.color)
             score = -self._negascout(
@@ -335,7 +346,7 @@ class MyPlayer(BasePlayer):
             player_file = ""
         stem = player_file.replace("\\", "/").split("/")[-1].removesuffix(".py")
         if not stem:
-            stem = "my_book_ab"
+            stem = "my_book_ab_weight_order"
         return f"{stem}_{suffix}.txt"
 
     def _write_time_log(self, move_no: int, elapsed_ms: float, move: Move, source: str):
@@ -345,6 +356,9 @@ class MyPlayer(BasePlayer):
                 f"eval_count={self._eval_count} color={self.color} "
                 f"move={move}\n"
             )
+
+    def _order_moves_by_weight(self, moves: list[Move]) -> list[Move]:
+        return sorted(moves, key=lambda move: self.ORDER_WEIGHTS[move[0]][move[1]], reverse=True)
 
     def _negascout(
         self,
@@ -379,6 +393,7 @@ class MyPlayer(BasePlayer):
                 return cut_score
 
         # 良さそうな手から読むことで、alpha-betaの枝刈りを起こしやすくする。
+        moves = self._order_moves_by_weight(moves)
         if depth >= 2 and len(moves) > 1:
             moves.sort(
                 key=lambda move: self._evaluate_for_color(

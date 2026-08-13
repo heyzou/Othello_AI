@@ -1,10 +1,22 @@
 class MyPlayer(BasePlayer):
     BOARD_INDEXES = range(8)
-    SEARCH_DEPTH = 5
+    SEARCH_DEPTH = 6
     SIMPLE_ALPHA_BETA_DEPTH = 2
     PROBCUT_MIN_DEPTH = 3
     PROBCUT_MARGIN = 0.16
     PROBCUT_SHALLOW_DEPTHS = (0, 0, 0, 1, 2, 1, 2, 3, 4, 3, 4, 3, 4, 5, 6)
+    SEARCH_HASH_TABLE_SIZE = 16384
+    SEARCH_HASH_MASK = SEARCH_HASH_TABLE_SIZE - 1
+    ORDER_WEIGHTS = (
+        (120, -20, 20, 5, 5, 20, -20, 120),
+        (-20, -40, -5, -5, -5, -5, -40, -20),
+        (20, -5, 15, 3, 3, 15, -5, 20),
+        (5, -5, 3, 3, 3, 3, -5, 5),
+        (5, -5, 3, 3, 3, 3, -5, 5),
+        (20, -5, 15, 3, 3, 15, -5, 20),
+        (-20, -40, -5, -5, -5, -5, -40, -20),
+        (120, -20, 20, 5, 5, 20, -20, 120),
+    )
 
     DIRECTIONS = (
         (-1, -1), (-1, 0), (-1, 1),
@@ -278,23 +290,26 @@ class MyPlayer(BasePlayer):
     PARAMS = None
     PATTERN_CACHE = {}
     ADD_CACHE = {}
+    PATTERN_VALUE_TABLES = None
+    ADD_VALUE_TABLE = None
+    ADDITIONAL_KEY_CACHE = {}
+    SEARCH_HASH_TABLE = [None] * SEARCH_HASH_TABLE_SIZE
+    SEARCH_HASH_GET_COUNT = 0
+    SEARCH_HASH_REG_COUNT = 0
     BOOK_LINES = ('f5', 'f5d6', 'f5d6c3g5', 'f5d6c3g5c6c5', 'f5d6c3g5c6c5c4b6', 'f5d6c3g5c6c5c4b6f6f4', 'f5d6c3g5c6c5c4b6f6f4e6d7', 'f5d6c3g5c6c5c4b6f6f4e6d7c7g6', 'f5d6c3g5c6c5c4b6f6f4e6d7c7g6d8b5', 'f5d6c3g5c6c5c4b6f6f4e6d7c7g6d8b5e7b3', 'f5d6c3g5c6c5c4b6f6f4e6d7c7g6d8b5e7b3a6e3', 'f5d6c3g5c6c5c4b6f6f4e6d7c7g6d8b5e7b3a6e3a5d3', 'f5d6c3g5f6d3', 'f5d6c3g5f6d3e3c2', 'f5d6c3g5f6d3e3c2c1e6', 'f5d6c3g5f6d3e3c2c1e6f4f3', 'f5d6c3g5f6d3e3c2c1e6f4f3f2g4', 'f5d6c3g5f6d3e3c2c1e6f4f3f2g4g6d2', 'f5d6c3g5f6d3e3c2c1e6f4f3f2g4g6d2h3h4', 'f5d6c3g5f6d3e3c2c1e6f4f3f2g4g6d2h3h4h5f7', 'f5d6c3g5f6d3e3c2c1e6f4f3f2g4g6d2h3h4h5f7e7g3', 'f5d6c3g5g6d3', 'f5d6c3g5g6d3c4e3', 'f5d6c3g5g6d3c4e3f3b4', 'f5d6c3g5g6d3c4e3f3b4f6e6', 'f5d6c3g5g6d3c4e3f3b4f6e6f4g4', 'f5d6c3g5g6d3c4e3f3b4f6e6f4g4h4h5', 'f5d6c3g5g6d3c4e3f3b4f6e6f4g4h4h5h6g3', 'f5d6c3g5g6d3c4e3f3b4f6e6f4g4h4h5h6g3h3f7', 'f5d6c3g5g6d3c4e3f3b4f6e6f4g4h4h5h6g3h3f7f8c2', 'f5d6c4b3', 'f5d6c4b3b4f4', 'f5d6c4b3b4f4f6g5', 'f5d6c4b3b4f4f6g5f3e7', 'f5d6c4b3b4f4f6g5f3e7c5e6', 'f5d6c4b3b4f4f6g5f3e7c5e6c3g4', 'f5d6c4b3b4f4f6g5f3e7c5e6c3g4c6g3', 'f5d6c4b3b4f4f6g5f3e7c5e6c3g4c6g3h3e3', 'f5d6c4b3b4f4f6g5f3e7c5e6c3g4c6g3h3e3f2b6', 'f5d6c4b3b4f4f6g5f3e7c5e6c3g4c6g3h3e3f2b6h4d3', 'f5d6c5b4', 'f5d6c5b4d7e7', 'f5d6c5b4d7e7c7d8', 'f5d6c5b4d7e7c7d8c3d3', 'f5d6c5b4d7e7c7d8c3d3c4b3', 'f5d6c5b4d7e7c7d8c3d3c4b3d2e2', 'f5d6c5b4d7e7c7d8c3d3c4b3d2e2c2e3', 'f5d6c5b4d7e7c7d8c3d3c4b3d2e2c2e3f4f2', 'f5d6c5b4d7e7c7d8c3d3c4b3d2e2c2e3f4f2c6b5', 'f5d6c5b4d7e7c7d8c3d3c4b3d2e2c2e3f4f2c6b5f3c8', 'f5d6c4', 'f5d6c4b3b4', 'f5d6c4b3b4f4f6', 'f5d6c4b3b4f4f6g5f3', 'f5d6c4b3b4f4f6g5f3e7c5', 'f5d6c4b3b4f4f6g5f3e7c5e6c3', 'f5d6c4b3b4f4f6g5f3e7c5e6c3g4c6', 'f5d6c4b3b4f4f6g5f3e7c5e6c3g4c6g3h3', 'f5d6c4b3b4f4f6g5f3e7c5e6c3g4c6g3h3e3f2', 'f5d6c4b3b4f4f6g5f3e7c5e6c3g4c6g3h3e3f2b6h4', 'f5d6c4b3b4f4f6g5f3e7c5e6c3g4c6g3h3e3f2b6h4d3e2', 'f5d6c4d3c3', 'f5d6c4d3c3b3d2', 'f5d6c4d3c3b3d2e1b5', 'f5d6c4d3c3b3d2e1b5c5b4', 'f5d6c4d3c3b3d2e1b5c5b4e3c2', 'f5d6c4d3c3b3d2e1b5c5b4e3c2a4c6', 'f5d6c4d3c3b3d2e1b5c5b4e3c2a4c6d1e2', 'f5d6c4d3c3b3d2e1b5c5b4e3c2a4c6d1e2c7b6', 'f5d6c4d3c3b3d2e1b5c5b4e3c2a4c6d1e2c7b6f1e6', 'f5d6c4d3c3b3d2e1b5c5b4e3c2a4c6d1e2c7b6f1e6f3f2', 'f5d6c4d3c3f4f6', 'f5d6c4d3c3f4f6f3e6', 'f5d6c4d3c3f4f6f3e6e7f7', 'f5d6c4d3c3f4f6f3e6e7f7c5b6', 'f5d6c4d3c3f4f6f3e6e7f7c5b6g5e3', 'f5d6c4d3c3f4f6f3e6e7f7c5b6g5e3d7c6', 'f5d6c4d3c3f4f6f3e6e7f7c5b6g5e3d7c6e2g4', 'f5d6c4d3c3f4f6f3e6e7f7c5b6g5e3d7c6e2g4h3d2', 'f5d6c4d3c3f4f6f3e6e7f7c5b6g5e3d7c6e2g4h3d2g3f1', 'f5d6c4d3c3f4f6f3e6e7f7c5b6g6e3', 'f5d6c4d3c3f4f6f3e6e7f7c5b6g6e3e2f1', 'f5d6c4d3c3f4f6f3e6e7f7c5b6g6e3e2f1d1g5', 'f5d6c4d3c3f4f6f3e6e7f7c5b6g6e3e2f1d1g5c6d8', 'f5d6c4d3c3f4f6f3e6e7f7c5b6g6e3e2f1d1g5c6d8g4h6', 'f5d6c4d3c3f4f6b4c2', 'f5d6c4d3c3f4f6b4c2f3e3', 'f5d6c4d3c3f4f6b4c2f3e3e2c6', 'f5d6c4d3c3f4f6b4c2f3e3e2c6f2c5', 'f5d6c4d3c3f4f6b4c2f3e3e2c6f2c5e6d2', 'f5d6c4d3c3f4f6b4c2f3e3e2c6f2c5e6d2g4d7', 'f5d6c4d3c3f4f6b4c2f3e3e2c6f2c5e6d2g4d7b3g5', 'f5d6c4d3c3f4f6b4c2f3e3e2c6f2c5e6d2g4d7b3g5c8h4', 'f5d6c4d3c3f4f6g5e3', 'f5d6c4d3c3f4f6g5e3f3g6', 'f5d6c4d3c3f4f6g5e3f3g6e2h5', 'f5d6c4d3c3f4f6g5e3f3g6e2h5c5g4', 'f5d6c4d3c3f4f6g5e3f3g6e2h5c5g4g3f2', 'f5d6c4d3c3b5b4', 'f5d6c4d3c3b5b4f4c5', 'f5d6c4d3c3b5b4f4c5a4b3', 'f5d6c4d3c3b5b4f4c5a4b3d2a6', 'f5d6c4d3c3b5b4f4c5a4b3d2a6a3e3', 'f5d6c4d3c3b5b4f4c5a4b3d2a6a3e3f3g4', 'f5d6c4d3c3b5b4f4c5a4b3d2a6a3e3f3g4e6f6', 'f5d6c4d3c3b5b4f4c5a4b3d2a6a3e3f3g4e6f6g3e2', 'f5d6c4d3c3b5b4f4c5a4b3d2a6a3e3f3g4e6f6g3e2c2f2', 'f5d6c4g5f6', 'f5d6c4g5f6f4f3', 'f5d6c4g5f6f4f3d3c3', 'f5d6c4g5f6f4f3d3c3g6e3', 'f5d6c4g5f6f4f3d3c3g6e3e6h5', 'f5d6c4g5f6f4f3d3c3g6e3e6h5d2e2', 'f5d6c4g5f6f4f3d3c3g6e3e6h5d2e2c2c6', 'f5d6c4g5f6f4f3d3c3g6e3e6h5d2e2c2c6c5b6', 'f5d6c4g5f6f4f3d3c3g6e3e6h5d2e2c2c6c5b6b4b3', 'f5d6c4g5f6f4f3d3c3g6e3e6h5d2e2c2c6c5b6b4b3c7a4', 'f5f6e6', 'f5f6e6f4g6', 'f5f6e6f4g6c5f3', 'f5f6e6f4g6c5f3g4e3', 'f5f6e6f4g6c5f3g4e3d6g5', 'f5f6e6f4g6c5f3g4e3d6g5g3c3', 'f5f6e6f4g6c5f3g4e3d6g5g3c3h5c4', 'f5f6e6f4g6c5f3g4e3d6g5g3c3h5c4d7h6', 'f5f6e6f4g6c5f3g4e3d6g5g3c3h5c4d7h6h7h3', 'f5f6e6f4g6c5f3g4e3d6g5g3c3h5c4d7h6h7h3f7e7', 'f5f6e6f4g6c5f3g4e3d6g5g3c3h5c4d7h6h7h3f7e7f8h4', 'f5f6e6f4g6c5f3g5d6', 'f5f6e6f4g6c5f3g5d6e3h4', 'f5f6e6f4g6c5f3g5d6e3h4g3g4', 'f5f6e6f4g6c5f3g5d6e3h4g3g4h6e2', 'f5f6e6f4g6c5f3g5d6e3h4g3g4h6e2d3h5', 'f5f6e6f4g6c5f3g5d6e3h4g3g4h6e2d3h5h3c6', 'f5f6e6f4g6c5f3g5d6e3h4g3g4h6e2d3h5h3c6e7f2', 'f5f6e6f4g6c5f3g5d6e3h4g3g4h6e2d3h5h3c6e7f2c4d2', 'f5f6e6f4g6d6g4', 'f5f6e6f4g6d6g4g5h4', 'f5f6e6f4g6d6g4g5h4e7f3', 'f5f6e6f4g6d6g4g5h4e7f3h6f7', 'f5f6e6f4g6d6g4g5h4e7f3h6f7e8f8', 'f5f6e6f4g6d6g4g5h4e7f3h6f7e8f8g8d3', 'f5f6e6f4g6d6g4g5h4e7f3h6f7e8f8g8d3h5h7', 'f5f6e6f4g6d6g4g5h4e7f3h6f7e8f8g8d3h5h7e3c5', 'f5f6e6f4g6d6g4g5h4e7f3h6f7e8f8g8d3h5h7e3c5c4g3', 'f5f6e6d6f7', 'f5f6e6d6f7e3c6', 'f5f6e6d6f7e3c6e7f4', 'f5f6e6d6f7e3c6e7f4c5d8', 'f5f6e6d6f7e3c6e7f4c5d8c7d7', 'f5f6e6d6f7e3c6e7f4c5d8c7d7f8b5', 'f5f6e6d6f7e3c6e7f4c5d8c7d7f8b5c4e8', 'f5f6e6d6f7e3c6e7f4c5d8c7d7f8b5c4e8c8f3', 'f5f6e6d6f7e3c6e7f4c5d8c7d7f8b5c4e8c8f3g5b6', 'f5f6e6d6f7e3c6e7f4c5d8c7d7f8b5c4e8c8f3g5b6d3b4', 'f5f6e6d6f7f4d7', 'f5f6e6d6f7f4d7e7d8', 'f5f6e6d6f7f4d7e7d8g5c6', 'f5f6e6d6f7f4d7e7d8g5c6f8g6', 'f5f6e6d6f7f4d7e7d8g5c6f8g6h5h6', 'f5f6e6d6f7f4d7e7d8g5c6f8g6h5h6h7c4', 'f5f6e6d6f7f4d7e7d8g5c6f8g6h5h6h7c4e8g8', 'f5f6e6d6f7f4d7e7d8g5c6f8g6h5h6h7c4e8g8c5e3', 'f5f6e6d6f7f4d7e7d8g5c6f8g6h5h6h7c4e8g8c5e3d3c7')
     BOOK_CACHE = None
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        MyPlayer._precompute_evaluation_tables()
+
     def next_move(self, board: Board) -> Move:
-        start_time = time.perf_counter()
-        self._eval_count = 0
-        move_no = self._move_number(board)
         moves = self.get_moves(board)
         if not moves:
-            elapsed_ms = (time.perf_counter() - start_time) * 1000
-            self._write_time_log(move_no, elapsed_ms, None, "pass")
             return None
 
         book_move = self._book_move(board)
         if book_move in moves:
-            elapsed_ms = (time.perf_counter() - start_time) * 1000
-            self._write_time_log(move_no, elapsed_ms, book_move, "book")
             return book_move
 
         best_move = moves[0]
@@ -302,6 +317,7 @@ class MyPlayer(BasePlayer):
         alpha = float("-inf")
         beta = float("inf")
 
+        moves = self._order_moves_by_weight(moves)
         for move in moves:
             next_board = self._apply_move(board, move, self.color)
             score = -self._negascout(
@@ -316,8 +332,6 @@ class MyPlayer(BasePlayer):
                 best_move = move
             alpha = max(alpha, best_score)
 
-        elapsed_ms = (time.perf_counter() - start_time) * 1000
-        self._write_time_log(move_no, elapsed_ms, best_move, "search")
         return best_move
 
     def _move_number(self, board: Board) -> int:
@@ -328,23 +342,8 @@ class MyPlayer(BasePlayer):
                     stones += 1
         return stones - 3
 
-    def _log_file_name(self, suffix: str) -> str:
-        try:
-            player_file = os.environ.get("MYPLAYER_FILE", "")
-        except NameError:
-            player_file = ""
-        stem = player_file.replace("\\", "/").split("/")[-1].removesuffix(".py")
-        if not stem:
-            stem = "my_book_ab"
-        return f"{stem}_{suffix}.txt"
-
-    def _write_time_log(self, move_no: int, elapsed_ms: float, move: Move, source: str):
-        with open(self._log_file_name("next_move_profile"), "a", encoding="utf-8") as file:
-            file.write(
-                f"move_no={move_no} time={elapsed_ms:.1f}ms "
-                f"eval_count={self._eval_count} color={self.color} "
-                f"move={move}\n"
-            )
+    def _order_moves_by_weight(self, moves: list[Move]) -> list[Move]:
+        return sorted(moves, key=lambda move: self.ORDER_WEIGHTS[move[0]][move[1]], reverse=True)
 
     def _negascout(
         self,
@@ -359,9 +358,18 @@ class MyPlayer(BasePlayer):
         if depth == 0:
             return self._evaluate_for_color(board, current_color)
 
+        original_alpha = alpha
+        original_beta = beta
+        search_key = self._search_hash_key(board, depth, current_color, allow_probcut)
+        cached = self._search_hash_get(search_key, alpha, beta)
+        if cached is not None:
+            return cached
+
         # 葉に近い浅い探索では、NegaScoutではなく通常のalpha-betaを使う。
         if depth <= self.SIMPLE_ALPHA_BETA_DEPTH:
-            return self._alpha_beta_simple(board, depth, current_color, alpha, beta)
+            score = self._alpha_beta_simple(board, depth, current_color, alpha, beta)
+            self._search_hash_register(search_key, score, original_alpha, original_beta)
+            return score
 
         moves = self._legal_moves(board, current_color)
         next_color = self._opponent_of(current_color)
@@ -369,16 +377,21 @@ class MyPlayer(BasePlayer):
         # 現在手番だけ合法手がなければパスし、両者なければ終局として評価する。
         if not moves:
             if not self._legal_moves(board, next_color):
-                return self._evaluate_for_color(board, current_color)
-            return -self._negascout(board, depth, next_color, -beta, -alpha, allow_probcut)
+                score = self._evaluate_for_color(board, current_color)
+            else:
+                score = -self._negascout(board, depth, next_color, -beta, -alpha, allow_probcut)
+            self._search_hash_register(search_key, score, original_alpha, original_beta)
+            return score
 
         # 深く読む前に、浅い評価で枝刈りできるか試す。
         if allow_probcut and depth >= self.PROBCUT_MIN_DEPTH:
             cut_score = self._probcut(board, depth, current_color, alpha, beta)
             if cut_score is not None:
+                self._search_hash_register(search_key, cut_score, original_alpha, original_beta)
                 return cut_score
 
         # 良さそうな手から読むことで、alpha-betaの枝刈りを起こしやすくする。
+        moves = self._order_moves_by_weight(moves)
         if depth >= 2 and len(moves) > 1:
             moves.sort(
                 key=lambda move: self._evaluate_for_color(
@@ -409,7 +422,70 @@ class MyPlayer(BasePlayer):
                 break
             search_window = alpha + 1
 
+        self._search_hash_register(search_key, best_score, original_alpha, original_beta)
         return best_score
+
+    def _search_hash_key(
+        self,
+        board: Board,
+        depth: int,
+        current_color: Cell,
+        allow_probcut: bool,
+    ) -> tuple[tuple[int, ...], int, int, bool]:
+        color_key = 1 if current_color == Cell.BLACK else 2
+        return (self._board_key(board), color_key, depth, allow_probcut)
+
+    @classmethod
+    def _search_hash_index(cls, key: tuple[tuple[int, ...], int, int, bool]) -> int:
+        board_key, color, depth, allow_probcut = key
+        value = color * 131 + depth * 17 + int(allow_probcut)
+        for cell in board_key:
+            value = (value * 17 + cell + 1) & 0xFFFFFFFFFFFFFFFF
+        return value & cls.SEARCH_HASH_MASK
+
+    @classmethod
+    def _search_hash_get(
+        cls,
+        key: tuple[tuple[int, ...], int, int, bool],
+        alpha: float,
+        beta: float,
+    ) -> float | None:
+        entry = cls.SEARCH_HASH_TABLE[cls._search_hash_index(key)]
+        if entry is None:
+            return None
+        entry_key, lower, upper = entry
+        if entry_key != key:
+            return None
+        if lower >= beta:
+            cls.SEARCH_HASH_GET_COUNT += 1
+            return lower
+        if upper <= alpha:
+            cls.SEARCH_HASH_GET_COUNT += 1
+            return upper
+        if lower == upper:
+            cls.SEARCH_HASH_GET_COUNT += 1
+            return lower
+        return None
+
+    @classmethod
+    def _search_hash_register(
+        cls,
+        key: tuple[tuple[int, ...], int, int, bool],
+        score: float,
+        alpha: float,
+        beta: float,
+    ) -> None:
+        lower = float("-inf")
+        upper = float("inf")
+        if score <= alpha:
+            upper = score
+        elif score >= beta:
+            lower = score
+        else:
+            lower = score
+            upper = score
+        cls.SEARCH_HASH_REG_COUNT += 1
+        cls.SEARCH_HASH_TABLE[cls._search_hash_index(key)] = (key, lower, upper)
 
     def _alpha_beta_simple(
         self,
@@ -482,7 +558,6 @@ class MyPlayer(BasePlayer):
         return -score
 
     def _evaluate_black_perspective(self, board: Board) -> float:
-        self._eval_count += 1
         flat_board = self._flatten_board(board)
         group_outputs = []
         for name, patterns in self.PATTERN_INDEXES.items():
@@ -532,6 +607,11 @@ class MyPlayer(BasePlayer):
 
     @classmethod
     def _pattern_value(cls, name: str, key: int) -> float:
+        cls._precompute_evaluation_tables()
+        return cls.PATTERN_VALUE_TABLES[name][key]
+
+    @classmethod
+    def _compute_pattern_value(cls, name: str, key: int) -> float:
         cache_key = (name, key)
         cached = cls.PATTERN_CACHE.get(cache_key)
         if cached is not None:
@@ -570,6 +650,11 @@ class MyPlayer(BasePlayer):
 
     @classmethod
     def _add_value(cls, key: int) -> float:
+        cls._precompute_evaluation_tables()
+        return cls.ADD_VALUE_TABLE[key]
+
+    @classmethod
+    def _compute_add_value(cls, key: int) -> float:
         cached = cls.ADD_CACHE.get(key)
         if cached is not None:
             return cached
@@ -597,6 +682,24 @@ class MyPlayer(BasePlayer):
         cls.ADD_CACHE[key] = result
         return result
 
+    @classmethod
+    def _precompute_evaluation_tables(cls) -> None:
+        if cls.PATTERN_VALUE_TABLES is not None and cls.ADD_VALUE_TABLE is not None:
+            return
+
+        pattern_tables = {}
+        for name, size in cls.PATTERN_SIZES.items():
+            table_size = 3 ** size
+            pattern_tables[name] = tuple(cls._compute_pattern_value(name, key) for key in range(table_size))
+
+        add_table_size = 61 * 51 * 51
+        add_table = tuple(cls._compute_add_value(key) for key in range(add_table_size))
+
+        cls.PATTERN_VALUE_TABLES = pattern_tables
+        cls.ADD_VALUE_TABLE = add_table
+        cls.PATTERN_CACHE = {}
+        cls.ADD_CACHE = {}
+
     @staticmethod
     def _leaky_relu(value: float) -> float:
         if value >= 0.0:
@@ -617,12 +720,19 @@ class MyPlayer(BasePlayer):
         return key
 
     def _additional_key(self, board: Board) -> int:
+        board_key = self._board_key(board)
+        cached = self.ADDITIONAL_KEY_CACHE.get(board_key)
+        if cached is not None:
+            return cached
+
         mobility = len(self._legal_moves(board, Cell.BLACK)) - len(self._legal_moves(board, Cell.WHITE))
         mobility = max(-30, min(30, mobility))
         surround_black, surround_white = self._surround_counts(board)
         surround_black = max(0, min(50, surround_black))
         surround_white = max(0, min(50, surround_white))
-        return ((mobility + 30) * 51 + surround_black) * 51 + surround_white
+        key = ((mobility + 30) * 51 + surround_black) * 51 + surround_white
+        self.ADDITIONAL_KEY_CACHE[board_key] = key
+        return key
 
     def _surround_counts(self, board: Board) -> tuple[int, int]:
         counts = [0, 0]
