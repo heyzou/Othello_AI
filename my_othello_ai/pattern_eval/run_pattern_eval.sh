@@ -2,7 +2,7 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PLAYER_FILE="${1:-myplayer_with_book.py}"
+PLAYER_FILE="${1:-my_book.py}"
 GAMES_PER_SIDE="${2:-100}"
 PYTHON_BIN="${PYTHON:-python}"
 

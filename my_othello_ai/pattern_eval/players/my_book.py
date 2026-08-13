@@ -1,6 +1,6 @@
 class MyPlayer(BasePlayer):
     BOARD_INDEXES = range(8)
-    SEARCH_DEPTH = 6
+    SEARCH_DEPTH = 5
     PROBCUT_MIN_DEPTH = 3
     PROBCUT_MARGIN = 0.16
     PROBCUT_SHALLOW_DEPTHS = (0, 0, 0, 1, 2, 1, 2, 3, 4, 3, 4, 3, 4, 5, 6)

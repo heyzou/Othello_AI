@@ -4,9 +4,9 @@
 
 MyPlayer の実装は `players/` に分けています。
 
-- `players/myplayer_base.py`: 定石なしの元のパターン評価版
-- `players/myplayer_with_book.py`: 定石確認つきのパターン評価版
-- `players/myplayer_with_book_simple_ab.py`: 定石確認つき + 最終N手を簡易alpha-betaで読む版
+- `players/my_base.py`: 定石なしの元のパターン評価版
+- `players/my_book.py`: 定石確認つきのパターン評価版
+- `players/my_book_ab.py`: 定石確認つき + 最終N手を簡易alpha-betaで読む版
 
 `players/*.py` は提出時に貼りやすいように、`class MyPlayer(BasePlayer):` から始めています。
 必要な import は共通ノートブック側の MyPlayer 読み込みセルに置いています。
@@ -14,7 +14,7 @@ MyPlayer の実装は `players/` に分けています。
 使う実装を変えるときは、`pattern_eval_common.ipynb` の MyPlayer 読み込みセルにある `MYPLAYER_FILE` だけ変更してください。
 
 ```python
-MYPLAYER_FILE = "../players/myplayer_with_book.py"
+MYPLAYER_FILE = "../players/my_book.py"
 ```
 
 これで、ノートブック全体をコピーせずに MyPlayer だけ差し替えて評価できます。
@@ -23,5 +23,5 @@ MYPLAYER_FILE = "../players/myplayer_with_book.py"
 `1` を指定すると、黒番1局・白番1局を実行します。
 
 ```bash
-./run_pattern_eval.sh myplayer_with_book.py 1
+./run_pattern_eval.sh my_book.py 1
 ```
