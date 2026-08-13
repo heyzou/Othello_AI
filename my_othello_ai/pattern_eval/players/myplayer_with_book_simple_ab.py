@@ -1,6 +1,7 @@
 class MyPlayer(BasePlayer):
     BOARD_INDEXES = range(8)
-    SEARCH_DEPTH = 6
+    SEARCH_DEPTH = 7
+    SIMPLE_ALPHA_BETA_DEPTH = 2
     PROBCUT_MIN_DEPTH = 3
     PROBCUT_MARGIN = 0.16
     PROBCUT_SHALLOW_DEPTHS = (0, 0, 0, 1, 2, 1, 2, 3, 4, 3, 4, 3, 4, 5, 6)
@@ -322,6 +323,9 @@ class MyPlayer(BasePlayer):
         if depth == 0:
             return self._evaluate_for_color(board, current_color)
 
+        if depth <= self.SIMPLE_ALPHA_BETA_DEPTH:
+            return self._alpha_beta_simple(board, depth, current_color, alpha, beta)
+
         moves = self._legal_moves(board, current_color)
         next_color = self._opponent_of(current_color)
 
@@ -362,6 +366,36 @@ class MyPlayer(BasePlayer):
             if alpha >= beta:
                 break
             search_window = alpha + 1
+
+        return best_score
+
+    def _alpha_beta_simple(
+        self,
+        board: Board,
+        depth: int,
+        current_color: Cell,
+        alpha: float,
+        beta: float,
+    ) -> float:
+        if depth == 0:
+            return self._evaluate_for_color(board, current_color)
+
+        moves = self._legal_moves(board, current_color)
+        next_color = self._opponent_of(current_color)
+
+        if not moves:
+            if not self._legal_moves(board, next_color):
+                return self._evaluate_for_color(board, current_color)
+            return -self._alpha_beta_simple(board, depth, next_color, -beta, -alpha)
+
+        best_score = float("-inf")
+        for move in moves:
+            next_board = self._apply_move(board, move, current_color)
+            score = -self._alpha_beta_simple(next_board, depth - 1, next_color, -beta, -alpha)
+            best_score = max(best_score, score)
+            alpha = max(alpha, score)
+            if alpha >= beta:
+                break
 
         return best_score
 

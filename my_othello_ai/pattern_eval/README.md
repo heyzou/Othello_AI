@@ -6,6 +6,7 @@ MyPlayer の実装は `players/` に分けています。
 
 - `players/myplayer_base.py`: 定石なしの元のパターン評価版
 - `players/myplayer_with_book.py`: 定石確認つきのパターン評価版
+- `players/myplayer_with_book_simple_ab.py`: 定石確認つき + 最終N手を簡易alpha-betaで読む版
 
 `players/*.py` は提出時に貼りやすいように、`class MyPlayer(BasePlayer):` から始めています。
 必要な import は共通ノートブック側の MyPlayer 読み込みセルに置いています。

@@ -554,6 +554,9 @@ class MyPlayer(BasePlayer):
         return [cell for row in board for cell in row]
 
     def _legal_moves(self, board: Board, color: Cell) -> list[Move]:
+        if color == self.color:
+            return self.get_moves(board)
+
         moves = []
         for row in self.BOARD_INDEXES:
             for col in self.BOARD_INDEXES:
@@ -566,12 +569,18 @@ class MyPlayer(BasePlayer):
         next_board = [board_row[:] for board_row in board]
         next_board[row][col] = color
 
-        for flip_row, flip_col in self._flips_for_color(board, row, col, color):
+        if color == self.color:
+            flips = self.get_flips(board, row, col)
+        else:
+            flips = self._flips_for_color(board, row, col, color)
+        for flip_row, flip_col in flips:
             next_board[flip_row][flip_col] = color
 
         return next_board
 
     def _flips_for_color(self, board: Board, row: int, col: int, color: Cell) -> list[Move]:
+        if color == self.color:
+            return self.get_flips(board, row, col)
         if board[row][col] != Cell.EMPTY:
             return []
 
@@ -603,4 +612,8 @@ class MyPlayer(BasePlayer):
         return flips
 
     def _opponent_of(self, color: Cell) -> Cell:
+        if color == self.color:
+            return self.opponent_color
+        if color == self.opponent_color:
+            return self.color
         return Cell.WHITE if color == Cell.BLACK else Cell.BLACK

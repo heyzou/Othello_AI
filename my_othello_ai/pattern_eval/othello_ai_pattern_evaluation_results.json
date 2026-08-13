@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-13 11:25:46",
+  "generated_at": "2026-08-13 11:49:49",
   "summaries": [
     {
       "label": "MyPlayer as BLACK vs AdvancedPlayer",
@@ -13,19 +13,19 @@
       "avg_my_diff": 0.0,
       "best_my_diff": 0,
       "worst_my_diff": 0,
-      "elapsed_sec": 2.0315096378326416,
-      "sec_per_game": 2.0315096378326416,
+      "elapsed_sec": 2.0303115844726562,
+      "sec_per_game": 2.0303115844726562,
       "slowest_move_overall": {
         "game_index": 1,
         "turn_index": 2,
         "color": "white",
         "player": "AdvancedPlayer",
-        "elapsed_sec": 0.015740113012725487,
+        "elapsed_sec": 0.015053682989673689,
         "move": [
           2,
           4
         ],
-        "elapsed_ms": 15.740113012725487
+        "elapsed_ms": 15.053682989673689
       }
     },
     {
@@ -40,19 +40,19 @@
       "avg_my_diff": -5.0,
       "best_my_diff": -5,
       "worst_my_diff": -5,
-      "elapsed_sec": 4.118675708770752,
-      "sec_per_game": 4.118675708770752,
+      "elapsed_sec": 4.57178521156311,
+      "sec_per_game": 4.57178521156311,
       "slowest_move_overall": {
         "game_index": 1,
         "turn_index": 6,
         "color": "white",
         "player": "MyPlayer",
-        "elapsed_sec": 1.4532607269939035,
+        "elapsed_sec": 1.9246761900139973,
         "move": [
           4,
           5
         ],
-        "elapsed_ms": 1453.2607269939035
+        "elapsed_ms": 1924.6761900139973
       }
     }
   ],
@@ -70,12 +70,12 @@
       "turn_index": 6,
       "color": "white",
       "player": "MyPlayer",
-      "elapsed_sec": 1.4532607269939035,
+      "elapsed_sec": 1.9246761900139973,
       "move": [
         4,
         5
       ],
-      "elapsed_ms": 1453.2607269939035
+      "elapsed_ms": 1924.6761900139973
     }
   },
   "records": {
@@ -94,12 +94,12 @@
           "turn_index": 2,
           "color": "white",
           "player": "AdvancedPlayer",
-          "elapsed_sec": 0.015740113012725487,
+          "elapsed_sec": 0.015053682989673689,
           "move": [
             2,
             4
           ],
-          "elapsed_ms": 15.740113012725487
+          "elapsed_ms": 15.053682989673689
         }
       }
     ],
@@ -118,12 +118,12 @@
           "turn_index": 6,
           "color": "white",
           "player": "MyPlayer",
-          "elapsed_sec": 1.4532607269939035,
+          "elapsed_sec": 1.9246761900139973,
           "move": [
             4,
             5
           ],
-          "elapsed_ms": 1453.2607269939035
+          "elapsed_ms": 1924.6761900139973
         }
       }
     ]
