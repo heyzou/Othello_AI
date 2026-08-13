@@ -1,8 +1,3 @@
-from othellopy.core import Board, Cell, Move
-from othellopy.players import BasePlayer
-
-
-# 提出時は，本コードセルをコピーして提出する
 class MyPlayer(BasePlayer):
     BOARD_INDEXES = range(8)
     SEARCH_DEPTH = 6
