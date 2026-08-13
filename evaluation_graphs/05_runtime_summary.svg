@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="460" viewBox="0 0 760 460">
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <style>
+    text { font-family: Arial, sans-serif; fill: #212529; }
+    .title { font-size: 24px; font-weight: 700; }
+    .label { font-size: 14px; }
+    .small { font-size: 12px; fill: #495057; }
+    .axis { stroke: #495057; stroke-width: 1; }
+    .grid { stroke: #dee2e6; stroke-width: 1; }
+  </style>
+<text x="380.0" y="40" text-anchor="middle" class="title">Average Evaluation Runtime</text>
+<line x1="95" y1="360.0" x2="655" y2="360.0" class="grid"/>
+<text x="85" y="364.0" text-anchor="end" class="small">0.0s</text>
+<line x1="95" y1="304.0" x2="655" y2="304.0" class="grid"/>
+<text x="85" y="308.0" text-anchor="end" class="small">2.3s</text>
+<line x1="95" y1="248.0" x2="655" y2="248.0" class="grid"/>
+<text x="85" y="252.0" text-anchor="end" class="small">4.6s</text>
+<line x1="95" y1="192.0" x2="655" y2="192.0" class="grid"/>
+<text x="85" y="196.0" text-anchor="end" class="small">6.9s</text>
+<line x1="95" y1="136.0" x2="655" y2="136.0" class="grid"/>
+<text x="85" y="140.0" text-anchor="end" class="small">9.1s</text>
+<line x1="95" y1="80.0" x2="655" y2="80.0" class="grid"/>
+<text x="85" y="84.0" text-anchor="end" class="small">11.4s</text>
+<rect x="220" y="80.0" width="90" height="280.0" fill="#1971c2"/>
+<text x="265" y="72.0" text-anchor="middle" class="label" font-weight="700">11.43s</text>
+<text x="265" y="392" text-anchor="middle" class="label">BLACK</text>
+<rect x="440" y="116.8" width="90" height="243.2" fill="#12b886"/>
+<text x="485" y="108.8" text-anchor="middle" class="label" font-weight="700">9.93s</text>
+<text x="485" y="392" text-anchor="middle" class="label">WHITE</text>
+<line x1="95" y1="80" x2="95" y2="360" class="axis"/>
+<line x1="95" y1="360" x2="655" y2="360" class="axis"/>
+<text x="30" y="220.0" transform="rotate(-90 30 220.0)" text-anchor="middle" class="label">Seconds per Game</text>
+</svg>

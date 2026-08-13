@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="520" viewBox="0 0 900 520">
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <style>
+    text { font-family: Arial, sans-serif; fill: #212529; }
+    .title { font-size: 24px; font-weight: 700; }
+    .label { font-size: 14px; }
+    .small { font-size: 12px; fill: #495057; }
+    .axis { stroke: #495057; stroke-width: 1; }
+    .grid { stroke: #dee2e6; stroke-width: 1; }
+  </style>
+<text x="450.0" y="40" text-anchor="middle" class="title">When the Slowest Move Happened</text>
+<line x1="80" y1="430.0" x2="820" y2="430.0" class="grid"/>
+<text x="70" y="434.0" text-anchor="end" class="small">0</text>
+<line x1="80" y1="360.0" x2="820" y2="360.0" class="grid"/>
+<text x="70" y="364.0" text-anchor="end" class="small">20</text>
+<line x1="80" y1="290.0" x2="820" y2="290.0" class="grid"/>
+<text x="70" y="294.0" text-anchor="end" class="small">40</text>
+<line x1="80" y1="220.0" x2="820" y2="220.0" class="grid"/>
+<text x="70" y="224.0" text-anchor="end" class="small">60</text>
+<line x1="80" y1="150.0" x2="820" y2="150.0" class="grid"/>
+<text x="70" y="154.0" text-anchor="end" class="small">80</text>
+<line x1="80" y1="80.0" x2="820" y2="80.0" class="grid"/>
+<text x="70" y="84.0" text-anchor="end" class="small">100</text>
+<line x1="80" y1="80" x2="80" y2="430" class="axis"/>
+<line x1="80" y1="430" x2="820" y2="430" class="axis"/>
+<rect x="94.8" y="430.0" width="70.3" height="0.0" fill="#1971c2"/>
+<rect x="176.2" y="83.5" width="70.3" height="346.5" fill="#12b886"/>
+<text x="172.5" y="452" text-anchor="middle" class="small">20</text>
+<rect x="279.8" y="430.0" width="70.3" height="0.0" fill="#1971c2"/>
+<rect x="361.2" y="430.0" width="70.3" height="0.0" fill="#12b886"/>
+<rect x="464.8" y="430.0" width="70.3" height="0.0" fill="#1971c2"/>
+<rect x="546.2" y="426.5" width="70.3" height="3.5" fill="#12b886"/>
+<text x="542.5" y="452" text-anchor="middle" class="small">22</text>
+<rect x="649.8" y="80.0" width="70.3" height="350.0" fill="#1971c2"/>
+<rect x="731.2" y="430.0" width="70.3" height="0.0" fill="#12b886"/>
+<text x="450.0" y="488" text-anchor="middle" class="label">Turn Index</text>
+<text x="28" y="255.0" transform="rotate(-90 28 255.0)" text-anchor="middle" class="label">Games</text>
+<rect x="665" y="462" width="14" height="14" fill="#1971c2"/><text x="685" y="474" class="small">BLACK</text>
+<rect x="750" y="462" width="14" height="14" fill="#12b886"/><text x="770" y="474" class="small">WHITE</text>
+</svg>

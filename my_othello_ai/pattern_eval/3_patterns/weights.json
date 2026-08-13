@@ -1,0 +1,30 @@
+{
+  "format": "othello-ai-linear-weights-v1",
+  "model": "linear_value_function",
+  "features": [
+    "mobility_difference",
+    "corner_difference",
+    "frontier_difference",
+    "disc_difference_early",
+    "disc_difference_middle",
+    "disc_difference_late"
+  ],
+  "weights": {
+    "MOBILITY_WEIGHT": 0.022237194341935745,
+    "CORNER_WEIGHT": 0.2965915930989951,
+    "FRONTIER_WEIGHT": -0.062878220334242,
+    "DISC_WEIGHT_EARLY": 0.009850823409131923,
+    "DISC_WEIGHT_MIDDLE": 0.03298094433849505,
+    "DISC_WEIGHT_LATE": 0.04948548990307967
+  },
+  "training": {
+    "method": "self_play_monte_carlo",
+    "reward": {
+      "win": 1.0,
+      "draw": 0.0,
+      "loss": -1.0
+    },
+    "episodes": 1000,
+    "seed": 42
+  }
+}
