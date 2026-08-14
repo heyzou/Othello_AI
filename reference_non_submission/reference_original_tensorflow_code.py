@@ -81,7 +81,63 @@ triangle_idx = [
     [56, 57, 58, 59, 48, 49, 50, 40, 41, 32], [56, 48, 40, 32, 57, 49, 41, 58, 50, 59]
 ]
 
-pattern_idx = [diagonal8_idx, edge_2x_idx, triangle_idx]
+diagonal7_idx = [
+    [1, 10, 19, 28, 37, 46, 55],
+    [8, 17, 26, 35, 44, 53, 62],
+    [6, 13, 20, 27, 34, 41, 48],
+    [15, 22, 29, 36, 43, 50, 57],
+]
+for pattern in deepcopy(diagonal7_idx):
+    diagonal7_idx.append(list(reversed(pattern)))
+
+diagonal6_idx = [
+    [2, 11, 20, 29, 38, 47],
+    [16, 25, 34, 43, 52, 61],
+    [5, 12, 19, 26, 33, 40],
+    [23, 30, 37, 44, 51, 58],
+]
+for pattern in deepcopy(diagonal6_idx):
+    diagonal6_idx.append(list(reversed(pattern)))
+
+diagonal5_idx = [
+    [3, 12, 21, 30, 39],
+    [24, 33, 42, 51, 60],
+    [4, 11, 18, 25, 32],
+    [31, 38, 45, 52, 59],
+]
+for pattern in deepcopy(diagonal5_idx):
+    diagonal5_idx.append(list(reversed(pattern)))
+
+edge_idx = [
+    [0, 1, 2, 3, 4, 5, 6, 7],
+    [0, 8, 16, 24, 32, 40, 48, 56],
+    [56, 57, 58, 59, 60, 61, 62, 63],
+    [7, 15, 23, 31, 39, 47, 55, 63],
+]
+for pattern in deepcopy(edge_idx):
+    edge_idx.append(list(reversed(pattern)))
+
+corner_3x3_idx = [
+    [0, 1, 2, 8, 9, 10, 16, 17, 18],
+    [7, 6, 5, 15, 14, 13, 23, 22, 21],
+    [56, 57, 58, 48, 49, 50, 40, 41, 42],
+    [63, 62, 61, 55, 54, 53, 47, 46, 45],
+]
+for pattern in deepcopy(corner_3x3_idx):
+    corner_3x3_idx.append(list(reversed(pattern)))
+
+pattern_idx = [
+    diagonal8_idx,
+    diagonal7_idx,
+    diagonal6_idx,
+    diagonal5_idx,
+    edge_idx,
+    edge_2x_idx,
+    triangle_idx,
+    corner_3x3_idx,
+]
+pattern_count = len(pattern_idx)
+model_stem = 'model_' + str(pattern_count) + 'patterns'
 ln_in = sum([len(elem) for elem in pattern_idx]) + 1
 all_data = [[] for _ in range(ln_in)]
 all_labels = []
@@ -121,7 +177,7 @@ def collect_data(board, player, v1, v2, v3, result):
 
 x = [None for _ in range(ln_in)]
 ys = []
-names = ['diagonal8', 'edge2X', 'triangle']
+names = ['diagonal8', 'diagonal7', 'diagonal6', 'diagonal5', 'edge', 'edge2X', 'triangle', 'corner3x3']
 idx = 0
 for i in range(len(pattern_idx)):
     layers = []
@@ -193,7 +249,7 @@ history = model.fit(train_data, train_labels, epochs=n_epochs, validation_data=(
 
 now = datetime.datetime.today()
 print('save start')
-model.save('models/model.h5')
+model.save('models/' + model_stem + '.h5')
 
 print('output model start')
-subprocess.run('python output_model.py model.h5 model.txt'.split())
+subprocess.run(['python', 'output_model.py', model_stem + '.h5', model_stem + '.txt'])

@@ -12,7 +12,7 @@ def get_layer_index(model, layer_name, not_found=None):
 
 model = load_model('models/' + sys.argv[1], compile=False)
 
-layer_names = ['diagonal8', 'edge2X', 'triangle']
+layer_names = ['diagonal8', 'diagonal7', 'diagonal6', 'diagonal5', 'edge', 'edge2X', 'triangle', 'corner3x3']
 names = []
 for name in layer_names:
     names.append(name + '_dense0')

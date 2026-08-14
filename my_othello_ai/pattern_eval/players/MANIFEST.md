@@ -14,7 +14,7 @@ Game records are stored in `../generated_kihu/vs_<opponent>/<player type>/`.
 
 | file | base | features |
 |---|---|---|
-| `current.py` | exp_014 | bitboard_search, additional_key_cache, fast_surround, mobility_bit_count |
+| `current.py` | exp_019 | bitboard_search, additional_key_cache, fast_surround, mobility_bit_count, fast_pattern_key, mobility_cache, legal_move_mask_cache, endgame_exact_search |
 | `baselines/my_base.py` | base | pattern evaluation |
 | `baselines/my_book.py` | base | opening book |
 | `baselines/my_book_ab.py` | book | alpha-beta endgame search |
@@ -32,3 +32,8 @@ Game records are stored in `../generated_kihu/vs_<opponent>/<player type>/`.
 | `experiments/exp_012_additional_key_cache.py` | exp_011 | additional_key_cache, no_open_getattr |
 | `experiments/exp_013_fast_surround.py` | exp_012 | bitshift_surround_counts |
 | `experiments/exp_014_mobility_mask.py` | exp_013 | mobility_bit_count |
+| `experiments/exp_015_fast_pattern_key.py` | exp_014 | fast_pattern_key |
+| `experiments/exp_016_mobility_cache.py` | exp_015 | mobility_cache |
+| `experiments/exp_017_precomputed_value_tables.py` | exp_016 | precomputed_value_tables |
+| `experiments/exp_018_legal_mask_cache.py` | exp_017 | legal_move_mask_cache |
+| `experiments/exp_019_endgame_exact_search.py` | exp_018 | endgame_exact_search, fastest_first_ordering |

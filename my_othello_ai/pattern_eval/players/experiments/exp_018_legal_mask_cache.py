@@ -1,7 +1,6 @@
 class MyPlayer(BasePlayer):
     BOARD_INDEXES = range(8)
     SEARCH_DEPTH = 6
-    ENDGAME_EXACT_EMPTY = 10
     SIMPLE_ALPHA_BETA_DEPTH = 2
     PROBCUT_MIN_DEPTH = 3
     PROBCUT_MARGIN = 0.16
@@ -296,44 +295,56 @@ class MyPlayer(BasePlayer):
     PARAMS = None
     PATTERN_CACHE = {}
     ADD_CACHE = {}
+    PATTERN_VALUE_TABLES = None
+    ADD_VALUE_TABLE = None
     ADDITIONAL_KEY_CACHE = {}
     MOBILITY_CACHE = {}
     LEGAL_MOVE_MASK_CACHE = {}
     LEGAL_MOVES_CACHE = {}
     SEARCH_HASH_TABLE = [None] * SEARCH_HASH_TABLE_SIZE
+    SEARCH_HASH_GET_COUNT = 0
+    SEARCH_HASH_REG_COUNT = 0
     BOOK_LINES = ('f5', 'f5d6', 'f5d6c3g5', 'f5d6c3g5c6c5', 'f5d6c3g5c6c5c4b6', 'f5d6c3g5c6c5c4b6f6f4', 'f5d6c3g5c6c5c4b6f6f4e6d7', 'f5d6c3g5c6c5c4b6f6f4e6d7c7g6', 'f5d6c3g5c6c5c4b6f6f4e6d7c7g6d8b5', 'f5d6c3g5c6c5c4b6f6f4e6d7c7g6d8b5e7b3', 'f5d6c3g5c6c5c4b6f6f4e6d7c7g6d8b5e7b3a6e3', 'f5d6c3g5c6c5c4b6f6f4e6d7c7g6d8b5e7b3a6e3a5d3', 'f5d6c3g5f6d3', 'f5d6c3g5f6d3e3c2', 'f5d6c3g5f6d3e3c2c1e6', 'f5d6c3g5f6d3e3c2c1e6f4f3', 'f5d6c3g5f6d3e3c2c1e6f4f3f2g4', 'f5d6c3g5f6d3e3c2c1e6f4f3f2g4g6d2', 'f5d6c3g5f6d3e3c2c1e6f4f3f2g4g6d2h3h4', 'f5d6c3g5f6d3e3c2c1e6f4f3f2g4g6d2h3h4h5f7', 'f5d6c3g5f6d3e3c2c1e6f4f3f2g4g6d2h3h4h5f7e7g3', 'f5d6c3g5g6d3', 'f5d6c3g5g6d3c4e3', 'f5d6c3g5g6d3c4e3f3b4', 'f5d6c3g5g6d3c4e3f3b4f6e6', 'f5d6c3g5g6d3c4e3f3b4f6e6f4g4', 'f5d6c3g5g6d3c4e3f3b4f6e6f4g4h4h5', 'f5d6c3g5g6d3c4e3f3b4f6e6f4g4h4h5h6g3', 'f5d6c3g5g6d3c4e3f3b4f6e6f4g4h4h5h6g3h3f7', 'f5d6c3g5g6d3c4e3f3b4f6e6f4g4h4h5h6g3h3f7f8c2', 'f5d6c4b3', 'f5d6c4b3b4f4', 'f5d6c4b3b4f4f6g5', 'f5d6c4b3b4f4f6g5f3e7', 'f5d6c4b3b4f4f6g5f3e7c5e6', 'f5d6c4b3b4f4f6g5f3e7c5e6c3g4', 'f5d6c4b3b4f4f6g5f3e7c5e6c3g4c6g3', 'f5d6c4b3b4f4f6g5f3e7c5e6c3g4c6g3h3e3', 'f5d6c4b3b4f4f6g5f3e7c5e6c3g4c6g3h3e3f2b6', 'f5d6c4b3b4f4f6g5f3e7c5e6c3g4c6g3h3e3f2b6h4d3', 'f5d6c5b4', 'f5d6c5b4d7e7', 'f5d6c5b4d7e7c7d8', 'f5d6c5b4d7e7c7d8c3d3', 'f5d6c5b4d7e7c7d8c3d3c4b3', 'f5d6c5b4d7e7c7d8c3d3c4b3d2e2', 'f5d6c5b4d7e7c7d8c3d3c4b3d2e2c2e3', 'f5d6c5b4d7e7c7d8c3d3c4b3d2e2c2e3f4f2', 'f5d6c5b4d7e7c7d8c3d3c4b3d2e2c2e3f4f2c6b5', 'f5d6c5b4d7e7c7d8c3d3c4b3d2e2c2e3f4f2c6b5f3c8', 'f5d6c4', 'f5d6c4b3b4', 'f5d6c4b3b4f4f6', 'f5d6c4b3b4f4f6g5f3', 'f5d6c4b3b4f4f6g5f3e7c5', 'f5d6c4b3b4f4f6g5f3e7c5e6c3', 'f5d6c4b3b4f4f6g5f3e7c5e6c3g4c6', 'f5d6c4b3b4f4f6g5f3e7c5e6c3g4c6g3h3', 'f5d6c4b3b4f4f6g5f3e7c5e6c3g4c6g3h3e3f2', 'f5d6c4b3b4f4f6g5f3e7c5e6c3g4c6g3h3e3f2b6h4', 'f5d6c4b3b4f4f6g5f3e7c5e6c3g4c6g3h3e3f2b6h4d3e2', 'f5d6c4d3c3', 'f5d6c4d3c3b3d2', 'f5d6c4d3c3b3d2e1b5', 'f5d6c4d3c3b3d2e1b5c5b4', 'f5d6c4d3c3b3d2e1b5c5b4e3c2', 'f5d6c4d3c3b3d2e1b5c5b4e3c2a4c6', 'f5d6c4d3c3b3d2e1b5c5b4e3c2a4c6d1e2', 'f5d6c4d3c3b3d2e1b5c5b4e3c2a4c6d1e2c7b6', 'f5d6c4d3c3b3d2e1b5c5b4e3c2a4c6d1e2c7b6f1e6', 'f5d6c4d3c3b3d2e1b5c5b4e3c2a4c6d1e2c7b6f1e6f3f2', 'f5d6c4d3c3f4f6', 'f5d6c4d3c3f4f6f3e6', 'f5d6c4d3c3f4f6f3e6e7f7', 'f5d6c4d3c3f4f6f3e6e7f7c5b6', 'f5d6c4d3c3f4f6f3e6e7f7c5b6g5e3', 'f5d6c4d3c3f4f6f3e6e7f7c5b6g5e3d7c6', 'f5d6c4d3c3f4f6f3e6e7f7c5b6g5e3d7c6e2g4', 'f5d6c4d3c3f4f6f3e6e7f7c5b6g5e3d7c6e2g4h3d2', 'f5d6c4d3c3f4f6f3e6e7f7c5b6g5e3d7c6e2g4h3d2g3f1', 'f5d6c4d3c3f4f6f3e6e7f7c5b6g6e3', 'f5d6c4d3c3f4f6f3e6e7f7c5b6g6e3e2f1', 'f5d6c4d3c3f4f6f3e6e7f7c5b6g6e3e2f1d1g5', 'f5d6c4d3c3f4f6f3e6e7f7c5b6g6e3e2f1d1g5c6d8', 'f5d6c4d3c3f4f6f3e6e7f7c5b6g6e3e2f1d1g5c6d8g4h6', 'f5d6c4d3c3f4f6b4c2', 'f5d6c4d3c3f4f6b4c2f3e3', 'f5d6c4d3c3f4f6b4c2f3e3e2c6', 'f5d6c4d3c3f4f6b4c2f3e3e2c6f2c5', 'f5d6c4d3c3f4f6b4c2f3e3e2c6f2c5e6d2', 'f5d6c4d3c3f4f6b4c2f3e3e2c6f2c5e6d2g4d7', 'f5d6c4d3c3f4f6b4c2f3e3e2c6f2c5e6d2g4d7b3g5', 'f5d6c4d3c3f4f6b4c2f3e3e2c6f2c5e6d2g4d7b3g5c8h4', 'f5d6c4d3c3f4f6g5e3', 'f5d6c4d3c3f4f6g5e3f3g6', 'f5d6c4d3c3f4f6g5e3f3g6e2h5', 'f5d6c4d3c3f4f6g5e3f3g6e2h5c5g4', 'f5d6c4d3c3f4f6g5e3f3g6e2h5c5g4g3f2', 'f5d6c4d3c3b5b4', 'f5d6c4d3c3b5b4f4c5', 'f5d6c4d3c3b5b4f4c5a4b3', 'f5d6c4d3c3b5b4f4c5a4b3d2a6', 'f5d6c4d3c3b5b4f4c5a4b3d2a6a3e3', 'f5d6c4d3c3b5b4f4c5a4b3d2a6a3e3f3g4', 'f5d6c4d3c3b5b4f4c5a4b3d2a6a3e3f3g4e6f6', 'f5d6c4d3c3b5b4f4c5a4b3d2a6a3e3f3g4e6f6g3e2', 'f5d6c4d3c3b5b4f4c5a4b3d2a6a3e3f3g4e6f6g3e2c2f2', 'f5d6c4g5f6', 'f5d6c4g5f6f4f3', 'f5d6c4g5f6f4f3d3c3', 'f5d6c4g5f6f4f3d3c3g6e3', 'f5d6c4g5f6f4f3d3c3g6e3e6h5', 'f5d6c4g5f6f4f3d3c3g6e3e6h5d2e2', 'f5d6c4g5f6f4f3d3c3g6e3e6h5d2e2c2c6', 'f5d6c4g5f6f4f3d3c3g6e3e6h5d2e2c2c6c5b6', 'f5d6c4g5f6f4f3d3c3g6e3e6h5d2e2c2c6c5b6b4b3', 'f5d6c4g5f6f4f3d3c3g6e3e6h5d2e2c2c6c5b6b4b3c7a4', 'f5f6e6', 'f5f6e6f4g6', 'f5f6e6f4g6c5f3', 'f5f6e6f4g6c5f3g4e3', 'f5f6e6f4g6c5f3g4e3d6g5', 'f5f6e6f4g6c5f3g4e3d6g5g3c3', 'f5f6e6f4g6c5f3g4e3d6g5g3c3h5c4', 'f5f6e6f4g6c5f3g4e3d6g5g3c3h5c4d7h6', 'f5f6e6f4g6c5f3g4e3d6g5g3c3h5c4d7h6h7h3', 'f5f6e6f4g6c5f3g4e3d6g5g3c3h5c4d7h6h7h3f7e7', 'f5f6e6f4g6c5f3g4e3d6g5g3c3h5c4d7h6h7h3f7e7f8h4', 'f5f6e6f4g6c5f3g5d6', 'f5f6e6f4g6c5f3g5d6e3h4', 'f5f6e6f4g6c5f3g5d6e3h4g3g4', 'f5f6e6f4g6c5f3g5d6e3h4g3g4h6e2', 'f5f6e6f4g6c5f3g5d6e3h4g3g4h6e2d3h5', 'f5f6e6f4g6c5f3g5d6e3h4g3g4h6e2d3h5h3c6', 'f5f6e6f4g6c5f3g5d6e3h4g3g4h6e2d3h5h3c6e7f2', 'f5f6e6f4g6c5f3g5d6e3h4g3g4h6e2d3h5h3c6e7f2c4d2', 'f5f6e6f4g6d6g4', 'f5f6e6f4g6d6g4g5h4', 'f5f6e6f4g6d6g4g5h4e7f3', 'f5f6e6f4g6d6g4g5h4e7f3h6f7', 'f5f6e6f4g6d6g4g5h4e7f3h6f7e8f8', 'f5f6e6f4g6d6g4g5h4e7f3h6f7e8f8g8d3', 'f5f6e6f4g6d6g4g5h4e7f3h6f7e8f8g8d3h5h7', 'f5f6e6f4g6d6g4g5h4e7f3h6f7e8f8g8d3h5h7e3c5', 'f5f6e6f4g6d6g4g5h4e7f3h6f7e8f8g8d3h5h7e3c5c4g3', 'f5f6e6d6f7', 'f5f6e6d6f7e3c6', 'f5f6e6d6f7e3c6e7f4', 'f5f6e6d6f7e3c6e7f4c5d8', 'f5f6e6d6f7e3c6e7f4c5d8c7d7', 'f5f6e6d6f7e3c6e7f4c5d8c7d7f8b5', 'f5f6e6d6f7e3c6e7f4c5d8c7d7f8b5c4e8', 'f5f6e6d6f7e3c6e7f4c5d8c7d7f8b5c4e8c8f3', 'f5f6e6d6f7e3c6e7f4c5d8c7d7f8b5c4e8c8f3g5b6', 'f5f6e6d6f7e3c6e7f4c5d8c7d7f8b5c4e8c8f3g5b6d3b4', 'f5f6e6d6f7f4d7', 'f5f6e6d6f7f4d7e7d8', 'f5f6e6d6f7f4d7e7d8g5c6', 'f5f6e6d6f7f4d7e7d8g5c6f8g6', 'f5f6e6d6f7f4d7e7d8g5c6f8g6h5h6', 'f5f6e6d6f7f4d7e7d8g5c6f8g6h5h6h7c4', 'f5f6e6d6f7f4d7e7d8g5c6f8g6h5h6h7c4e8g8', 'f5f6e6d6f7f4d7e7d8g5c6f8g6h5h6h7c4e8g8c5e3', 'f5f6e6d6f7f4d7e7d8g5c6f8g6h5h6h7c4e8g8c5e3d3c7')
     BOOK_CACHE = None
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        MyPlayer._pattern_bit_specs()
+        MyPlayer._precompute_evaluation_tables()
+
     def next_move(self, board: Board) -> Move:
+        start_time = time.perf_counter()
+        self._profile_stats = {}
+        self._eval_count = 0
+        self._legal_moves_count = 0
+        self._legal_moves_total_sec = 0.0
+        self._legal_moves_cache_hits = 0
+        self._legal_moves_cache_misses = 0
+        self._pattern_bit_specs()
+        type(self).SEARCH_HASH_GET_COUNT = 0
+        type(self).SEARCH_HASH_REG_COUNT = 0
+        move_no = self._move_number(board)
         state = self._board_to_bits(board)
         moves = self._legal_moves_bits(state, self.color)
         if not moves:
+            elapsed_ms = (time.perf_counter() - start_time) * 1000
+            self._write_time_log(move_no, elapsed_ms, None, "pass")
+            self._print_legal_moves_profile(move_no)
+            self._print_hotspot_profile(move_no, elapsed_ms / 1000.0)
             return None
 
         book_move = self._book_move_bits(state)
         if book_move is not None and self._move_to_pos(book_move) in moves:
+            elapsed_ms = (time.perf_counter() - start_time) * 1000
+            self._write_time_log(move_no, elapsed_ms, book_move, "book")
+            self._print_legal_moves_profile(move_no)
+            self._print_hotspot_profile(move_no, elapsed_ms / 1000.0)
             return book_move
 
         best_move = moves[0]
         best_score = float("-inf")
         alpha = float("-inf")
         beta = float("inf")
-
-        if self._empty_count_bits(state) <= self.ENDGAME_EXACT_EMPTY:
-            moves = self._order_moves_by_opponent_mobility(state, moves, self.color)
-            for move in moves:
-                next_state = self._apply_move_bits(state, move, self.color)
-                score = -self._endgame_exact_search(
-                    next_state,
-                    self._opponent_of(self.color),
-                    -65,
-                    65,
-                )
-                if score > best_score:
-                    best_score = score
-                    best_move = move
-                alpha = max(alpha, best_score)
-            return self._pos_to_move(best_move)
 
         moves = self._order_move_positions_by_weight(moves)
         for move in moves:
@@ -350,54 +361,90 @@ class MyPlayer(BasePlayer):
                 best_move = move
             alpha = max(alpha, best_score)
 
-        return self._pos_to_move(best_move)
+        elapsed_ms = (time.perf_counter() - start_time) * 1000
+        result = self._pos_to_move(best_move)
+        self._write_time_log(move_no, elapsed_ms, result, "search")
+        self._print_legal_moves_profile(move_no)
+        self._print_hotspot_profile(move_no, elapsed_ms / 1000.0)
+        return result
+
+    def _move_number(self, board: Board) -> int:
+        stones = 0
+        for row in board:
+            for cell in row:
+                if cell != Cell.EMPTY:
+                    stones += 1
+        return stones - 3
+
+    def _log_file_name(self, suffix: str) -> str:
+        try:
+            player_file = os.environ.get("MYPLAYER_FILE", "")
+        except NameError:
+            player_file = ""
+        player_path = player_file.replace("\\", "/")
+        stem = player_path.split("/")[-1].removesuffix(".py")
+        if not stem:
+            stem = "current"
+        if "/baselines/" in player_path:
+            log_dir = "profiles/baselines"
+        elif "/experiments/" in player_path:
+            log_dir = "profiles/experiments"
+        elif stem == "current":
+            log_dir = "profiles/current"
+        else:
+            log_dir = "profiles"
+        os.makedirs(log_dir, exist_ok=True)
+        return f"{log_dir}/{stem}_{suffix}.txt"
+
+    def _write_time_log(self, move_no: int, elapsed_ms: float, move: Move, source: str):
+        return None
+
+    def _timed_legal_moves_bits(self, state: tuple[int, int], color: Cell) -> tuple[int, ...]:
+        start_time = time.perf_counter()
+        moves = self._legal_moves_bits_uncached(state, color)
+        elapsed = time.perf_counter() - start_time
+        self._legal_moves_count += 1
+        self._legal_moves_total_sec += elapsed
+        total_sec, count = self._profile_stats.get("legal_moves_uncached", (0.0, 0))
+        self._profile_stats["legal_moves_uncached"] = (total_sec + elapsed, count + 1)
+        return tuple(moves)
+
+    def _print_legal_moves_profile(self, move_no: int) -> None:
+        count = self._legal_moves_count
+        total_sec = self._legal_moves_total_sec
+        avg_sec = total_sec / count if count else 0.0
+        print(
+            f"[legal_moves_bits] move_no={move_no} "
+            f"calls={count} total_sec={total_sec:.6f} avg_sec={avg_sec:.6f} "
+            f"legal_cache_hits={self._legal_moves_cache_hits} "
+            f"legal_cache_misses={self._legal_moves_cache_misses}",
+            flush=True,
+        )
+
+    def _profile_start(self) -> float:
+        return time.perf_counter()
+
+    def _profile_add(self, name: str, start_time: float) -> None:
+        total_sec, count = self._profile_stats.get(name, (0.0, 0))
+        self._profile_stats[name] = (total_sec + time.perf_counter() - start_time, count + 1)
+
+    def _print_hotspot_profile(self, move_no: int, total_sec: float) -> None:
+        print(f"[hotspots] move_no={move_no} total_sec={total_sec:.6f}", flush=True)
+        for name, (sec, count) in sorted(
+            self._profile_stats.items(),
+            key=lambda item: item[1][0],
+            reverse=True,
+        )[:14]:
+            avg = sec / count if count else 0.0
+            pct = (sec / total_sec * 100.0) if total_sec else 0.0
+            print(
+                f"  {name}: calls={count} total_sec={sec:.6f} "
+                f"avg_sec={avg:.6f} pct={pct:.1f}%",
+                flush=True,
+            )
 
     def _order_move_positions_by_weight(self, moves: tuple[int, ...] | list[int]) -> list[int]:
         return sorted(moves, key=lambda pos: self.ORDER_WEIGHTS[pos // 8][pos % 8], reverse=True)
-
-    def _order_moves_by_opponent_mobility(
-        self,
-        state: tuple[int, int],
-        moves: tuple[int, ...] | list[int],
-        current_color: Cell,
-    ) -> list[int]:
-        next_color = self._opponent_of(current_color)
-        return sorted(
-            moves,
-            key=lambda move: self._legal_move_mask_bits(
-                self._apply_move_bits(state, move, current_color),
-                next_color,
-            ).bit_count(),
-        )
-
-    def _endgame_exact_search(
-        self,
-        state: tuple[int, int],
-        current_color: Cell,
-        alpha: int,
-        beta: int,
-    ) -> int:
-        moves = self._legal_moves_bits(state, current_color)
-        next_color = self._opponent_of(current_color)
-
-        if not moves:
-            if not self._legal_moves_bits(state, next_color):
-                return self._terminal_score_for_color_bits(state, current_color)
-            return -self._endgame_exact_search(state, next_color, -beta, -alpha)
-
-        best_score = -65
-        moves = self._order_moves_by_opponent_mobility(state, moves, current_color)
-        for move in moves:
-            next_state = self._apply_move_bits(state, move, current_color)
-            score = -self._endgame_exact_search(next_state, next_color, -beta, -alpha)
-            if score > best_score:
-                best_score = score
-            if score > alpha:
-                alpha = score
-            if alpha >= beta:
-                break
-
-        return best_score
 
     def _negascout(
         self,
@@ -431,7 +478,7 @@ class MyPlayer(BasePlayer):
         # 現在手番だけ合法手がなければパスし、両者なければ終局として評価する。
         if not moves:
             if not self._legal_moves_bits(state, next_color):
-                score = self._terminal_score_for_color_bits(state, current_color)
+                score = self._evaluate_for_color_bits(state, current_color)
             else:
                 score = -self._negascout(state, depth, next_color, -beta, -alpha, allow_probcut)
             self._search_hash_register(search_key, score, original_alpha, original_beta)
@@ -512,10 +559,13 @@ class MyPlayer(BasePlayer):
         if entry_key != key:
             return None
         if lower >= beta:
+            cls.SEARCH_HASH_GET_COUNT += 1
             return lower
         if upper <= alpha:
+            cls.SEARCH_HASH_GET_COUNT += 1
             return upper
         if lower == upper:
+            cls.SEARCH_HASH_GET_COUNT += 1
             return lower
         return None
 
@@ -536,6 +586,7 @@ class MyPlayer(BasePlayer):
         else:
             lower = score
             upper = score
+        cls.SEARCH_HASH_REG_COUNT += 1
         cls.SEARCH_HASH_TABLE[cls._search_hash_index(key)] = (key, lower, upper)
 
     def _alpha_beta_simple(
@@ -554,7 +605,7 @@ class MyPlayer(BasePlayer):
 
         if not moves:
             if not self._legal_moves_bits(state, next_color):
-                return self._terminal_score_for_color_bits(state, current_color)
+                return self._evaluate_for_color_bits(state, current_color)
             return -self._alpha_beta_simple(state, depth, next_color, -beta, -alpha)
 
         best_score = float("-inf")
@@ -567,17 +618,6 @@ class MyPlayer(BasePlayer):
                 break
 
         return best_score
-
-    def _empty_count_bits(self, state: tuple[int, int]) -> int:
-        black_bits, white_bits = state
-        return 64 - (black_bits | white_bits).bit_count()
-
-    def _terminal_score_for_color_bits(self, state: tuple[int, int], color: Cell) -> int:
-        black_bits, white_bits = state
-        score = black_bits.bit_count() - white_bits.bit_count()
-        if color == Cell.BLACK:
-            return score
-        return -score
 
     def _probcut(self, state: tuple[int, int], depth: int, current_color: Cell, alpha: float, beta: float):
         margin = self.PROBCUT_MARGIN + 0.02 * depth
@@ -614,25 +654,41 @@ class MyPlayer(BasePlayer):
         return None
 
     def _evaluate_for_color_bits(self, state: tuple[int, int], color: Cell) -> float:
+        profile_start = self._profile_start()
         score = self._evaluate_black_perspective_bits(state)
         if color == Cell.BLACK:
-            return score
-        return -score
+            result = score
+        else:
+            result = -score
+        self._profile_add("evaluate_for_color", profile_start)
+        return result
 
     def _evaluate_black_perspective_bits(self, state: tuple[int, int]) -> float:
+        profile_start = self._profile_start()
+        self._eval_count += 1
         group_outputs = []
         for name, pattern_specs in self._pattern_bit_specs().items():
             group_sum = 0.0
             for pattern_spec in pattern_specs:
+                key_start = self._profile_start()
                 key = self._pattern_key_bits(state, pattern_spec)
+                self._profile_add("pattern_key_bits", key_start)
+                value_start = self._profile_start()
                 group_sum += self._pattern_value(name, key)
+                self._profile_add("pattern_value", value_start)
             group_outputs.append(group_sum)
 
+        add_key_start = self._profile_start()
         add_key = self._additional_key_bits(state)
+        self._profile_add("additional_key_bits", add_key_start)
+        add_value_start = self._profile_start()
         add_value = self._add_value(add_key)
+        self._profile_add("add_value", add_value_start)
         values = group_outputs + [add_value]
         final_dense, final_bias = self._params()[2]
-        return final_bias + sum(values[i] * final_dense[i] for i in range(4))
+        result = final_bias + sum(values[i] * final_dense[i] for i in range(4))
+        self._profile_add("evaluate_black_perspective", profile_start)
+        return result
 
     @classmethod
     def _params(cls):
@@ -669,6 +725,11 @@ class MyPlayer(BasePlayer):
 
     @classmethod
     def _pattern_value(cls, name: str, key: int) -> float:
+        cls._precompute_evaluation_tables()
+        return cls.PATTERN_VALUE_TABLES[name][key]
+
+    @classmethod
+    def _compute_pattern_value(cls, name: str, key: int) -> float:
         cache_key = (name, key)
         cached = cls.PATTERN_CACHE.get(cache_key)
         if cached is not None:
@@ -707,6 +768,11 @@ class MyPlayer(BasePlayer):
 
     @classmethod
     def _add_value(cls, key: int) -> float:
+        cls._precompute_evaluation_tables()
+        return cls.ADD_VALUE_TABLE[key]
+
+    @classmethod
+    def _compute_add_value(cls, key: int) -> float:
         cached = cls.ADD_CACHE.get(key)
         if cached is not None:
             return cached
@@ -733,6 +799,24 @@ class MyPlayer(BasePlayer):
         result = cls._leaky_relu(result)
         cls.ADD_CACHE[key] = result
         return result
+
+    @classmethod
+    def _precompute_evaluation_tables(cls) -> None:
+        if cls.PATTERN_VALUE_TABLES is not None and cls.ADD_VALUE_TABLE is not None:
+            return
+
+        pattern_tables = {}
+        for name, size in cls.PATTERN_SIZES.items():
+            table_size = 3 ** size
+            pattern_tables[name] = tuple(cls._compute_pattern_value(name, key) for key in range(table_size))
+
+        add_table_size = 61 * 51 * 51
+        add_table = tuple(cls._compute_add_value(key) for key in range(add_table_size))
+
+        cls.PATTERN_VALUE_TABLES = pattern_tables
+        cls.ADD_VALUE_TABLE = add_table
+        cls.PATTERN_CACHE = {}
+        cls.ADD_CACHE = {}
 
     @staticmethod
     def _leaky_relu(value: float) -> float:
@@ -773,21 +857,28 @@ class MyPlayer(BasePlayer):
         return key
 
     def _additional_key_bits(self, state: tuple[int, int]) -> int:
-        cached = MyPlayer.ADDITIONAL_KEY_CACHE.get(state)
+        profile_start = self._profile_start()
+        cached = type(self).ADDITIONAL_KEY_CACHE.get(state)
         if cached is not None:
+            self._profile_add("additional_key_cache_hit", profile_start)
             return cached
 
+        mobility_start = self._profile_start()
         mobility = self._mobility_diff_bits(state)
+        self._profile_add("mobility_mask_bits", mobility_start)
         mobility = max(-30, min(30, mobility))
+        surround_start = self._profile_start()
         surround_black, surround_white = self._surround_counts_bits(state)
+        self._profile_add("surround_counts_bits", surround_start)
         surround_black = max(0, min(50, surround_black))
         surround_white = max(0, min(50, surround_white))
         result = ((mobility + 30) * 51 + surround_black) * 51 + surround_white
-        MyPlayer.ADDITIONAL_KEY_CACHE[state] = result
+        type(self).ADDITIONAL_KEY_CACHE[state] = result
+        self._profile_add("additional_key_body", profile_start)
         return result
 
     def _mobility_diff_bits(self, state: tuple[int, int]) -> int:
-        cached = MyPlayer.MOBILITY_CACHE.get(state)
+        cached = type(self).MOBILITY_CACHE.get(state)
         if cached is not None:
             return cached
 
@@ -795,10 +886,11 @@ class MyPlayer(BasePlayer):
             self._legal_move_mask_bits(state, Cell.BLACK).bit_count()
             - self._legal_move_mask_bits(state, Cell.WHITE).bit_count()
         )
-        MyPlayer.MOBILITY_CACHE[state] = mobility
+        type(self).MOBILITY_CACHE[state] = mobility
         return mobility
 
     def _surround_counts_bits(self, state: tuple[int, int]) -> tuple[int, int]:
+        profile_start = self._profile_start()
         black_bits, white_bits = state
         occupied = black_bits | white_bits
         empty_bits = self.FULL_MASK ^ occupied
@@ -807,17 +899,24 @@ class MyPlayer(BasePlayer):
         for direction in range(8):
             black_count += (empty_bits & self._shift_bits(black_bits, direction)).bit_count()
             white_count += (empty_bits & self._shift_bits(white_bits, direction)).bit_count()
-        return (black_count, white_count)
+        result = (black_count, white_count)
+        self._profile_add("surround_counts_body", profile_start)
+        return result
 
     def _legal_moves_bits(self, state: tuple[int, int], color: Cell) -> tuple[int, ...]:
+        profile_start = self._profile_start()
         key = self._legal_moves_cache_key_bits(state, color)
-        cached = MyPlayer.LEGAL_MOVES_CACHE.get(key)
+        cached = type(self).LEGAL_MOVES_CACHE.get(key)
         if cached is not None:
+            self._legal_moves_cache_hits += 1
+            self._profile_add("legal_moves_cache_get", profile_start)
             return cached
 
-        moves = self._legal_moves_bits_uncached(state, color)
+        self._legal_moves_cache_misses += 1
+        moves = self._timed_legal_moves_bits(state, color)
         self._legal_moves_cache_register(key, moves)
-        return tuple(moves)
+        self._profile_add("legal_moves_cache_get", profile_start)
+        return moves
 
     def _legal_moves_bits_uncached(self, state: tuple[int, int], color: Cell) -> list[int]:
         legal_bits = self._legal_move_mask_bits(state, color)
@@ -830,9 +929,11 @@ class MyPlayer(BasePlayer):
         return moves
 
     def _legal_move_mask_bits(self, state: tuple[int, int], color: Cell) -> int:
+        profile_start = self._profile_start()
         key = self._legal_moves_cache_key_bits(state, color)
-        cached = MyPlayer.LEGAL_MOVE_MASK_CACHE.get(key)
+        cached = type(self).LEGAL_MOVE_MASK_CACHE.get(key)
         if cached is not None:
+            self._profile_add("legal_move_mask_cache_get", profile_start)
             return cached
 
         black_bits, white_bits = state
@@ -848,7 +949,8 @@ class MyPlayer(BasePlayer):
                 candidates |= opponent_bits & self._shift_bits(candidates, direction)
             legal_bits |= empty_bits & self._shift_bits(candidates, direction)
 
-        MyPlayer.LEGAL_MOVE_MASK_CACHE[key] = legal_bits
+        type(self).LEGAL_MOVE_MASK_CACHE[key] = legal_bits
+        self._profile_add("legal_move_mask_cache_get", profile_start)
         return legal_bits
 
     @classmethod
@@ -885,21 +987,28 @@ class MyPlayer(BasePlayer):
         cls.LEGAL_MOVES_CACHE[key] = tuple(moves)
 
     def _apply_move_bits(self, state: tuple[int, int], move: int, color: Cell) -> tuple[int, int]:
+        profile_start = self._profile_start()
         black_bits, white_bits = state
         move_bit = 1 << move
+        flips_start = self._profile_start()
         flips = self._flips_bits(state, move, color)
+        self._profile_add("flips_bits", flips_start)
         if color == Cell.BLACK:
             black_bits |= move_bit | flips
             white_bits &= ~flips
         else:
             white_bits |= move_bit | flips
             black_bits &= ~flips
-        return (black_bits & self.FULL_MASK, white_bits & self.FULL_MASK)
+        result = (black_bits & self.FULL_MASK, white_bits & self.FULL_MASK)
+        self._profile_add("apply_move_bits", profile_start)
+        return result
 
     def _flips_bits(self, state: tuple[int, int], move: int, color: Cell) -> int:
+        profile_start = self._profile_start()
         black_bits, white_bits = state
         move_bit = 1 << move
         if (black_bits | white_bits) & move_bit:
+            self._profile_add("flips_bits_body", profile_start)
             return 0
         own_bits = black_bits if color == Cell.BLACK else white_bits
         opponent_bits = white_bits if color == Cell.BLACK else black_bits
@@ -920,6 +1029,7 @@ class MyPlayer(BasePlayer):
                 if own_bits & bit:
                     flips |= direction_flips
                 break
+        self._profile_add("flips_bits_body", profile_start)
         return flips
 
     @classmethod
