@@ -45,3 +45,5 @@ Game records are stored in `../generated_kihu/vs_<opponent>/<player type>/`.
 | `experiments/exp_025_eval_cache_262144.py` | exp_023 | eval_cache_262144 |
 | `experiments/exp_026_incremental_pattern_keys.py` | exp_025 | incremental_pattern_keys |
 | `experiments/exp_027_8patterns_incremental_keys.py` | exp_026 | 8_active_patterns |
+| `experiments/exp_028_endgame12_incremental_keys.py` | exp_027 | endgame_exact_empty12 |
+| `experiments/exp_029_endgame13_incremental_keys.py` | exp_028 | endgame_exact_empty13 |
