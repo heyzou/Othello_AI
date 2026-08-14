@@ -7,7 +7,7 @@ class MyPlayer(BasePlayer):
     PROBCUT_MARGIN = 0.16
     PROBCUT_SHALLOW_DEPTHS = (0, 0, 0, 1, 2, 1, 2, 3, 4, 3, 4, 3, 4, 5, 6)
     LEGAL_MOVES_CACHE_MAX_SIZE = 65536
-    EVAL_CACHE_MAX_SIZE = 262144
+    EVAL_CACHE_MAX_SIZE = 65536
     SEARCH_HASH_TABLE_SIZE = 16384
     SEARCH_HASH_MASK = SEARCH_HASH_TABLE_SIZE - 1
     FULL_MASK = (1 << 64) - 1
@@ -120,8 +120,6 @@ class MyPlayer(BasePlayer):
     ACTIVE_PATTERN_NAMES = (
         "diagonal8",
         "diagonal7",
-        "diagonal6",
-        "diagonal5",
         "edge",
         "edge2X",
         "triangle",
@@ -129,7 +127,6 @@ class MyPlayer(BasePlayer):
     )
     PRECOMPUTED_PATTERN_NAMES = ACTIVE_PATTERN_NAMES
     PATTERN_BIT_SPECS = None
-    PATTERN_KEY_META = None
     WEIGHTS = (
         -0.983672, -0.823711, -0.195077, -1.846479, 0.456302, -0.264372, -1.105291, -0.931343,
         0.899218, 1.002967, 0.167889, 0.253584, -0.524418, 0.955871, -0.267441, 0.811155,
@@ -716,7 +713,6 @@ class MyPlayer(BasePlayer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         MyPlayer._pattern_bit_specs()
-        MyPlayer._pattern_key_meta()
         MyPlayer._precompute_evaluation_tables()
 
     def next_move(self, board: Board) -> Move:
@@ -724,7 +720,6 @@ class MyPlayer(BasePlayer):
         MyPlayer.SEARCH_HASH_GET_COUNT = 0
         MyPlayer.SEARCH_HASH_REG_COUNT = 0
         state = self._board_to_bits(board)
-        pattern_keys = self._pattern_keys_from_state(state)
         moves = self._legal_moves_bits(state, self.color)
         if not moves:
             return None
@@ -757,12 +752,9 @@ class MyPlayer(BasePlayer):
 
         ordered_moves = self._order_move_positions_by_weight(moves)
         for move in ordered_moves:
-            next_state, next_pattern_keys = self._apply_move_with_pattern_keys(
-                state, pattern_keys, move, self.color
-            )
+            next_state = self._apply_move_bits(state, move, self.color)
             score = -self._negascout(
                 next_state,
-                next_pattern_keys,
                 depth=self.SEARCH_DEPTH - 1,
                 current_color=self._opponent_of(self.color),
                 alpha=-beta,
@@ -840,7 +832,6 @@ class MyPlayer(BasePlayer):
     def _negascout(
         self,
         state: tuple[int, int],
-        pattern_keys: tuple[int, ...] | None,
         depth: int,
         current_color: Cell,
         alpha: float,
@@ -849,7 +840,7 @@ class MyPlayer(BasePlayer):
     ) -> float:
         # 葉ノードでは、現在手番から見た盤面評価を返す。
         if depth == 0:
-            return self._evaluate_for_color_bits(state, current_color, pattern_keys)
+            return self._evaluate_for_color_bits(state, current_color)
 
         original_alpha = alpha
         original_beta = beta
@@ -860,7 +851,7 @@ class MyPlayer(BasePlayer):
 
         # 葉に近い浅い探索では、NegaScoutではなく通常のalpha-betaを使う。
         if depth <= self.SIMPLE_ALPHA_BETA_DEPTH:
-            score = self._alpha_beta_simple(state, pattern_keys, depth, current_color, alpha, beta)
+            score = self._alpha_beta_simple(state, depth, current_color, alpha, beta)
             self._search_hash_register(search_key, score, original_alpha, original_beta)
             return score
 
@@ -872,46 +863,41 @@ class MyPlayer(BasePlayer):
             if not self._legal_moves_bits(state, next_color):
                 score = self._terminal_score_for_color_bits(state, current_color)
             else:
-                score = -self._negascout(state, pattern_keys, depth, next_color, -beta, -alpha, allow_probcut)
+                score = -self._negascout(state, depth, next_color, -beta, -alpha, allow_probcut)
             self._search_hash_register(search_key, score, original_alpha, original_beta)
             return score
 
         # 深く読む前に、浅い評価で枝刈りできるか試す。
         if allow_probcut and depth >= self.PROBCUT_MIN_DEPTH:
-            cut_score = self._probcut(state, pattern_keys, depth, current_color, alpha, beta)
+            cut_score = self._probcut(state, depth, current_color, alpha, beta)
             if cut_score is not None:
                 self._search_hash_register(search_key, cut_score, original_alpha, original_beta)
                 return cut_score
 
         # 良さそうな手から読むことで、alpha-betaの枝刈りを起こしやすくする。
         moves = self._order_move_positions_by_weight(moves)
-        children = []
-        for move in moves:
-            next_state, next_pattern_keys = self._apply_move_with_pattern_keys(
-                state, pattern_keys, move, current_color
+        if depth >= 2 and len(moves) > 1:
+            moves.sort(
+                key=lambda move: self._evaluate_for_color_bits(
+                    self._apply_move_bits(state, move, current_color), current_color
+                ),
+                reverse=True,
             )
-            order_score = 0.0
-            if depth >= 2 and len(moves) > 1:
-                order_score = self._evaluate_for_color_bits(next_state, current_color, next_pattern_keys)
-            children.append((move, next_state, next_pattern_keys, order_score))
-        if depth >= 2 and len(children) > 1:
-            children.sort(key=lambda child: child[3], reverse=True)
 
         search_window = beta
         best_score = float("-inf")
 
-        for index, child in enumerate(children):
-            next_state = child[1]
-            next_pattern_keys = child[2]
+        for index, move in enumerate(moves):
+            next_state = self._apply_move_bits(state, move, current_color)
             # 1手目は通常窓、2手目以降は狭い窓で先に読む。
             score = -self._negascout(
-                next_state, next_pattern_keys, depth - 1, next_color, -search_window, -alpha, allow_probcut
+                next_state, depth - 1, next_color, -search_window, -alpha, allow_probcut
             )
 
             # 狭い窓で有望そうなら、通常窓で読み直す。
             if alpha < score < beta and index > 0 and depth > 1:
                 score = -self._negascout(
-                    next_state, next_pattern_keys, depth - 1, next_color, -beta, -score, allow_probcut
+                    next_state, depth - 1, next_color, -beta, -score, allow_probcut
                 )
 
             best_score = max(best_score, score)
@@ -989,14 +975,13 @@ class MyPlayer(BasePlayer):
     def _alpha_beta_simple(
         self,
         state: tuple[int, int],
-        pattern_keys: tuple[int, ...] | None,
         depth: int,
         current_color: Cell,
         alpha: float,
         beta: float,
     ) -> float:
         if depth == 0:
-            return self._evaluate_for_color_bits(state, current_color, pattern_keys)
+            return self._evaluate_for_color_bits(state, current_color)
 
         moves = self._legal_moves_bits(state, current_color)
         next_color = self._opponent_of(current_color)
@@ -1004,14 +989,12 @@ class MyPlayer(BasePlayer):
         if not moves:
             if not self._legal_moves_bits(state, next_color):
                 return self._terminal_score_for_color_bits(state, current_color)
-            return -self._alpha_beta_simple(state, pattern_keys, depth, next_color, -beta, -alpha)
+            return -self._alpha_beta_simple(state, depth, next_color, -beta, -alpha)
 
         best_score = float("-inf")
         for move in moves:
-            next_state, next_pattern_keys = self._apply_move_with_pattern_keys(
-                state, pattern_keys, move, current_color
-            )
-            score = -self._alpha_beta_simple(next_state, next_pattern_keys, depth - 1, next_color, -beta, -alpha)
+            next_state = self._apply_move_bits(state, move, current_color)
+            score = -self._alpha_beta_simple(next_state, depth - 1, next_color, -beta, -alpha)
             best_score = max(best_score, score)
             alpha = max(alpha, score)
             if alpha >= beta:
@@ -1032,17 +1015,9 @@ class MyPlayer(BasePlayer):
             return score
         return -score
 
-    def _probcut(
-        self,
-        state: tuple[int, int],
-        pattern_keys: tuple[int, ...] | None,
-        depth: int,
-        current_color: Cell,
-        alpha: float,
-        beta: float,
-    ):
+    def _probcut(self, state: tuple[int, int], depth: int, current_color: Cell, alpha: float, beta: float):
         margin = self.PROBCUT_MARGIN + 0.02 * depth
-        estimate = self._evaluate_for_color_bits(state, current_color, pattern_keys)
+        estimate = self._evaluate_for_color_bits(state, current_color)
         if estimate >= beta + margin:
             return beta
         if estimate <= alpha - margin:
@@ -1059,7 +1034,7 @@ class MyPlayer(BasePlayer):
         if estimate + margin >= beta:
             high = beta + margin
             high_score = self._negascout(
-                state, pattern_keys, probe_depth, current_color, high - 0.001, high, allow_probcut=False
+                state, probe_depth, current_color, high - 0.001, high, allow_probcut=False
             )
             if high_score >= high:
                 return beta
@@ -1067,45 +1042,39 @@ class MyPlayer(BasePlayer):
         if estimate - margin <= alpha:
             low = alpha - margin
             low_score = self._negascout(
-                state, pattern_keys, probe_depth, current_color, low, low + 0.001, allow_probcut=False
+                state, probe_depth, current_color, low, low + 0.001, allow_probcut=False
             )
             if low_score <= low:
                 return alpha
 
         return None
 
-    def _evaluate_for_color_bits(
-        self,
-        state: tuple[int, int],
-        color: Cell,
-        pattern_keys: tuple[int, ...] | None = None,
-    ) -> float:
-        score = self._evaluate_black_perspective_bits(state, pattern_keys)
+    def _evaluate_for_color_bits(self, state: tuple[int, int], color: Cell) -> float:
+        score = self._evaluate_black_perspective_bits(state)
         if color == Cell.BLACK:
             return score
         return -score
 
-    def _evaluate_black_perspective_bits(
-        self,
-        state: tuple[int, int],
-        pattern_keys: tuple[int, ...] | None = None,
-    ) -> float:
+    def _evaluate_black_perspective_bits(self, state: tuple[int, int]) -> float:
         cached = MyPlayer.EVAL_CACHE.get(state)
         if cached is not None:
             return cached
 
-        if pattern_keys is None:
-            pattern_keys = self._pattern_keys_from_state(state)
-
+        black_bits, white_bits = state
         final_dense, final_bias = self._params()[2]
         pattern_name_to_final_index = MyPlayer._pattern_name_to_final_index()
-        group_infos = MyPlayer._pattern_key_group_infos()
         result = final_bias
-        for name, start, end in group_infos:
+        for name in self.ACTIVE_PATTERN_NAMES:
+            pattern_specs = self._pattern_bit_specs()[name]
             group_sum = 0.0
             pattern_table = MyPlayer.PATTERN_VALUE_TABLES.get(name)
-            for index in range(start, end):
-                key = pattern_keys[index]
+            for pattern_spec in pattern_specs:
+                key, parts = pattern_spec
+                for bit, white_delta, black_delta in parts:
+                    if black_bits & bit:
+                        key -= black_delta
+                    elif white_bits & bit:
+                        key -= white_delta
                 if pattern_table is None:
                     group_sum += MyPlayer._compute_pattern_value(name, key)
                 else:
@@ -1303,60 +1272,6 @@ class MyPlayer(BasePlayer):
         cls.PATTERN_BIT_SPECS = specs
         return specs
 
-    @classmethod
-    def _pattern_key_meta(cls):
-        if cls.PATTERN_KEY_META is not None:
-            return cls.PATTERN_KEY_META
-
-        specs = cls._pattern_bit_specs()
-        empty_keys = []
-        group_infos = []
-        position_updates = [[] for _ in range(64)]
-        key_index = 0
-        for name in cls.ACTIVE_PATTERN_NAMES:
-            start = key_index
-            for empty_key, parts in specs[name]:
-                empty_keys.append(empty_key)
-                for bit, white_delta, _ in parts:
-                    position = bit.bit_length() - 1
-                    position_updates[position].append((key_index, white_delta))
-                key_index += 1
-            group_infos.append((name, start, key_index))
-
-        cls.PATTERN_KEY_META = (
-            tuple(empty_keys),
-            tuple(tuple(items) for items in position_updates),
-            tuple(group_infos),
-        )
-        return cls.PATTERN_KEY_META
-
-    @classmethod
-    def _pattern_key_group_infos(cls):
-        return cls._pattern_key_meta()[2]
-
-    def _pattern_keys_from_state(self, state: tuple[int, int]) -> tuple[int, ...]:
-        empty_keys, position_updates, _ = MyPlayer._pattern_key_meta()
-        keys = list(empty_keys)
-        black_bits, white_bits = state
-
-        bits = black_bits
-        while bits:
-            bit = bits & -bits
-            position = bit.bit_length() - 1
-            for key_index, weight in position_updates[position]:
-                keys[key_index] -= weight + weight
-            bits ^= bit
-
-        bits = white_bits
-        while bits:
-            bit = bits & -bits
-            position = bit.bit_length() - 1
-            for key_index, weight in position_updates[position]:
-                keys[key_index] -= weight
-            bits ^= bit
-
-        return tuple(keys)
-
     def _additional_key_bits(self, state: tuple[int, int]) -> int:
         cached = MyPlayer.ADDITIONAL_KEY_CACHE.get(state)
         if cached is not None:
@@ -1479,46 +1394,6 @@ class MyPlayer(BasePlayer):
             white_bits |= flips | move_bit
             black_bits &= ~flips
         return black_bits, white_bits
-
-    def _apply_move_with_pattern_keys(
-        self,
-        state: tuple[int, int],
-        pattern_keys: tuple[int, ...] | None,
-        pos: int,
-        color: Cell,
-    ) -> tuple[tuple[int, int], tuple[int, ...]]:
-        if pattern_keys is None:
-            pattern_keys = self._pattern_keys_from_state(state)
-
-        flips = self._flips_bits(state, pos, color)
-        move_bit = 1 << pos
-        black_bits, white_bits = state
-        if color == Cell.BLACK:
-            next_state = ((black_bits | flips | move_bit), (white_bits & ~flips))
-        else:
-            next_state = ((black_bits & ~flips), (white_bits | flips | move_bit))
-
-        _, position_updates, _ = MyPlayer._pattern_key_meta()
-        keys = list(pattern_keys)
-
-        for key_index, weight in position_updates[pos]:
-            if color == Cell.BLACK:
-                keys[key_index] -= weight + weight
-            else:
-                keys[key_index] -= weight
-
-        bits = flips
-        while bits:
-            bit = bits & -bits
-            position = bit.bit_length() - 1
-            for key_index, weight in position_updates[position]:
-                if color == Cell.BLACK:
-                    keys[key_index] -= weight
-                else:
-                    keys[key_index] += weight
-            bits ^= bit
-
-        return next_state, tuple(keys)
 
     def _flips_bits(self, state: tuple[int, int], pos: int, color: Cell) -> int:
         black_bits, white_bits = state

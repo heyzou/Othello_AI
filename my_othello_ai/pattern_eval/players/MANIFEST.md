@@ -14,7 +14,7 @@ Game records are stored in `../generated_kihu/vs_<opponent>/<player type>/`.
 
 | file | base | features |
 |---|---|---|
-| `current.py` | exp_019 | bitboard_search, additional_key_cache, fast_surround, mobility_bit_count, fast_pattern_key, mobility_cache, legal_move_mask_cache, endgame_exact_search |
+| `current.py` | exp_027 | bitboard_search, 8_pattern_weights, 8_active_patterns, rounded_weights, init_pattern_tables, depth6, state_eval_cache, incremental_pattern_keys, endgame_exact_search |
 | `baselines/my_base.py` | base | pattern evaluation |
 | `baselines/my_book.py` | base | opening book |
 | `baselines/my_book_ab.py` | book | alpha-beta endgame search |
@@ -37,3 +37,11 @@ Game records are stored in `../generated_kihu/vs_<opponent>/<player type>/`.
 | `experiments/exp_017_precomputed_value_tables.py` | exp_016 | precomputed_value_tables |
 | `experiments/exp_018_legal_mask_cache.py` | exp_017 | legal_move_mask_cache |
 | `experiments/exp_019_endgame_exact_search.py` | exp_018 | endgame_exact_search, fastest_first_ordering |
+| `experiments/exp_020_8patterns.py` | exp_019 | 8_pattern_weights |
+| `experiments/exp_021_direct_pattern_value.py` | exp_020 | inline_direct_pattern_value |
+| `experiments/exp_022_eval_cache.py` | exp_021 | state_eval_cache |
+| `experiments/exp_023_6patterns_eval_cache.py` | exp_022 | 6_active_patterns |
+| `experiments/exp_024_rounded_weights_init_tables.py` | exp_023 | rounded_weights, init_pattern_tables, depth6 |
+| `experiments/exp_025_eval_cache_262144.py` | exp_023 | eval_cache_262144 |
+| `experiments/exp_026_incremental_pattern_keys.py` | exp_025 | incremental_pattern_keys |
+| `experiments/exp_027_8patterns_incremental_keys.py` | exp_026 | 8_active_patterns |

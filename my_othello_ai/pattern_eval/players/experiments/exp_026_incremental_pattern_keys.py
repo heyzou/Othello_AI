@@ -120,8 +120,6 @@ class MyPlayer(BasePlayer):
     ACTIVE_PATTERN_NAMES = (
         "diagonal8",
         "diagonal7",
-        "diagonal6",
-        "diagonal5",
         "edge",
         "edge2X",
         "triangle",
