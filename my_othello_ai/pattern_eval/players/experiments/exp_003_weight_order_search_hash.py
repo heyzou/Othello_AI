@@ -1,13 +1,12 @@
 class MyPlayer(BasePlayer):
     BOARD_INDEXES = range(8)
-    SEARCH_DEPTH = 5
+    SEARCH_DEPTH = 6
     SIMPLE_ALPHA_BETA_DEPTH = 2
     PROBCUT_MIN_DEPTH = 3
     PROBCUT_MARGIN = 0.16
     PROBCUT_SHALLOW_DEPTHS = (0, 0, 0, 1, 2, 1, 2, 3, 4, 3, 4, 3, 4, 5, 6)
     SEARCH_HASH_TABLE_SIZE = 16384
     SEARCH_HASH_MASK = SEARCH_HASH_TABLE_SIZE - 1
-    WEIGHT_SCALE = 1024
     ORDER_WEIGHTS = (
         (120, -20, 20, 5, 5, 20, -20, 120),
         (-20, -40, -5, -5, -5, -5, -40, -20),
@@ -352,10 +351,20 @@ class MyPlayer(BasePlayer):
             player_file = os.environ.get("MYPLAYER_FILE", "")
         except NameError:
             player_file = ""
-        stem = player_file.replace("\\", "/").split("/")[-1].removesuffix(".py")
+        player_path = player_file.replace("\\", "/")
+        stem = player_path.split("/")[-1].removesuffix(".py")
         if not stem:
-            stem = "my_book_ab_qweight_search_hash"
-        return f"{stem}_{suffix}.txt"
+            stem = "exp_003_weight_order_search_hash"
+        if "/baselines/" in player_path:
+            log_dir = "profiles/baselines"
+        elif "/experiments/" in player_path:
+            log_dir = "profiles/experiments"
+        elif stem == "current":
+            log_dir = "profiles/current"
+        else:
+            log_dir = "profiles"
+        os.makedirs(log_dir, exist_ok=True)
+        return f"{log_dir}/{stem}_{suffix}.txt"
 
     def _write_time_log(self, move_no: int, elapsed_ms: float, move: Move, source: str):
         with open(self._log_file_name("next_move_profile"), "a", encoding="utf-8") as file:
@@ -596,17 +605,14 @@ class MyPlayer(BasePlayer):
         add_value = self._add_value(self._additional_key(board))
         values = group_outputs + [add_value]
         final_dense, final_bias = self._params()[2]
-        score = final_bias
-        for i in range(4):
-            score += values[i] * final_dense[i] // self.WEIGHT_SCALE
-        return score / self.WEIGHT_SCALE
+        return final_bias + sum(values[i] * final_dense[i] for i in range(4))
 
     @classmethod
     def _params(cls):
         if cls.PARAMS is not None:
             return cls.PARAMS
 
-        weights = tuple(int(round(value * cls.WEIGHT_SCALE)) for value in cls.WEIGHTS)
+        weights = cls.WEIGHTS
         pos = 0
 
         def take():
@@ -635,45 +641,45 @@ class MyPlayer(BasePlayer):
         return cls.PARAMS
 
     @classmethod
-    def _pattern_value(cls, name: str, key: int) -> int:
+    def _pattern_value(cls, name: str, key: int) -> float:
         cache_key = (name, key)
         cached = cls.PATTERN_CACHE.get(cache_key)
         if cached is not None:
             return cached
 
         size, dense0, bias0, dense1, bias1, dense2, bias2 = cls._params()[0][name]
-        active_indexes = []
+        arr = [0.0] * (size * 2)
         n = key
         for i in range(size - 1, -1, -1):
             digit = n % 3
             n //= 3
             if digit == 0:
-                active_indexes.append(i)
+                arr[i] = 1.0
             elif digit == 1:
-                active_indexes.append(size + i)
+                arr[size + i] = 1.0
 
         hidden0 = []
         for out_i in range(16):
             value = bias0[out_i]
             row = dense0[out_i]
-            for in_i in active_indexes:
-                value += row[in_i]
-            hidden0.append(cls._q_leaky_relu(value))
+            for in_i in range(size * 2):
+                value += arr[in_i] * row[in_i]
+            hidden0.append(cls._leaky_relu(value))
 
         result = bias2
         for out_i in range(16):
             value = bias1[out_i]
             row = dense1[out_i]
             for in_i in range(16):
-                value += hidden0[in_i] * row[in_i] // cls.WEIGHT_SCALE
-            result += cls._q_leaky_relu(value) * dense2[out_i] // cls.WEIGHT_SCALE
+                value += hidden0[in_i] * row[in_i]
+            result += cls._leaky_relu(value) * dense2[out_i]
 
-        result = cls._q_leaky_relu(result)
+        result = cls._leaky_relu(result)
         cls.PATTERN_CACHE[cache_key] = result
         return result
 
     @classmethod
-    def _add_value(cls, key: int) -> int:
+    def _add_value(cls, key: int) -> float:
         cached = cls.ADD_CACHE.get(key)
         if cached is not None:
             return cached
@@ -683,11 +689,7 @@ class MyPlayer(BasePlayer):
         tmp //= 51
         sur0 = tmp % 51
         mobility = tmp // 51 - 30
-        arr = (
-            mobility * cls.WEIGHT_SCALE // 30,
-            (sur0 - 15) * cls.WEIGHT_SCALE // 15,
-            (sur1 - 15) * cls.WEIGHT_SCALE // 15,
-        )
+        arr = (mobility / 30.0, (sur0 - 15.0) / 15.0, (sur1 - 15.0) / 15.0)
         dense0, bias0, dense1, bias1 = cls._params()[1]
 
         hidden = []
@@ -695,21 +697,15 @@ class MyPlayer(BasePlayer):
             value = bias0[out_i]
             row = dense0[out_i]
             for in_i in range(3):
-                value += arr[in_i] * row[in_i] // cls.WEIGHT_SCALE
-            hidden.append(cls._q_leaky_relu(value))
+                value += arr[in_i] * row[in_i]
+            hidden.append(cls._leaky_relu(value))
 
         result = bias1
         for i in range(8):
-            result += hidden[i] * dense1[i] // cls.WEIGHT_SCALE
-        result = cls._q_leaky_relu(result)
+            result += hidden[i] * dense1[i]
+        result = cls._leaky_relu(result)
         cls.ADD_CACHE[key] = result
         return result
-
-    @staticmethod
-    def _q_leaky_relu(value: int) -> int:
-        if value >= 0:
-            return value
-        return -((-value) // 100)
 
     @staticmethod
     def _leaky_relu(value: float) -> float:

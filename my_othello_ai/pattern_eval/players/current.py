@@ -1,6 +1,6 @@
 class MyPlayer(BasePlayer):
     BOARD_INDEXES = range(8)
-    SEARCH_DEPTH = 5
+    SEARCH_DEPTH = 6
     SIMPLE_ALPHA_BETA_DEPTH = 2
     PROBCUT_MIN_DEPTH = 3
     PROBCUT_MARGIN = 0.16
@@ -8,14 +8,14 @@ class MyPlayer(BasePlayer):
     SEARCH_HASH_TABLE_SIZE = 16384
     SEARCH_HASH_MASK = SEARCH_HASH_TABLE_SIZE - 1
     ORDER_WEIGHTS = (
-        (2714, 147, 69, -18, -18, 69, 147, 2714),
-        (147, -577, -186, -153, -153, -186, -577, 147),
-        (69, -186, -379, -122, -122, -379, -186, 69),
-        (-18, -153, -122, -169, -169, -122, -153, -18),
-        (-18, -153, -122, -169, -169, -122, -153, -18),
-        (69, -186, -379, -122, -122, -379, -186, 69),
-        (147, -577, -186, -153, -153, -186, -577, 147),
-        (2714, 147, 69, -18, -18, 69, 147, 2714),
+        (120, -20, 20, 5, 5, 20, -20, 120),
+        (-20, -40, -5, -5, -5, -5, -40, -20),
+        (20, -5, 15, 3, 3, 15, -5, 20),
+        (5, -5, 3, 3, 3, 3, -5, 5),
+        (5, -5, 3, 3, 3, 3, -5, 5),
+        (20, -5, 15, 3, 3, 15, -5, 20),
+        (-20, -40, -5, -5, -5, -5, -40, -20),
+        (120, -20, 20, 5, 5, 20, -20, 120),
     )
 
     DIRECTIONS = (
@@ -351,10 +351,20 @@ class MyPlayer(BasePlayer):
             player_file = os.environ.get("MYPLAYER_FILE", "")
         except NameError:
             player_file = ""
-        stem = player_file.replace("\\", "/").split("/")[-1].removesuffix(".py")
+        player_path = player_file.replace("\\", "/")
+        stem = player_path.split("/")[-1].removesuffix(".py")
         if not stem:
-            stem = "my_book_ab_strong_weight_search_hash"
-        return f"{stem}_{suffix}.txt"
+            stem = "current"
+        if "/baselines/" in player_path:
+            log_dir = "profiles/baselines"
+        elif "/experiments/" in player_path:
+            log_dir = "profiles/experiments"
+        elif stem == "current":
+            log_dir = "profiles/current"
+        else:
+            log_dir = "profiles"
+        os.makedirs(log_dir, exist_ok=True)
+        return f"{log_dir}/{stem}_{suffix}.txt"
 
     def _write_time_log(self, move_no: int, elapsed_ms: float, move: Move, source: str):
         with open(self._log_file_name("next_move_profile"), "a", encoding="utf-8") as file:

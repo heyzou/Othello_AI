@@ -4,9 +4,25 @@
 
 MyPlayer の実装は `players/` に分けています。
 
-- `players/my_base.py`: 定石なしの元のパターン評価版
-- `players/my_book.py`: 定石確認つきのパターン評価版
-- `players/my_book_ab.py`: 定石確認つき + 最終N手を簡易alpha-betaで読む版
+```text
+players/
+  current.py      # 今の提出候補
+  baselines/      # 基準版
+  experiments/    # 実験版
+  archived/       # 使わなくなった退避先
+  MANIFEST.md     # 実験内容の対応表
+
+profiles/
+  current/         # current.py の next_move ログ
+  baselines/       # 基準版の next_move ログ
+  experiments/     # 実験版の next_move ログ
+
+generated_kihu/
+  vs_AdvancedPlayer/
+    current/       # current.py の棋譜
+    baselines/     # 基準版の棋譜
+    experiments/   # 実験版の棋譜
+```
 
 `players/*.py` は提出時に貼りやすいように、`class MyPlayer(BasePlayer):` から始めています。
 必要な import は共通ノートブック側の MyPlayer 読み込みセルに置いています。
@@ -14,14 +30,18 @@ MyPlayer の実装は `players/` に分けています。
 使う実装を変えるときは、`pattern_eval_common.ipynb` の MyPlayer 読み込みセルにある `MYPLAYER_FILE` だけ変更してください。
 
 ```python
-MYPLAYER_FILE = "../players/my_book.py"
+MYPLAYER_FILE = "../players/current.py"
 ```
-
-これで、ノートブック全体をコピーせずに MyPlayer だけ差し替えて評価できます。
 
 シェルから実行する場合は次のようにします。第2引数は片側ごとの対戦回数です。
 `1` を指定すると、黒番1局・白番1局を実行します。
 
 ```bash
-./run_pattern_eval.sh my_book.py 1
+./run_pattern_eval.sh current.py 1
+./run_pattern_eval.sh baselines/my_book_ab.py 1
+./run_pattern_eval.sh experiments/exp_003_weight_order_search_hash.py 1
 ```
+
+ファイル名が長くなりそうな実験は、`experiments/exp_XXX_short_name.py` に置き、詳細は `players/MANIFEST.md` に書いてください。
+`next_move_profile.txt` などの計測ログは、対応する `profiles/` 配下に出力されます。
+対戦棋譜は、対応する `generated_kihu/vs_*/` 配下に出力されます。
