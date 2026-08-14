@@ -2,6 +2,13 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+TEST_MODE=0
+
+if [[ "${1:-}" == "-test" ]]; then
+  TEST_MODE=1
+  shift
+fi
+
 PLAYER_FILE="${1:-current.py}"
 GAMES_PER_SIDE="${2:-100}"
 PYTHON_BIN="${PYTHON:-python}"
@@ -33,4 +40,9 @@ if [[ "$PLAYER_FILE" != */* ]]; then
 fi
 
 cd "$SCRIPT_DIR"
-MYPLAYER_FILE="$PLAYER_FILE" GAMES_PER_SIDE="$GAMES_PER_SIDE" "$PYTHON_BIN" run_common_notebook.py
+if [[ "$TEST_MODE" == "1" ]]; then
+  echo "TEST MODE: move timeout disabled; moves over 2.0 seconds will continue."
+  MYPLAYER_FILE="$PLAYER_FILE" GAMES_PER_SIDE="$GAMES_PER_SIDE" MOVE_TIMEOUT_SECONDS=none "$PYTHON_BIN" run_common_notebook.py
+else
+  MYPLAYER_FILE="$PLAYER_FILE" GAMES_PER_SIDE="$GAMES_PER_SIDE" "$PYTHON_BIN" run_common_notebook.py
+fi
