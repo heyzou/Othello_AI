@@ -1,5 +1,9 @@
+import random
+
+
 class MyPlayer(BasePlayer):
     BOARD_INDEXES = range(8)
+    RANDOM_OPENING_PLIES = 10
     SEARCH_DEPTH = 6
     ENDGAME_EXACT_EMPTY = 10
     SIMPLE_ALPHA_BETA_DEPTH = 2
@@ -746,6 +750,8 @@ class MyPlayer(BasePlayer):
         moves = self._legal_moves_bits(state, self.color)
         if not moves:
             return None
+        if 64 - self._empty_count_bits(state) < 4 + self.RANDOM_OPENING_PLIES:
+            return self._pos_to_move(random.choice(moves))
         MyPlayer._warm_evaluation_table_steps()
 
         book_move = self._book_move_bits(state)

@@ -14,7 +14,7 @@ Game records are stored in `../generated_kihu/vs_<opponent>/<player type>/`.
 
 | file | base | features |
 |---|---|---|
-| `current.py` | exp_027 | bitboard_search, 8_pattern_weights, 8_active_patterns, rounded_weights, init_pattern_tables, depth6, state_eval_cache, incremental_pattern_keys, endgame_exact_search |
+| `current.py` | exp_038 | bitboard_search, 8_pattern_weights, 8_active_patterns, rounded_weights, depth6, state_eval_cache, incremental_pattern_keys, endgame_exact_search, init_48s_triangle_chunks, incremental_remaining_table_warmup |
 | `baselines/my_base.py` | base | pattern evaluation |
 | `baselines/my_book.py` | base | opening book |
 | `baselines/my_book_ab.py` | book | alpha-beta endgame search |
@@ -47,3 +47,12 @@ Game records are stored in `../generated_kihu/vs_<opponent>/<player type>/`.
 | `experiments/exp_027_8patterns_incremental_keys.py` | exp_026 | 8_active_patterns |
 | `experiments/exp_028_endgame12_incremental_keys.py` | exp_027 | endgame_exact_empty12 |
 | `experiments/exp_029_endgame13_incremental_keys.py` | exp_028 | endgame_exact_empty13 |
+| `experiments/exp_030_rounded_weights_5digits.py` | current | rounded_weights_5digits, init_time_check |
+| `experiments/exp_031_incremental_table_warmup.py` | current | lazy_init, incremental_pattern_table_warmup |
+| `experiments/exp_032_init5s_table_warmup.py` | exp_031 | init_edge_tables, incremental_remaining_table_warmup |
+| `experiments/exp_033_init3s_table_warmup.py` | exp_032 | shorter_init_edge_edge2x, incremental_remaining_table_warmup |
+| `experiments/exp_034_init3s_plus_triangle_warmup.py` | exp_033 | init_edge_edge2x_plus_triangle_chunks, incremental_remaining_table_warmup |
+| `experiments/exp_035_init_more_triangle_warmup.py` | exp_034 | init_more_triangle_chunks, incremental_remaining_table_warmup |
+| `experiments/exp_036_init_even_more_triangle_warmup.py` | exp_035 | init_even_more_triangle_chunks, incremental_remaining_table_warmup |
+| `experiments/exp_037_init45s_triangle_warmup.py` | exp_036 | init_45s_triangle_chunks, incremental_remaining_table_warmup |
+| `experiments/exp_038_init48s_triangle_warmup.py` | exp_037 | init_48s_triangle_chunks, incremental_remaining_table_warmup |

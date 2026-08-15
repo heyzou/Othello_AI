@@ -141,7 +141,7 @@ class MyPlayer(BasePlayer):
         "edge2X",
     )
     WARM_TABLE_CHUNK_SIZE = 512
-    INIT_WARM_TABLE_STEPS = 96
+    INIT_WARM_TABLE_STEPS = 24
     WARM_TABLE_STEPS_PER_MOVE = 12
     PATTERN_BIT_SPECS = None
     PATTERN_KEY_META = None

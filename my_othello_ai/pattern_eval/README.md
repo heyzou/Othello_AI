@@ -37,11 +37,17 @@ MYPLAYER_FILE = "../players/current.py"
 `1` を指定すると、黒番1局・白番1局を実行します。
 
 ```bash
-./run_pattern_eval.sh current.py 1
-./run_pattern_eval.sh baselines/my_book_ab.py 1
-./run_pattern_eval.sh experiments/exp_003_weight_order_search_hash.py 1
+./scripts/run_pattern_eval.sh current.py 1
+./scripts/run_pattern_eval.sh baselines/my_book_ab.py 1
+./scripts/run_pattern_eval.sh experiments/exp_003_weight_order_search_hash.py 1
 ```
 
 ファイル名が長くなりそうな実験は、`experiments/exp_XXX_short_name.py` に置き、詳細は `players/MANIFEST.md` に書いてください。
 `next_move_profile.txt` などの計測ログは、対応する `profiles/` 配下に出力されます。
 対戦棋譜は、対応する `generated_kihu/vs_*/` 配下に出力されます。
+
+Webシステムの `TA_Player_v2` と対戦を作る場合は、次を見てください。
+
+```text
+docs/WEB_TA_PLAYER_AUTOMATION.md
+```

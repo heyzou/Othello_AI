@@ -141,7 +141,6 @@ class MyPlayer(BasePlayer):
         "edge2X",
     )
     WARM_TABLE_CHUNK_SIZE = 512
-    INIT_WARM_TABLE_STEPS = 96
     WARM_TABLE_STEPS_PER_MOVE = 12
     PATTERN_BIT_SPECS = None
     PATTERN_KEY_META = None
@@ -735,7 +734,6 @@ class MyPlayer(BasePlayer):
         MyPlayer._pattern_bit_specs()
         MyPlayer._pattern_key_meta()
         MyPlayer._precompute_init_evaluation_tables()
-        MyPlayer._warm_init_evaluation_table_steps()
 
     def next_move(self, board: Board) -> Move:
         self._pattern_bit_specs()
@@ -1297,12 +1295,6 @@ class MyPlayer(BasePlayer):
     def _precompute_init_evaluation_tables(cls) -> None:
         for name in cls.INIT_PRECOMPUTED_PATTERN_NAMES:
             cls._pattern_value_table(name)
-
-    @classmethod
-    def _warm_init_evaluation_table_steps(cls) -> None:
-        for _ in range(cls.INIT_WARM_TABLE_STEPS):
-            if not cls._warm_evaluation_table_step():
-                return
 
     @classmethod
     def _warm_evaluation_table_steps(cls) -> None:

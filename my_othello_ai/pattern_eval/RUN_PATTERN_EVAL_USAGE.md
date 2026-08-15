@@ -3,13 +3,13 @@
 Run from `my_othello_ai/pattern_eval`:
 
 ```bash
-bash ./run_pattern_eval.sh current.py 1
+bash ./scripts/run_pattern_eval.sh current.py 1
 ```
 
 Run an experiment:
 
 ```bash
-bash ./run_pattern_eval.sh exp_010_bitboard.py 1
+bash ./scripts/run_pattern_eval.sh exp_010_bitboard.py 1
 ```
 
 The second argument is the number of games per side. `1` means one black game and one white game.
@@ -19,7 +19,7 @@ The second argument is the number of games per side. `1` means one black game an
 Use `-test` to disable the 2.0 second move timeout. This lets a slow `next_move()` keep running so you can see how long it actually takes.
 
 ```bash
-bash ./run_pattern_eval.sh -test exp_010_bitboard.py 1
+bash ./scripts/run_pattern_eval.sh -test exp_010_bitboard.py 1
 ```
 
 In normal mode, `OthelloGame` receives `move_timeout_seconds=2.0`.
