@@ -1,0 +1,24 @@
+{
+  "generated_at": "2026-08-15 12:00:40",
+  "myplayer_file": "players/current.py",
+  "opponent": "players/experiments/exp_030_rounded_weights_5digits.py",
+  "total_games": 1,
+  "saved_games": 1,
+  "random_opening_plies": 8,
+  "random_seed": 42,
+  "move_timeout_seconds": null,
+  "record_path": "generated_kihu/for_training/vs_exp_030_rounded_weights_5digits_10games/20260815_120009/records.txt",
+  "games": [
+    {
+      "black_score": 17,
+      "white_score": 47,
+      "winner": "white",
+      "game_index": 1,
+      "my_color": "black",
+      "record_text": "d3c5d6e7d7e3f8c7b4d2f4c6c4b5d1c3a4f3e2b3a3f2g3f1e6e8f7g8f5d8c2b6a6g6e1c1b1a1b2g1g2a2b8g5h5h6h7f6g4h4h3h1h2h8g7c8b7a8a7a5",
+      "completed": true,
+      "skip_reason": "",
+      "randomized_moves": 8
+    }
+  ]
+}

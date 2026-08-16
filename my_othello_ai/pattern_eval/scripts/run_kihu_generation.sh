@@ -39,4 +39,4 @@ if [[ "$TEST_MODE" == "1" ]]; then
   echo "TEST MODE: move timeout disabled for kihu generation."
 fi
 
-MYPLAYER_FILE="$PLAYER_FILE" TOTAL_GAMES="$TOTAL_GAMES" MOVE_TIMEOUT_SECONDS=none "$PYTHON_BIN" "$PATTERN_EVAL_DIR/kihu_generation/run_kihu_generation_notebook.py"
+MYPLAYER_FILE="$PLAYER_FILE" OPPONENT_PLAYER=AdvancedPlayer TOTAL_GAMES="$TOTAL_GAMES" MOVE_TIMEOUT_SECONDS=none "$PYTHON_BIN" "$PATTERN_EVAL_DIR/kihu_generation/run_kihu_generation_notebook.py"

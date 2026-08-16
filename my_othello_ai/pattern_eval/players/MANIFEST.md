@@ -56,3 +56,5 @@ Game records are stored in `../generated_kihu/vs_<opponent>/<player type>/`.
 | `experiments/exp_036_init_even_more_triangle_warmup.py` | exp_035 | init_even_more_triangle_chunks, incremental_remaining_table_warmup |
 | `experiments/exp_037_init45s_triangle_warmup.py` | exp_036 | init_45s_triangle_chunks, incremental_remaining_table_warmup |
 | `experiments/exp_038_init48s_triangle_warmup.py` | exp_037 | init_48s_triangle_chunks, incremental_remaining_table_warmup |
+| `experiments/exp_039_corner_x_penalty.py` | current | corner_empty_x_square_penalty, x_square_move_order_penalty |
+| `experiments/exp_040_depth7_fast_probcut.py` | current | depth7, larger_search_hash, stronger_probcut, root_late_move_reduction |

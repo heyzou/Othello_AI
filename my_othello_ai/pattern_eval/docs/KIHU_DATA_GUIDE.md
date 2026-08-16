@@ -234,6 +234,16 @@ cd /home/nakai/Othello_AI
 bash my_othello_ai/pattern_eval/scripts/run_kihu_generation.sh -test current.py 10
 ```
 
+相手を選んで棋譜生成する場合は、次を使う。
+第1引数が自分側Player、第2引数が相手、第3引数が局数。
+
+```bash
+cd /home/nakai/Othello_AI/my_othello_ai/pattern_eval
+bash scripts/run_kihu_vs_player.sh -test current.py AdvancedPlayer 10
+bash scripts/run_kihu_vs_player.sh -test current.py exp_030_rounded_weights_5digits.py 10
+bash scripts/run_kihu_vs_player.sh -test random_opening/current_random_r4.py exp_038_init48s_triangle_warmup.py 10
+```
+
 Webシステム上の `TA_Player_v2` と自動対戦を作る場合は、ログイン後の短時間トークンを環境変数に入れて実行する。
 
 ```bash

@@ -1,0 +1,24 @@
+{
+  "generated_at": "2026-08-15 11:21:45",
+  "myplayer_file": "/home/nakai/Othello_AI/my_othello_ai/pattern_eval/players/experiments/exp_038_init48s_triangle_warmup.py",
+  "opponent": "AdvancedPlayer",
+  "total_games": 1,
+  "saved_games": 1,
+  "random_opening_plies": 8,
+  "random_seed": 42,
+  "move_timeout_seconds": null,
+  "record_path": "generated_kihu/for_training/vs_AdvancedPlayer_10games/20260815_112114/records.txt",
+  "games": [
+    {
+      "black_score": 52,
+      "white_score": 12,
+      "winner": "black",
+      "game_index": 1,
+      "my_color": "black",
+      "record_text": "d3e3f4c3d6e6f3g3f5f6c4b4g6f7c2g5c5d2c6b3d1e2f2f1e1c1a3d7h5c7g4h3h4h6d8c8b5g2e8b7b6a6a4f8a8a5a7b8h1e7g1h2b1b2g8g7h7h8a2a1",
+      "completed": true,
+      "skip_reason": "",
+      "randomized_moves": 8
+    }
+  ]
+}

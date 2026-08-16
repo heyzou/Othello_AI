@@ -25,6 +25,8 @@ if [[ "$PLAYER_FILE" != */* ]]; then
     PLAYER_FILE="$PATTERN_EVAL_DIR/players/baselines/$PLAYER_FILE"
   elif [[ -f "$PATTERN_EVAL_DIR/players/experiments/$PLAYER_FILE" ]]; then
     PLAYER_FILE="$PATTERN_EVAL_DIR/players/experiments/$PLAYER_FILE"
+  elif find "$PATTERN_EVAL_DIR/players/experiments" -name "$PLAYER_FILE" -print -quit 2>/dev/null | grep -q .; then
+    PLAYER_FILE="$(find "$PATTERN_EVAL_DIR/players/experiments" -name "$PLAYER_FILE" -print -quit)"
   else
     case "$PLAYER_FILE" in
       my_book_ab_add_hash.py) PLAYER_FILE="$PATTERN_EVAL_DIR/players/experiments/exp_001_add_hash.py" ;;

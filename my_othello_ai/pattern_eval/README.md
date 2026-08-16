@@ -51,3 +51,10 @@ Webシステムの `TA_Player_v2` と対戦を作る場合は、次を見てく�
 ```text
 docs/WEB_TA_PLAYER_AUTOMATION.md
 ```
+
+棋譜生成で相手を選ぶ場合は次を使います。
+
+```bash
+./scripts/run_kihu_vs_player.sh -test current.py AdvancedPlayer 10
+./scripts/run_kihu_vs_player.sh -test current.py exp_030_rounded_weights_5digits.py 10
+```

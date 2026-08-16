@@ -1,135 +1,135 @@
 {
-  "generated_at": "2026-08-13 17:23:07",
+  "generated_at": "2026-08-16 10:56:00",
   "summaries": [
     {
       "label": "MyPlayer as BLACK vs AdvancedPlayer",
       "games": 1,
-      "wins": 0,
-      "losses": 1,
+      "wins": 1,
+      "losses": 0,
       "draws": 0,
-      "win_rate": 0.0,
-      "avg_my_score": 4.0,
-      "avg_opp_score": 6.0,
-      "avg_my_diff": -2.0,
-      "best_my_diff": -2,
-      "worst_my_diff": -2,
-      "elapsed_sec": 5.029999256134033,
-      "sec_per_game": 5.029999256134033,
+      "win_rate": 1.0,
+      "avg_my_score": 56.0,
+      "avg_opp_score": 8.0,
+      "avg_my_diff": 48.0,
+      "best_my_diff": 48,
+      "worst_my_diff": 48,
+      "elapsed_sec": 20.049253463745117,
+      "sec_per_game": 20.049253463745117,
       "slowest_move_overall": {
         "game_index": 1,
-        "turn_index": 3,
+        "turn_index": 21,
         "color": "black",
         "player": "MyPlayer",
-        "elapsed_sec": 0.6906519350013696,
+        "elapsed_sec": 1.7470114339957945,
         "move": [
-          2,
-          5
+          1,
+          4
         ],
-        "elapsed_ms": 690.6519350013696
+        "elapsed_ms": 1747.0114339957945
       }
     },
     {
       "label": "MyPlayer as WHITE vs AdvancedPlayer",
       "games": 1,
-      "wins": 0,
-      "losses": 1,
+      "wins": 1,
+      "losses": 0,
       "draws": 0,
-      "win_rate": 0.0,
-      "avg_my_score": 3.0,
-      "avg_opp_score": 14.0,
-      "avg_my_diff": -11.0,
-      "best_my_diff": -11,
-      "worst_my_diff": -11,
-      "elapsed_sec": 5.709167242050171,
-      "sec_per_game": 5.709167242050171,
+      "win_rate": 1.0,
+      "avg_my_score": 57.0,
+      "avg_opp_score": 7.0,
+      "avg_my_diff": 50.0,
+      "best_my_diff": 50,
+      "worst_my_diff": 50,
+      "elapsed_sec": 10.165812730789185,
+      "sec_per_game": 10.165812730789185,
       "slowest_move_overall": {
         "game_index": 1,
-        "turn_index": 12,
+        "turn_index": 32,
         "color": "white",
         "player": "MyPlayer",
-        "elapsed_sec": 1.6233452779706568,
+        "elapsed_sec": 1.2091671850066632,
         "move": [
-          5,
-          4
+          1,
+          6
         ],
-        "elapsed_ms": 1623.3452779706568
+        "elapsed_ms": 1209.1671850066632
       }
     }
   ],
   "total": {
     "games": 2,
-    "wins": 0,
-    "losses": 2,
+    "wins": 2,
+    "losses": 0,
     "draws": 0,
-    "win_rate": 0.0,
-    "avg_my_diff": -6.5,
-    "best_my_diff": -2,
-    "worst_my_diff": -11,
+    "win_rate": 1.0,
+    "avg_my_diff": 49.0,
+    "best_my_diff": 50,
+    "worst_my_diff": 48,
     "slowest_move_overall": {
       "game_index": 1,
-      "turn_index": 12,
-      "color": "white",
+      "turn_index": 21,
+      "color": "black",
       "player": "MyPlayer",
-      "elapsed_sec": 1.6233452779706568,
+      "elapsed_sec": 1.7470114339957945,
       "move": [
-        5,
+        1,
         4
       ],
-      "elapsed_ms": 1623.3452779706568
+      "elapsed_ms": 1747.0114339957945
     }
   },
   "records": {
     "black": [
       {
-        "outcome": "loss",
-        "black_score": 4,
-        "white_score": 6,
-        "diff_black": -2,
-        "my_score": 4,
-        "opp_score": 6,
-        "my_diff": -2,
+        "outcome": "win",
+        "black_score": 56,
+        "white_score": 8,
+        "diff_black": 48,
+        "my_score": 56,
+        "opp_score": 8,
+        "my_diff": 48,
         "game_index": 1,
-        "record_text": "d3e3f3c3c4g3",
-        "skip_reason": "BLACK player forfeited because next_move() exceeded 2 seconds.",
-        "completed": false,
+        "record_text": "d3e3f4c3f5f6e6f3c4c6d6c5b3a3g5b4g6d7g3f7e2e1c2c1g4h4h3h6h5h2f1g1d2d1f2g2b5a5f8e8a4e7h1g8a6a7b6c7b1b2d8c8b7b8a8h8a2a1g7h7",
+        "skip_reason": "",
+        "completed": true,
         "slowest_move": {
           "game_index": 1,
-          "turn_index": 3,
+          "turn_index": 21,
           "color": "black",
           "player": "MyPlayer",
-          "elapsed_sec": 0.6906519350013696,
+          "elapsed_sec": 1.7470114339957945,
           "move": [
-            2,
-            5
+            1,
+            4
           ],
-          "elapsed_ms": 690.6519350013696
+          "elapsed_ms": 1747.0114339957945
         }
       }
     ],
     "white": [
       {
-        "outcome": "loss",
-        "black_score": 14,
-        "white_score": 3,
-        "diff_black": 11,
-        "my_score": 3,
-        "opp_score": 14,
-        "my_diff": -11,
+        "outcome": "win",
+        "black_score": 7,
+        "white_score": 57,
+        "diff_black": -50,
+        "my_score": 57,
+        "opp_score": 7,
+        "my_diff": 50,
         "game_index": 1,
-        "record_text": "d3c5f6d2b5f4f3f5e3c4c3e6g5",
-        "skip_reason": "WHITE player forfeited because next_move() exceeded 2 seconds.",
-        "completed": false,
+        "record_text": "d3c5f6d2b5f4f3f5e3c4c3e6g5c2d1g6f7e8h6g4h4e2f1b4a3g3c1d6f8e7h3g2f2e1h1g1d8h2c6b3a4b6a6b2a1b1d7c8c7b8a2b7a8a7g8g7a5h8h7h5",
+        "skip_reason": "",
+        "completed": true,
         "slowest_move": {
           "game_index": 1,
-          "turn_index": 12,
+          "turn_index": 32,
           "color": "white",
           "player": "MyPlayer",
-          "elapsed_sec": 1.6233452779706568,
+          "elapsed_sec": 1.2091671850066632,
           "move": [
-            5,
-            4
+            1,
+            6
           ],
-          "elapsed_ms": 1623.3452779706568
+          "elapsed_ms": 1209.1671850066632
         }
       }
     ]

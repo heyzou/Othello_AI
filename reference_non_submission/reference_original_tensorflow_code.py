@@ -7,11 +7,25 @@
 
 from copy import deepcopy
 import tensorflow as tf
+
+# Enable GPU memory growth
+gpus = tf.config.list_physical_devices('GPU')
+if gpus:
+    try:
+        for gpu in gpus:
+            tf.config.experimental.set_memory_growth(gpu, True)
+        print(f"GPU is available and memory growth enabled: {len(gpus)} GPU(s) found.")
+    except RuntimeError as e:
+        print(f"GPU config error: {e}")
+else:
+    print("WARNING: No GPU detected by TensorFlow. Training will run on CPU.")
+
 from tensorflow.keras.layers import Add, Dense, Input, LeakyReLU, Concatenate
 from tensorflow.keras.models import Model
 from tensorflow.keras.callbacks import EarlyStopping
 import numpy as np
 from tqdm import trange, tqdm
+import glob
 from random import shuffle
 import subprocess
 import datetime
@@ -27,8 +41,9 @@ def digit(n, r):
 
 # 棋譜から盤面データを作る
 records = []
-for num in range(20):
-    with open('training_records/' + digit(num, 7) + '.txt', 'r') as f:
+txt_files = sorted(glob.glob('training_records/*.txt'))
+for file_path in txt_files:
+    with open(file_path, 'r') as f:
         records.extend(list(f.read().splitlines()))
 data = []
 evaluate_additional = subprocess.Popen('./evaluate.out'.split(), stdin=subprocess.PIPE, stdout=subprocess.PIPE)
@@ -137,7 +152,13 @@ pattern_idx = [
     corner_3x3_idx,
 ]
 pattern_count = len(pattern_idx)
-model_stem = 'model_' + str(pattern_count) + 'patterns'
+if len(txt_files) > 0:
+    first_file = txt_files[0].split('/')[-1].replace('.txt', '')
+    last_file = txt_files[-1].split('/')[-1].replace('.txt', '')
+    file_range = f"_records_{first_file}_to_{last_file}_total_{len(txt_files)}"
+else:
+    file_range = "_no_records"
+model_stem = 'model_' + str(pattern_count) + 'patterns' + file_range
 ln_in = sum([len(elem) for elem in pattern_idx]) + 1
 all_data = [[] for _ in range(ln_in)]
 all_labels = []
