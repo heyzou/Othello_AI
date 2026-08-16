@@ -1,3 +1,5 @@
+# Reference / Non-submission code
+import time
 class MyPlayer(BasePlayer):
     PATTERN_INDEXES = {
         "diagonal8": (
@@ -767,10 +769,82 @@ class MyPlayer(BasePlayer):
         MyPlayer._pattern_key_meta()
         MyPlayer._precompute_init_evaluation_tables()
         MyPlayer._warm_init_evaluation_table_steps()
+    PATTERN_KEYS_CACHE = {}
+    _accum_eval_time = 0.0
+    _accum_eval_hit_time = 0.0
+    _accum_eval_pattern_time = 0.0
+    _accum_eval_mobility_time = 0.0
+    _accum_eval_surround_time = 0.0
+    _accum_eval_add_mlp_time = 0.0
+    _accum_eval_cache_overhead = 0.0
+    _accum_search_movegen_time = 0.0
+    _accum_search_applymove_time = 0.0
+    _accum_search_moveorder_time = 0.0
+    _accum_search_tthash_time = 0.0
+
+    def _log_profile(self, total_time: float, is_book: bool, actual_turn: int) -> None:
+        total_ms = total_time * 1000
+        book_ms = self._t_book * 1000
+        search_ms = self._t_search * 1000
+        eval_ms = MyPlayer._accum_eval_time * 1000
+        other_search_ms = search_ms - eval_ms
+        
+        book_pct = (book_ms / total_ms) * 100 if total_ms > 0 else 0
+        eval_pct = (eval_ms / total_ms) * 100 if total_ms > 0 else 0
+        other_pct = (other_search_ms / total_ms) * 100 if total_ms > 0 else 0
+        
+        prefix = "[BOOK]  " if is_book else "[SEARCH]"
+        print(f"{prefix} Turn {actual_turn:2d} | Total: {total_ms:7.2f} ms | Book: {book_ms:6.2f} ms ({book_pct:5.1f}%) | Eval: {eval_ms:7.2f} ms ({eval_pct:5.1f}%) | Search(Other): {other_search_ms:7.2f} ms ({other_pct:5.1f}%)")
+        
+        if not is_book:
+            mgen_ms = MyPlayer._accum_search_movegen_time * 1000
+            app_ms = MyPlayer._accum_search_applymove_time * 1000
+            mord_ms = MyPlayer._accum_search_moveorder_time * 1000
+            tt_ms = MyPlayer._accum_search_tthash_time * 1000
+            ctrl_ms = max(0, other_search_ms - (mgen_ms + app_ms + mord_ms + tt_ms))
+            
+            mgen_pct = (mgen_ms / other_search_ms) * 100 if other_search_ms > 0 else 0
+            app_pct = (app_ms / other_search_ms) * 100 if other_search_ms > 0 else 0
+            mord_pct = (mord_ms / other_search_ms) * 100 if other_search_ms > 0 else 0
+            tt_pct = (tt_ms / other_search_ms) * 100 if other_search_ms > 0 else 0
+            ctrl_pct = (ctrl_ms / other_search_ms) * 100 if other_search_ms > 0 else 0
+            
+            print(f"         ├─ [Search Breakdown] MoveGen: {mgen_ms:7.2f} ms ({mgen_pct:5.1f}%) | ApplyMove: {app_ms:7.2f} ms ({app_pct:5.1f}%) | MoveOrder: {mord_ms:7.2f} ms ({mord_pct:5.1f}%) | TTHash: {tt_ms:7.2f} ms ({tt_pct:5.1f}%) | Control: {ctrl_ms:7.2f} ms ({ctrl_pct:5.1f}%)")
+            
+            pat_ms = MyPlayer._accum_eval_pattern_time * 1000
+            mob_ms = MyPlayer._accum_eval_mobility_time * 1000
+            sur_ms = MyPlayer._accum_eval_surround_time * 1000
+            add_ms = MyPlayer._accum_eval_add_mlp_time * 1000
+            hit_ms = MyPlayer._accum_eval_hit_time * 1000
+            
+            pat_pct = (pat_ms / eval_ms) * 100 if eval_ms > 0 else 0
+            mob_pct = (mob_ms / eval_ms) * 100 if eval_ms > 0 else 0
+            sur_pct = (sur_ms / eval_ms) * 100 if eval_ms > 0 else 0
+            add_pct = (add_ms / eval_ms) * 100 if eval_ms > 0 else 0
+            hit_pct = (hit_ms / eval_ms) * 100 if eval_ms > 0 else 0
+            
+            print(f"         └─ [Eval Breakdown]   Patterns: {pat_ms:7.2f} ms ({pat_pct:5.1f}%) | Mobility: {mob_ms:7.2f} ms ({mob_pct:5.1f}%) | Surround: {sur_ms:7.2f} ms ({sur_pct:5.1f}%) | AddMLP: {add_ms:7.2f} ms ({add_pct:5.1f}%) | CacheHit: {hit_ms:7.2f} ms ({hit_pct:5.1f}%)")
+
     def next_move(self, board: Board) -> Move:
+        start_total = time.perf_counter()
+        MyPlayer._accum_eval_time = 0.0
+        MyPlayer._accum_eval_hit_time = 0.0
+        MyPlayer._accum_eval_pattern_time = 0.0
+        MyPlayer._accum_eval_mobility_time = 0.0
+        MyPlayer._accum_eval_surround_time = 0.0
+        MyPlayer._accum_eval_add_mlp_time = 0.0
+        MyPlayer._accum_eval_cache_overhead = 0.0
+        MyPlayer._accum_search_movegen_time = 0.0
+        MyPlayer._accum_search_applymove_time = 0.0
+        MyPlayer._accum_search_moveorder_time = 0.0
+        MyPlayer._accum_search_tthash_time = 0.0
+        MyPlayer.PATTERN_KEYS_CACHE.clear()
+        self._t_book = 0.0
+        self._t_search = 0.0
 
         self._pattern_bit_specs()
-
+        MyPlayer.SEARCH_HASH_GET_COUNT = 0
+        MyPlayer.SEARCH_HASH_REG_COUNT = 0
         state = self._board_to_bits(board)
         actual_turn = (state[0] | state[1]).bit_count() - 3
         pattern_keys = self._pattern_keys_from_state(state)
@@ -778,11 +852,17 @@ class MyPlayer(BasePlayer):
         if not moves:
             return None
         MyPlayer._warm_evaluation_table_steps()
+
+        t0_book = time.perf_counter()
         book_move = self._book_move_bits(state)
+        self._t_book = time.perf_counter() - t0_book
 
         if book_move is not None and self._move_to_pos(book_move) in moves:
+            total_time = time.perf_counter() - start_total
+            self._log_profile(total_time, is_book=True, actual_turn=actual_turn)
             return book_move
 
+        t0_search = time.perf_counter()
 
         best_move = moves[0]
         best_score = float("-inf")
@@ -803,6 +883,9 @@ class MyPlayer(BasePlayer):
                     best_score = score
                     best_move = move_pos
                 alpha = max(alpha, best_score)
+            self._t_search = time.perf_counter() - t0_search
+            total_time = time.perf_counter() - start_total
+            self._log_profile(total_time, is_book=False, actual_turn=actual_turn)
             return self._pos_to_move(best_move)
 
         # 反復深化（Iterative Deepening: 深さ 1 から SEARCH_DEPTH - 1 まで段階的に探索）
@@ -839,6 +922,10 @@ class MyPlayer(BasePlayer):
 
             best_move = iter_best_move
             best_score = iter_best_score
+
+        self._t_search = time.perf_counter() - t0_search
+        total_time = time.perf_counter() - start_total
+        self._log_profile(total_time, is_book=False, actual_turn=actual_turn)
         return self._pos_to_move(best_move)
 
     def _move_number(self, board: Board) -> int:
@@ -857,7 +944,9 @@ class MyPlayer(BasePlayer):
 
 
     def _order_move_positions_by_weight(self, moves: tuple[int, ...] | list[int]) -> list[int]:
+        t0 = time.perf_counter()
         res = sorted(moves, key=lambda pos: self.ORDER_WEIGHTS[pos // 8][pos % 8], reverse=True)
+        MyPlayer._accum_search_moveorder_time += time.perf_counter() - t0
         return res
 
     def _endgame_move_gen_and_sort(self, state: tuple[int, int], color: Cell, next_color: Cell) -> list[tuple[int, tuple[int, int], int]]:
@@ -1050,9 +1139,29 @@ class MyPlayer(BasePlayer):
         alpha: float,
         beta: float,
     ) -> float | None:
+        t0 = time.perf_counter()
         entry = cls.SEARCH_HASH_TABLE[cls._search_hash_index(key)]
         if entry is None:
+            cls._accum_search_tthash_time += time.perf_counter() - t0
             return None
+        entry_key, lower, upper, entry_depth, best_move = entry
+        if entry_key != key or entry_depth < depth:
+            cls._accum_search_tthash_time += time.perf_counter() - t0
+            return None
+        if lower >= beta:
+            cls.SEARCH_HASH_GET_COUNT += 1
+            cls._accum_search_tthash_time += time.perf_counter() - t0
+            return lower
+        if upper <= alpha:
+            cls.SEARCH_HASH_GET_COUNT += 1
+            cls._accum_search_tthash_time += time.perf_counter() - t0
+            return upper
+        if lower == upper:
+            cls.SEARCH_HASH_GET_COUNT += 1
+            cls._accum_search_tthash_time += time.perf_counter() - t0
+            return lower
+        cls._accum_search_tthash_time += time.perf_counter() - t0
+        return None
         entry_key, lower, upper, entry_depth, best_move = entry
         if entry_key != key or entry_depth < depth:
             return None
@@ -1208,16 +1317,19 @@ class MyPlayer(BasePlayer):
         pattern_keys: tuple[int, ...] | None = None,
         surrounds: tuple[int, int] | None = None,
     ) -> float:
+        t_eval_start = time.perf_counter()
         cached = MyPlayer.EVAL_CACHE.get(state)
-        
         if cached is not None:
-
+            dt = time.perf_counter() - t_eval_start
+            MyPlayer._accum_eval_hit_time += dt
+            MyPlayer._accum_eval_time += dt
             return cached
 
         if pattern_keys is None:
             pattern_keys = self._pattern_keys_from_state(state)
         final_dense, final_bias = self._params()[2]
-        
+
+        t_pat_start = time.perf_counter()
         if MyPlayer._ensure_evaluate_patterns_tables():
             result = MyPlayer._evaluate_patterns_func_static(
                 pattern_keys,
@@ -1238,14 +1350,20 @@ class MyPlayer(BasePlayer):
                     else:
                         group_sum += pattern_table[key]
                 result += group_sum * final_dense[pattern_name_to_final_index[name]]
+        MyPlayer._accum_eval_pattern_time += time.perf_counter() - t_pat_start
+
+        t_add_start = time.perf_counter()
         add_key = self._additional_key_bits(state, surrounds)
         add_value = self._add_value(add_key)
         result += add_value * final_dense[len(self.PATTERN_SIZES)]
+        MyPlayer._accum_eval_add_mlp_time += time.perf_counter() - t_add_start
+
         cache = MyPlayer.EVAL_CACHE
         if len(cache) >= self.EVAL_CACHE_MAX_SIZE:
             cache.clear()
         cache[state] = result
 
+        MyPlayer._accum_eval_time += time.perf_counter() - t_eval_start
         return result
 
     @classmethod
@@ -1534,6 +1652,10 @@ class MyPlayer(BasePlayer):
         cls.EVALUATE_PATTERNS_TABLES = tuple(tables)
         return True
     def _pattern_keys_from_state(self, state: tuple[int, int]) -> tuple[int, ...]:
+        cached = MyPlayer.PATTERN_KEYS_CACHE.get(state)
+        if cached is not None:
+            return cached
+
         empty_keys, _, _ = MyPlayer._pattern_key_meta()
         keys = list(empty_keys)
         black_bits, white_bits = state
@@ -1550,17 +1672,27 @@ class MyPlayer(BasePlayer):
             MyPlayer.UPDATE_POS_WHITE_FUNCS_STATIC[bit.bit_length() - 1](keys)
             bits ^= bit
 
-        return tuple(keys)
+        res = tuple(keys)
+        if len(MyPlayer.PATTERN_KEYS_CACHE) >= 131072:
+            MyPlayer.PATTERN_KEYS_CACHE.clear()
+        MyPlayer.PATTERN_KEYS_CACHE[state] = res
+        return res
 
     def _additional_key_bits(self, state: tuple[int, int], surrounds: tuple[int, int] | None = None) -> int:
         cached = MyPlayer.ADDITIONAL_KEY_CACHE.get(state)
         if cached is not None:
             return cached
+
+        t_mob_start = time.perf_counter()
         mobility = self._mobility_diff_bits(state)
+        MyPlayer._accum_eval_mobility_time += time.perf_counter() - t_mob_start
+
+        t_sur_start = time.perf_counter()
         if surrounds is None:
             surround_black, surround_white = self._surround_counts_bits(state)
         else:
             surround_black, surround_white = surrounds
+        MyPlayer._accum_eval_surround_time += time.perf_counter() - t_sur_start
 
         mobility = max(-30, min(30, mobility))
         surround_black = max(0, min(50, surround_black))
@@ -1630,9 +1762,12 @@ class MyPlayer(BasePlayer):
         if cached is not None:
             return cached
 
+        t0 = time.perf_counter()
         moves = self._legal_moves_bits_uncached(state, color)
         self._legal_moves_cache_register(key, moves)
-        return tuple(moves)
+        res = tuple(moves)
+        MyPlayer._accum_search_movegen_time += time.perf_counter() - t0
+        return res
 
     def _legal_moves_bits_uncached(self, state: tuple[int, int], color: Cell) -> list[int]:
         legal_bits = self._legal_move_mask_bits(state, color)
@@ -1796,6 +1931,7 @@ class MyPlayer(BasePlayer):
         cls.LEGAL_MOVES_CACHE[key] = tuple(moves)
 
     def _apply_move_bits(self, state: tuple[int, int], pos: int, color: Cell) -> tuple[int, int]:
+        t0 = time.perf_counter()
         flips = self._flips_bits(state, pos, color)
         move_bit = 1 << pos
         black_bits, white_bits = state
@@ -1805,7 +1941,9 @@ class MyPlayer(BasePlayer):
         else:
             white_bits |= flips | move_bit
             black_bits &= ~flips
-        return black_bits, white_bits
+        res = (black_bits, white_bits)
+        MyPlayer._accum_search_applymove_time += time.perf_counter() - t0
+        return res
 
     def _apply_move_full(
         self,
@@ -1814,9 +1952,8 @@ class MyPlayer(BasePlayer):
         surrounds: tuple[int, int] | None,
         pos: int,
         color: Cell,
-    ) -> tuple[tuple[int, int], tuple[int, ...], tuple[int, int]]:
-        if pattern_keys is None:
-            pattern_keys = self._pattern_keys_from_state(state)
+    ) -> tuple[tuple[int, int], None, tuple[int, int]]:
+        t0 = time.perf_counter()
         if surrounds is None:
             surrounds = self._surround_counts_bits(state)
 
@@ -1830,22 +1967,9 @@ class MyPlayer(BasePlayer):
         else:
             next_state = ((black_bits & ~flips), (white_bits | flips | move_bit))
 
-        keys = list(pattern_keys)
-
-        bits = flips
-        if color == Cell.BLACK:
-            MyPlayer.UPDATE_POS_BLACK_FUNCS_STATIC[pos](keys)
-            while bits:
-                bit = bits & -bits
-                MyPlayer.UPDATE_FLIP_BLACK_FUNCS_STATIC[bit.bit_length() - 1](keys)
-                bits ^= bit
-        else:
-            MyPlayer.UPDATE_POS_WHITE_FUNCS_STATIC[pos](keys)
-            while bits:
-                bit = bits & -bits
-                MyPlayer.UPDATE_FLIP_WHITE_FUNCS_STATIC[bit.bit_length() - 1](keys)
-                bits ^= bit
-        return next_state, tuple(keys), next_surrounds
+        res = next_state, None, next_surrounds
+        MyPlayer._accum_search_applymove_time += time.perf_counter() - t0
+        return res
 
     def _flips_bits(self, state: tuple[int, int], pos: int, color: Cell) -> int:
         black_bits, white_bits = state
