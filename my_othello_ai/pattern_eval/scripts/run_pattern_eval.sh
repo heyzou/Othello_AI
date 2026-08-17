@@ -10,6 +10,12 @@ if [[ "${1:-}" == "-test" ]]; then
   shift
 fi
 
+PLAY_SIDE="both"
+if [[ "${1:-}" == "-side" ]]; then
+  PLAY_SIDE="$2"
+  shift 2
+fi
+
 PLAYER_FILE="${1:-current.py}"
 GAMES_PER_SIDE="${2:-100}"
 PYTHON_BIN="${PYTHON:-python}"
@@ -45,7 +51,7 @@ fi
 cd "$PATTERN_EVAL_DIR"
 if [[ "$TEST_MODE" == "1" ]]; then
   echo "TEST MODE: move timeout disabled; moves over 2.0 seconds will continue."
-  MYPLAYER_FILE="$PLAYER_FILE" GAMES_PER_SIDE="$GAMES_PER_SIDE" MOVE_TIMEOUT_SECONDS=none "$PYTHON_BIN" run_common_notebook.py
+  PLAY_SIDE="$PLAY_SIDE" MYPLAYER_FILE="$PLAYER_FILE" GAMES_PER_SIDE="$GAMES_PER_SIDE" MOVE_TIMEOUT_SECONDS=none "$PYTHON_BIN" run_common_notebook.py
 else
-  MYPLAYER_FILE="$PLAYER_FILE" GAMES_PER_SIDE="$GAMES_PER_SIDE" "$PYTHON_BIN" run_common_notebook.py
+  PLAY_SIDE="$PLAY_SIDE" MYPLAYER_FILE="$PLAYER_FILE" GAMES_PER_SIDE="$GAMES_PER_SIDE" "$PYTHON_BIN" run_common_notebook.py
 fi
