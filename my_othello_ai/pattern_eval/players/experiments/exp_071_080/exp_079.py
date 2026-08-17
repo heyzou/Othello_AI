@@ -691,15 +691,15 @@ class MyPlayer(BasePlayer):
     BOOK_CACHE = None
 
     BOARD_INDEXES = range(8)
-    SEARCH_DEPTH = 7
+    SEARCH_DEPTH = 8
     ENDGAME_EXACT_EMPTY = 12
     SIMPLE_ALPHA_BETA_DEPTH = 2
     PROBCUT_MIN_DEPTH = 3
     PROBCUT_MARGIN = 0.16
     PROBCUT_SHALLOW_DEPTHS = (0, 0, 0, 1, 2, 1, 2, 3, 4, 3, 4, 3, 4, 5, 6)
-    LEGAL_MOVES_CACHE_MAX_SIZE = 65536
-    EVAL_CACHE_MAX_SIZE = 262144
-    SEARCH_HASH_TABLE_SIZE = 131072
+    LEGAL_MOVES_CACHE_MAX_SIZE = 131072
+    EVAL_CACHE_MAX_SIZE = 524288
+    SEARCH_HASH_TABLE_SIZE = 524288
     SEARCH_HASH_MASK = SEARCH_HASH_TABLE_SIZE - 1
     FULL_MASK = (1 << 64) - 1
     NOT_A_FILE = 0xfefefefefefefefe
@@ -737,16 +737,32 @@ class MyPlayer(BasePlayer):
 
 
     PARAMS = None
+    _accum_eval_time = 0.0
+    _accum_eval_hit_time = 0.0
+    _accum_eval_pattern_time = 0.0
+    _accum_eval_mobility_time = 0.0
+    _accum_eval_surround_time = 0.0
+    _accum_eval_add_mlp_time = 0.0
+    _accum_search_movegen_time = 0.0
+    _accum_search_applymove_time = 0.0
+    _accum_search_moveorder_time = 0.0
+    _accum_search_tthash_time = 0.0
+
     PATTERN_CACHE = {}
     ADD_CACHE = {}
-    PATTERN_VALUE_TABLES = {}
+    PATTERN_VALUE_TABLES: dict[str, tuple[float, ...]] = {}
+    WHITE_PATTERN_VALUE_TABLES: dict[str, tuple[float, ...]] = {}
     PARTIAL_PATTERN_VALUE_TABLES = {}
+    PARTIAL_WHITE_PATTERN_VALUE_TABLES = {}
     PARTIAL_PATTERN_VALUE_INDEXES = {}
+    PARTIAL_WHITE_PATTERN_VALUE_INDEXES = {}
     ADD_VALUE_TABLE = None
     ADDITIONAL_KEY_CACHE = {}
+    WHITE_ADDITIONAL_KEY_CACHE = {}
     COMBINED_LEGAL_CACHE = {}
     LEGAL_MOVES_CACHE = {}
     EVAL_CACHE = {}
+    WHITE_EVAL_CACHE = {}
     EVAL_TABLE_WARM_INDEX = 0
     SEARCH_HASH_TABLE = [None] * SEARCH_HASH_TABLE_SIZE
     SEARCH_HASH_GET_COUNT = 0
@@ -759,14 +775,65 @@ class MyPlayer(BasePlayer):
     
     EVALUATE_PATTERNS_FUNC = None
     EVALUATE_PATTERNS_TABLES = None
+    WHITE_EVALUATE_PATTERNS_TABLES = None
     BOOK_CACHE = None
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         MyPlayer._pattern_bit_specs()
         MyPlayer._pattern_key_meta()
-        MyPlayer._precompute_init_evaluation_tables()
-        MyPlayer._warm_init_evaluation_table_steps()
+        if self.color == Cell.WHITE:
+            MyPlayer._precompute_init_evaluation_tables_white()
+            MyPlayer._warm_init_evaluation_table_steps_white()
+        else:
+            MyPlayer._precompute_init_evaluation_tables_black()
+            MyPlayer._warm_init_evaluation_table_steps_black()
+    def _log_profile(self, total_time: float, is_book: bool, actual_turn: int) -> None:
+        import time
+        total_ms = total_time * 1000
+        book_ms = getattr(self, '_t_book', 0.0) * 1000
+        search_ms = getattr(self, '_t_search', 0.0) * 1000
+        eval_ms = MyPlayer._accum_eval_time * 1000
+        other_search_ms = max(0, search_ms - eval_ms)
+        
+        book_pct = (book_ms / total_ms) * 100 if total_ms > 0 else 0
+        eval_pct = (eval_ms / total_ms) * 100 if total_ms > 0 else 0
+        other_pct = (other_search_ms / total_ms) * 100 if total_ms > 0 else 0
+        
+        prefix = "[BOOK]  " if is_book else "[SEARCH]"
+        
+        mgen_ms = MyPlayer._accum_search_movegen_time * 1000
+        app_ms = MyPlayer._accum_search_applymove_time * 1000
+        mord_ms = MyPlayer._accum_search_moveorder_time * 1000
+        tt_ms = MyPlayer._accum_search_tthash_time * 1000
+        ctrl_ms = max(0, other_search_ms - (mgen_ms + app_ms + mord_ms + tt_ms))
+        
+        mgen_pct = (mgen_ms / other_search_ms) * 100 if other_search_ms > 0 else 0
+        app_pct = (app_ms / other_search_ms) * 100 if other_search_ms > 0 else 0
+        mord_pct = (mord_ms / other_search_ms) * 100 if other_search_ms > 0 else 0
+        tt_pct = (tt_ms / other_search_ms) * 100 if other_search_ms > 0 else 0
+        ctrl_pct = (ctrl_ms / other_search_ms) * 100 if other_search_ms > 0 else 0
+        
+        pat_ms = MyPlayer._accum_eval_pattern_time * 1000
+        mob_ms = MyPlayer._accum_eval_mobility_time * 1000
+        sur_ms = MyPlayer._accum_eval_surround_time * 1000
+        add_ms = MyPlayer._accum_eval_add_mlp_time * 1000
+        hit_ms = MyPlayer._accum_eval_hit_time * 1000
+        
+        pat_pct = (pat_ms / eval_ms) * 100 if eval_ms > 0 else 0
+        mob_pct = (mob_ms / eval_ms) * 100 if eval_ms > 0 else 0
+        sur_pct = (sur_ms / eval_ms) * 100 if eval_ms > 0 else 0
+        add_pct = (add_ms / eval_ms) * 100 if eval_ms > 0 else 0
+        hit_pct = (hit_ms / eval_ms) * 100 if eval_ms > 0 else 0
+
+        print(f"Turn {actual_turn:2d} | My Move Time: {total_time:.3f} s")
+        
+        with open("076_profile.txt", "a", encoding="utf-8") as f:
+            f.write(f"{prefix} Turn {actual_turn:2d} | Total: {total_ms:7.2f} ms | Book: {book_ms:6.2f} ms ({book_pct:5.1f}%) | Eval: {eval_ms:7.2f} ms ({eval_pct:5.1f}%) | Search(Other): {other_search_ms:7.2f} ms ({other_pct:5.1f}%)\n")
+            if not is_book:
+                f.write(f"         ├─ [Search Breakdown] MoveGen: {mgen_ms:7.2f} ms ({mgen_pct:4.1f}%) | ApplyMove: {app_ms:7.2f} ms ({app_pct:4.1f}%) | MoveOrder: {mord_ms:7.2f} ms ({mord_pct:4.1f}%) | TTHash: {tt_ms:7.2f} ms ({tt_pct:4.1f}%) | Control: {ctrl_ms:7.2f} ms ({ctrl_pct:4.1f}%)\n")
+                f.write(f"         ├─ [Eval Breakdown]   Patterns: {pat_ms:7.2f} ms ({pat_pct:4.1f}%) | Mobility: {mob_ms:7.2f} ms ({mob_pct:4.1f}%) | Surround: {sur_ms:7.2f} ms ({sur_pct:4.1f}%) | AddMLP: {add_ms:7.2f} ms ({add_pct:4.1f}%) | CacheHit: {hit_ms:7.2f} ms ({hit_pct:4.1f}%)\n")
+
     def next_move(self, board: Board) -> Move:
 
         self._pattern_bit_specs()
@@ -777,10 +844,16 @@ class MyPlayer(BasePlayer):
         moves = self._legal_moves_bits(state, self.color)
         if not moves:
             return None
-        MyPlayer._warm_evaluation_table_steps(actual_turn)
+            
+        if self.color == Cell.WHITE:
+            MyPlayer._warm_evaluation_table_steps_white(actual_turn)
+        else:
+            MyPlayer._warm_evaluation_table_steps_black(actual_turn)
         book_move = self._book_move_bits(state)
 
         if book_move is not None and self._move_to_pos(book_move) in moves:
+            self._t_book = time.perf_counter() - t_start_all
+            self._log_profile(time.perf_counter() - t_start_all, True, actual_turn)
             return book_move
 
 
@@ -839,6 +912,10 @@ class MyPlayer(BasePlayer):
 
             best_move = iter_best_move
             best_score = iter_best_score
+        
+        import time
+        self._t_search = time.perf_counter() - t_start_all
+        self._log_profile(self._t_search, False, actual_turn)
         return self._pos_to_move(best_move)
 
     def _move_number(self, board: Board) -> int:
@@ -1003,8 +1080,10 @@ class MyPlayer(BasePlayer):
             
             # --- LMR (Late Move Reductions) ---
             reduction = 0
-            if depth >= 3 and index >= 3:
+            if depth >= 3 and index >= 2:
                 reduction = 1
+                if depth >= 4 and index >= 6:
+                    reduction = 2
                 
             # 1手目は通常窓、2手目以降は狭い窓で先に読む。
             score = -self._negascout(
@@ -1206,31 +1285,39 @@ class MyPlayer(BasePlayer):
         pattern_keys: tuple[int, ...] | None = None,
         surrounds: tuple[int, int] | None = None,
     ) -> float:
-        score = self._evaluate_black_perspective_bits(state, pattern_keys, surrounds)
+        import time
+        t0 = time.perf_counter()
         if color == Cell.BLACK:
-            return score
-        return -score
+            res = self._evaluate_black_perspective_bits(state, pattern_keys, surrounds, is_white=False)
+        else:
+            res = self._evaluate_black_perspective_bits(state, pattern_keys, surrounds, is_white=True)
+        MyPlayer._accum_eval_time += time.perf_counter() - t0
+        return res
 
     def _evaluate_black_perspective_bits(
         self,
         state: tuple[int, int],
         pattern_keys: tuple[int, ...] | None = None,
         surrounds: tuple[int, int] | None = None,
+        is_white: bool = False,
     ) -> float:
-        cached = MyPlayer.EVAL_CACHE.get(state)
+        cache = MyPlayer.WHITE_EVAL_CACHE if is_white else MyPlayer.EVAL_CACHE
+        cached = cache.get(state)
         
         if cached is not None:
-
             return cached
 
         if pattern_keys is None:
             pattern_keys = self._pattern_keys_from_state(state)
         final_dense, final_bias = self._params()[2]
         
-        if MyPlayer._ensure_evaluate_patterns_tables():
+        ready = MyPlayer._ensure_evaluate_patterns_tables_white() if is_white else MyPlayer._ensure_evaluate_patterns_tables_black()
+        
+        if ready:
+            tables = MyPlayer.WHITE_EVALUATE_PATTERNS_TABLES if is_white else MyPlayer.EVALUATE_PATTERNS_TABLES
             result = MyPlayer._evaluate_patterns_func_static(
                 pattern_keys,
-                MyPlayer.EVALUATE_PATTERNS_TABLES,
+                tables,
                 final_bias
             )
         else:
@@ -1239,18 +1326,33 @@ class MyPlayer(BasePlayer):
             result = final_bias
             for name, start, end in group_infos:
                 group_sum = 0.0
-                pattern_table = MyPlayer.PATTERN_VALUE_TABLES.get(name)
+                pattern_table = MyPlayer.WHITE_PATTERN_VALUE_TABLES.get(name) if is_white else MyPlayer.PATTERN_VALUE_TABLES.get(name)
                 for index in range(start, end):
                     key = pattern_keys[index]
                     if pattern_table is None:
-                        group_sum += MyPlayer._compute_pattern_value(name, key)
+                        # Fallback for keys not even computed yet
+                        if is_white:
+                            size = MyPlayer.PATTERN_SIZES[name]
+                            inv = 0
+                            mult = 1
+                            temp_k = key
+                            for _ in range(size):
+                                d = temp_k % 3
+                                temp_k //= 3
+                                if d == 0: inv += mult
+                                elif d == 2: inv += 2 * mult
+                                mult *= 3
+                            group_sum += MyPlayer._compute_pattern_value(name, inv)
+                        else:
+                            group_sum += MyPlayer._compute_pattern_value(name, key)
                     else:
                         group_sum += pattern_table[key]
                 result += group_sum * final_dense[pattern_name_to_final_index[name]]
-        add_key = self._additional_key_bits(state, surrounds)
+        
+        add_key = self._additional_key_bits(state, surrounds, is_white)
         add_value = self._add_value(add_key)
         result += add_value * final_dense[len(self.PATTERN_SIZES)]
-        cache = MyPlayer.EVAL_CACHE
+        
         if len(cache) >= self.EVAL_CACHE_MAX_SIZE:
             cache.clear()
         cache[state] = result
@@ -1406,38 +1508,59 @@ class MyPlayer(BasePlayer):
         return result
 
     @classmethod
-    def _precompute_evaluation_tables(cls) -> None:
-        for name in cls.PRECOMPUTED_PATTERN_NAMES:
-            cls._pattern_value_table(name)
-
-    @classmethod
-    def _precompute_init_evaluation_tables(cls) -> None:
+    def _precompute_init_evaluation_tables_black(cls) -> None:
         for name in cls.INIT_PRECOMPUTED_PATTERN_NAMES:
-            cls._pattern_value_table(name)
+            cls._pattern_value_table_black(name)
 
     @classmethod
-    def _warm_init_evaluation_table_steps(cls) -> None:
+    def _precompute_init_evaluation_tables_white(cls) -> None:
+        for name in cls.INIT_PRECOMPUTED_PATTERN_NAMES:
+            cls._pattern_value_table_white(name)
+
+    @classmethod
+    def _warm_init_evaluation_table_steps_black(cls) -> None:
         for _ in range(cls.INIT_WARM_TABLE_STEPS):
-            if not cls._warm_evaluation_table_step():
+            if not cls._warm_evaluation_table_step_black():
                 return
 
     @classmethod
-    def _warm_evaluation_table_steps(cls, actual_turn: int) -> None:
+    def _warm_init_evaluation_table_steps_white(cls) -> None:
+        for _ in range(cls.INIT_WARM_TABLE_STEPS):
+            if not cls._warm_evaluation_table_step_white():
+                return
+
+    @classmethod
+    def _warm_evaluation_table_steps_black(cls, actual_turn: int) -> None:
         steps = max(10, 40 - actual_turn * 2)
         for _ in range(steps):
-            if not cls._warm_evaluation_table_step():
+            if not cls._warm_evaluation_table_step_black():
                 return
 
     @classmethod
-    def _warm_evaluation_table_step(cls) -> bool:
+    def _warm_evaluation_table_steps_white(cls, actual_turn: int) -> None:
+        steps = max(10, 40 - actual_turn * 2)
+        for _ in range(steps):
+            if not cls._warm_evaluation_table_step_white():
+                return
+
+    @classmethod
+    def _warm_evaluation_table_step_black(cls) -> bool:
         for name in cls.WARM_PATTERN_NAMES:
             if name not in cls.PATTERN_VALUE_TABLES:
-                cls._warm_pattern_value_table_chunk(name)
+                cls._warm_pattern_value_table_chunk_black(name)
                 return True
         return False
 
     @classmethod
-    def _warm_pattern_value_table_chunk(cls, name: str) -> None:
+    def _warm_evaluation_table_step_white(cls) -> bool:
+        for name in cls.WARM_PATTERN_NAMES:
+            if name not in cls.WHITE_PATTERN_VALUE_TABLES:
+                cls._warm_pattern_value_table_chunk_white(name)
+                return True
+        return False
+
+    @classmethod
+    def _warm_pattern_value_table_chunk_black(cls, name: str) -> None:
         size = cls.PATTERN_SIZES[name]
         total = 3 ** size
         partial = cls.PARTIAL_PATTERN_VALUE_TABLES.get(name)
@@ -1458,6 +1581,99 @@ class MyPlayer(BasePlayer):
         else:
             cls.PARTIAL_PATTERN_VALUE_INDEXES[name] = end
 
+    @classmethod
+    def _warm_pattern_value_table_chunk_white(cls, name: str) -> None:
+        size = cls.PATTERN_SIZES[name]
+        total = 3 ** size
+        partial = cls.PARTIAL_WHITE_PATTERN_VALUE_TABLES.get(name)
+        if partial is None:
+            partial = [None] * total
+            cls.PARTIAL_WHITE_PATTERN_VALUE_TABLES[name] = partial
+
+        start = cls.PARTIAL_WHITE_PATTERN_VALUE_INDEXES.get(name, 0)
+        end = min(total, start + cls.WARM_TABLE_CHUNK_SIZE)
+        for key in range(start, end):
+            inv = 0
+            mult = 1
+            temp_k = key
+            for _ in range(size):
+                d = temp_k % 3
+                temp_k //= 3
+                if d == 0: inv += mult
+                elif d == 2: inv += 2 * mult
+                mult *= 3
+            partial[key] = cls._compute_pattern_value(name, inv)
+
+        if end >= total:
+            cls.WHITE_PATTERN_VALUE_TABLES[name] = tuple(partial)
+            cls.PARTIAL_WHITE_PATTERN_VALUE_TABLES.pop(name, None)
+            cls.PARTIAL_WHITE_PATTERN_VALUE_INDEXES.pop(name, None)
+            cls.PATTERN_CACHE = {}
+        else:
+            cls.PARTIAL_WHITE_PATTERN_VALUE_INDEXES[name] = end
+
+    @classmethod
+    def _pattern_value_table_black(cls, name: str):
+        cached = cls.PATTERN_VALUE_TABLES.get(name)
+        if cached is not None:
+            return cached
+
+        size = cls.PATTERN_SIZES[name]
+        partial = cls.PARTIAL_PATTERN_VALUE_TABLES.get(name)
+        if partial is None:
+            table = tuple(cls._compute_pattern_value(name, key) for key in range(3 ** size))
+        else:
+            for key in range(3 ** size):
+                if partial[key] is None:
+                    partial[key] = cls._compute_pattern_value(name, key)
+            table = tuple(partial)
+            cls.PARTIAL_PATTERN_VALUE_TABLES.pop(name, None)
+            cls.PARTIAL_PATTERN_VALUE_INDEXES.pop(name, None)
+        cls.PATTERN_VALUE_TABLES[name] = table
+        cls.PATTERN_CACHE = {}
+        return table
+
+    @classmethod
+    def _pattern_value_table_white(cls, name: str):
+        cached = cls.WHITE_PATTERN_VALUE_TABLES.get(name)
+        if cached is not None:
+            return cached
+
+        size = cls.PATTERN_SIZES[name]
+        partial = cls.PARTIAL_WHITE_PATTERN_VALUE_TABLES.get(name)
+        if partial is None:
+            table = [0.0] * (3 ** size)
+            for key in range(3 ** size):
+                inv = 0
+                mult = 1
+                temp_k = key
+                for _ in range(size):
+                    d = temp_k % 3
+                    temp_k //= 3
+                    if d == 0: inv += mult
+                    elif d == 2: inv += 2 * mult
+                    mult *= 3
+                table[key] = cls._compute_pattern_value(name, inv)
+            table = tuple(table)
+        else:
+            for key in range(3 ** size):
+                if partial[key] is None:
+                    inv = 0
+                    mult = 1
+                    temp_k = key
+                    for _ in range(size):
+                        d = temp_k % 3
+                        temp_k //= 3
+                        if d == 0: inv += mult
+                        elif d == 2: inv += 2 * mult
+                        mult *= 3
+                    partial[key] = cls._compute_pattern_value(name, inv)
+            table = tuple(partial)
+            cls.PARTIAL_WHITE_PATTERN_VALUE_TABLES.pop(name, None)
+            cls.PARTIAL_WHITE_PATTERN_VALUE_INDEXES.pop(name, None)
+        cls.WHITE_PATTERN_VALUE_TABLES[name] = table
+        cls.PATTERN_CACHE = {}
+        return table
     @staticmethod
     def _leaky_relu(value: float) -> float:
         if value >= 0.0:
@@ -1518,7 +1734,7 @@ class MyPlayer(BasePlayer):
         return cls._pattern_key_meta()[2]
 
     @classmethod
-    def _ensure_evaluate_patterns_tables(cls):
+    def _ensure_evaluate_patterns_tables_black(cls):
         if cls.EVALUATE_PATTERNS_TABLES is not None:
             return True
             
@@ -1527,21 +1743,34 @@ class MyPlayer(BasePlayer):
                 return False
                 
         final_dense, final_bias = cls._params()[2]
-        group_infos = cls._pattern_key_group_infos()
         
         tables = []
-        name_to_table_idx = {}
         for name in cls.ACTIVE_PATTERN_NAMES:
-            table_idx = len(tables)
-            name_to_table_idx[name] = table_idx
-            
             original_table = cls.PATTERN_VALUE_TABLES[name]
             weight = final_dense[cls._pattern_name_to_final_index()[name]]
-            
-            multiplied_table = tuple(val * weight for val in original_table)
-            tables.append(multiplied_table)
+            tables.append(tuple(val * weight for val in original_table))
             
         cls.EVALUATE_PATTERNS_TABLES = tuple(tables)
+        return True
+
+    @classmethod
+    def _ensure_evaluate_patterns_tables_white(cls):
+        if cls.WHITE_EVALUATE_PATTERNS_TABLES is not None:
+            return True
+            
+        for name in cls.ACTIVE_PATTERN_NAMES:
+            if name not in cls.WHITE_PATTERN_VALUE_TABLES:
+                return False
+                
+        final_dense, final_bias = cls._params()[2]
+        
+        tables = []
+        for name in cls.ACTIVE_PATTERN_NAMES:
+            original_table = cls.WHITE_PATTERN_VALUE_TABLES[name]
+            weight = final_dense[cls._pattern_name_to_final_index()[name]]
+            tables.append(tuple(val * weight for val in original_table))
+            
+        cls.WHITE_EVALUATE_PATTERNS_TABLES = tuple(tables)
         return True
     def _pattern_keys_from_state(self, state: tuple[int, int]) -> tuple[int, ...]:
         empty_keys, _, _ = MyPlayer._pattern_key_meta()
@@ -1562,8 +1791,9 @@ class MyPlayer(BasePlayer):
 
         return tuple(keys)
 
-    def _additional_key_bits(self, state: tuple[int, int], surrounds: tuple[int, int] | None = None) -> int:
-        cached = MyPlayer.ADDITIONAL_KEY_CACHE.get(state)
+    def _additional_key_bits(self, state: tuple[int, int], surrounds: tuple[int, int] | None = None, is_white: bool = False) -> int:
+        cache = MyPlayer.WHITE_ADDITIONAL_KEY_CACHE if is_white else MyPlayer.ADDITIONAL_KEY_CACHE
+        cached = cache.get(state)
         if cached is not None:
             return cached
         mobility = self._mobility_diff_bits(state)
@@ -1572,11 +1802,15 @@ class MyPlayer(BasePlayer):
         else:
             surround_black, surround_white = surrounds
 
+        if is_white:
+            mobility = -mobility
+            surround_black, surround_white = surround_white, surround_black
+
         mobility = max(-30, min(30, mobility))
         surround_black = max(0, min(50, surround_black))
         surround_white = max(0, min(50, surround_white))
         result = ((mobility + 30) * 51 + surround_black) * 51 + surround_white
-        MyPlayer.ADDITIONAL_KEY_CACHE[state] = result
+        cache[state] = result
         return result
 
     def _mobility_diff_bits(self, state: tuple[int, int]) -> int:

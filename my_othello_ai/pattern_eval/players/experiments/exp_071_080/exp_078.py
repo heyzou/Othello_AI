@@ -697,9 +697,9 @@ class MyPlayer(BasePlayer):
     PROBCUT_MIN_DEPTH = 3
     PROBCUT_MARGIN = 0.16
     PROBCUT_SHALLOW_DEPTHS = (0, 0, 0, 1, 2, 1, 2, 3, 4, 3, 4, 3, 4, 5, 6)
-    LEGAL_MOVES_CACHE_MAX_SIZE = 65536
-    EVAL_CACHE_MAX_SIZE = 262144
-    SEARCH_HASH_TABLE_SIZE = 131072
+    LEGAL_MOVES_CACHE_MAX_SIZE = 131072
+    EVAL_CACHE_MAX_SIZE = 524288
+    SEARCH_HASH_TABLE_SIZE = 524288
     SEARCH_HASH_MASK = SEARCH_HASH_TABLE_SIZE - 1
     FULL_MASK = (1 << 64) - 1
     NOT_A_FILE = 0xfefefefefefefefe
@@ -1003,8 +1003,10 @@ class MyPlayer(BasePlayer):
             
             # --- LMR (Late Move Reductions) ---
             reduction = 0
-            if depth >= 3 and index >= 3:
+            if depth >= 3 and index >= 2:
                 reduction = 1
+                if depth >= 4 and index >= 6:
+                    reduction = 2
                 
             # 1手目は通常窓、2手目以降は狭い窓で先に読む。
             score = -self._negascout(
@@ -1206,10 +1208,15 @@ class MyPlayer(BasePlayer):
         pattern_keys: tuple[int, ...] | None = None,
         surrounds: tuple[int, int] | None = None,
     ) -> float:
-        score = self._evaluate_black_perspective_bits(state, pattern_keys, surrounds)
         if color == Cell.BLACK:
-            return score
-        return -score
+            return self._evaluate_black_perspective_bits(state, pattern_keys, surrounds)
+            
+        # 実行時盤面反転 (Runtime Swapping)
+        # 白黒を反転させた仮想の盤面を作成
+        inverted_state = (state[1], state[0])
+        # 反転させた盤面を「黒」として評価させることで、元の盤面での「白」の有利度を正確に測る
+        # 反転したため、元のpattern_keys等は使えずNoneを渡して再計算させる（重い処理）
+        return self._evaluate_black_perspective_bits(inverted_state, None, None)
 
     def _evaluate_black_perspective_bits(
         self,
