@@ -691,15 +691,15 @@ class MyPlayer(BasePlayer):
     BOOK_CACHE = None
 
     BOARD_INDEXES = range(8)
-    SEARCH_DEPTH = 7
-    ENDGAME_EXACT_EMPTY = 13
+    SEARCH_DEPTH = 8
+    ENDGAME_EXACT_EMPTY = 12
     SIMPLE_ALPHA_BETA_DEPTH = 2
     PROBCUT_MIN_DEPTH = 3
     PROBCUT_MARGIN = 0.16
     PROBCUT_SHALLOW_DEPTHS = (0, 0, 0, 1, 2, 1, 2, 3, 4, 3, 4, 3, 4, 5, 6)
-    LEGAL_MOVES_CACHE_MAX_SIZE = 65536
-    EVAL_CACHE_MAX_SIZE = 262144
-    SEARCH_HASH_TABLE_SIZE = 131072
+    LEGAL_MOVES_CACHE_MAX_SIZE = 131072
+    EVAL_CACHE_MAX_SIZE = 524288
+    SEARCH_HASH_TABLE_SIZE = 524288
     SEARCH_HASH_MASK = SEARCH_HASH_TABLE_SIZE - 1
     FULL_MASK = (1 << 64) - 1
     NOT_A_FILE = 0xfefefefefefefefe
@@ -1003,8 +1003,10 @@ class MyPlayer(BasePlayer):
             
             # --- LMR (Late Move Reductions) ---
             reduction = 0
-            if depth >= 3 and index >= 3:
+            if depth >= 3 and index >= 2:
                 reduction = 1
+                if depth >= 4 and index >= 6:
+                    reduction = 2
                 
             # 1手目は通常窓、2手目以降は狭い窓で先に読む。
             score = -self._negascout(
