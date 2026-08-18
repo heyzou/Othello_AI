@@ -1,0 +1,306 @@
+742c742,743
+<     PATTERN_VALUE_TABLES = {}
+---
+>     PATTERN_VALUE_TABLES: dict[str, tuple[float, ...]] = {}
+>     WHITE_PATTERN_VALUE_TABLES: dict[str, tuple[float, ...]] = {}
+743a745
+>     PARTIAL_WHITE_PATTERN_VALUE_TABLES = {}
+744a747
+>     PARTIAL_WHITE_PATTERN_VALUE_INDEXES = {}
+746a750
+>     WHITE_ADDITIONAL_KEY_CACHE = {}
+749a754
+>     WHITE_EVAL_CACHE = {}
+761a767
+>     WHITE_EVALUATE_PATTERNS_TABLES = None
+768,769c774,779
+<         MyPlayer._precompute_init_evaluation_tables()
+<         MyPlayer._warm_init_evaluation_table_steps()
+---
+>         if self.color == Cell.WHITE:
+>             MyPlayer._precompute_init_evaluation_tables_white()
+>             MyPlayer._warm_init_evaluation_table_steps_white()
+>         else:
+>             MyPlayer._precompute_init_evaluation_tables_black()
+>             MyPlayer._warm_init_evaluation_table_steps_black()
+780c790,794
+<         MyPlayer._warm_evaluation_table_steps(actual_turn)
+---
+>             
+>         if self.color == Cell.WHITE:
+>             MyPlayer._warm_evaluation_table_steps_white(actual_turn)
+>         else:
+>             MyPlayer._warm_evaluation_table_steps_black(actual_turn)
+1211d1224
+<         score = self._evaluate_black_perspective_bits(state, pattern_keys, surrounds)
+1213,1214c1226,1227
+<             return score
+<         return -score
+---
+>             return self._evaluate_black_perspective_bits(state, pattern_keys, surrounds, is_white=False)
+>         return self._evaluate_black_perspective_bits(state, pattern_keys, surrounds, is_white=True)
+1220a1234
+>         is_white: bool = False,
+1222c1236,1237
+<         cached = MyPlayer.EVAL_CACHE.get(state)
+---
+>         cache = MyPlayer.WHITE_EVAL_CACHE if is_white else MyPlayer.EVAL_CACHE
+>         cached = cache.get(state)
+1225d1239
+< 
+1232c1246,1249
+<         if MyPlayer._ensure_evaluate_patterns_tables():
+---
+>         ready = MyPlayer._ensure_evaluate_patterns_tables_white() if is_white else MyPlayer._ensure_evaluate_patterns_tables_black()
+>         
+>         if ready:
+>             tables = MyPlayer.WHITE_EVALUATE_PATTERNS_TABLES if is_white else MyPlayer.EVALUATE_PATTERNS_TABLES
+1235c1252
+<                 MyPlayer.EVALUATE_PATTERNS_TABLES,
+---
+>                 tables,
+1244c1261
+<                 pattern_table = MyPlayer.PATTERN_VALUE_TABLES.get(name)
+---
+>                 pattern_table = MyPlayer.WHITE_PATTERN_VALUE_TABLES.get(name) if is_white else MyPlayer.PATTERN_VALUE_TABLES.get(name)
+1248c1265,1279
+<                         group_sum += MyPlayer._compute_pattern_value(name, key)
+---
+>                         # Fallback for keys not even computed yet
+>                         if is_white:
+>                             size = MyPlayer.PATTERN_SIZES[name]
+>                             inv = 0
+>                             mult = 1
+>                             temp_k = key
+>                             for _ in range(size):
+>                                 d = temp_k % 3
+>                                 temp_k //= 3
+>                                 if d == 0: inv += mult
+>                                 elif d == 2: inv += 2 * mult
+>                                 mult *= 3
+>                             group_sum += MyPlayer._compute_pattern_value(name, inv)
+>                         else:
+>                             group_sum += MyPlayer._compute_pattern_value(name, key)
+1252c1283,1284
+<         add_key = self._additional_key_bits(state, surrounds)
+---
+>         
+>         add_key = self._additional_key_bits(state, surrounds, is_white)
+1255c1287
+<         cache = MyPlayer.EVAL_CACHE
+---
+>         
+1411,1413c1443,1445
+<     def _precompute_evaluation_tables(cls) -> None:
+<         for name in cls.PRECOMPUTED_PATTERN_NAMES:
+<             cls._pattern_value_table(name)
+---
+>     def _precompute_init_evaluation_tables_black(cls) -> None:
+>         for name in cls.INIT_PRECOMPUTED_PATTERN_NAMES:
+>             cls._pattern_value_table_black(name)
+1416c1448
+<     def _precompute_init_evaluation_tables(cls) -> None:
+---
+>     def _precompute_init_evaluation_tables_white(cls) -> None:
+1418c1450,1456
+<             cls._pattern_value_table(name)
+---
+>             cls._pattern_value_table_white(name)
+> 
+>     @classmethod
+>     def _warm_init_evaluation_table_steps_black(cls) -> None:
+>         for _ in range(cls.INIT_WARM_TABLE_STEPS):
+>             if not cls._warm_evaluation_table_step_black():
+>                 return
+1421c1459
+<     def _warm_init_evaluation_table_steps(cls) -> None:
+---
+>     def _warm_init_evaluation_table_steps_white(cls) -> None:
+1423c1461
+<             if not cls._warm_evaluation_table_step():
+---
+>             if not cls._warm_evaluation_table_step_white():
+1427c1465
+<     def _warm_evaluation_table_steps(cls, actual_turn: int) -> None:
+---
+>     def _warm_evaluation_table_steps_black(cls, actual_turn: int) -> None:
+1430c1468
+<             if not cls._warm_evaluation_table_step():
+---
+>             if not cls._warm_evaluation_table_step_black():
+1434c1472,1479
+<     def _warm_evaluation_table_step(cls) -> bool:
+---
+>     def _warm_evaluation_table_steps_white(cls, actual_turn: int) -> None:
+>         steps = max(10, 40 - actual_turn * 2)
+>         for _ in range(steps):
+>             if not cls._warm_evaluation_table_step_white():
+>                 return
+> 
+>     @classmethod
+>     def _warm_evaluation_table_step_black(cls) -> bool:
+1437c1482,1490
+<                 cls._warm_pattern_value_table_chunk(name)
+---
+>                 cls._warm_pattern_value_table_chunk_black(name)
+>                 return True
+>         return False
+> 
+>     @classmethod
+>     def _warm_evaluation_table_step_white(cls) -> bool:
+>         for name in cls.WARM_PATTERN_NAMES:
+>             if name not in cls.WHITE_PATTERN_VALUE_TABLES:
+>                 cls._warm_pattern_value_table_chunk_white(name)
+1442c1495
+<     def _warm_pattern_value_table_chunk(cls, name: str) -> None:
+---
+>     def _warm_pattern_value_table_chunk_black(cls, name: str) -> None:
+1462a1516,1608
+>     @classmethod
+>     def _warm_pattern_value_table_chunk_white(cls, name: str) -> None:
+>         size = cls.PATTERN_SIZES[name]
+>         total = 3 ** size
+>         partial = cls.PARTIAL_WHITE_PATTERN_VALUE_TABLES.get(name)
+>         if partial is None:
+>             partial = [None] * total
+>             cls.PARTIAL_WHITE_PATTERN_VALUE_TABLES[name] = partial
+> 
+>         start = cls.PARTIAL_WHITE_PATTERN_VALUE_INDEXES.get(name, 0)
+>         end = min(total, start + cls.WARM_TABLE_CHUNK_SIZE)
+>         for key in range(start, end):
+>             inv = 0
+>             mult = 1
+>             temp_k = key
+>             for _ in range(size):
+>                 d = temp_k % 3
+>                 temp_k //= 3
+>                 if d == 0: inv += mult
+>                 elif d == 2: inv += 2 * mult
+>                 mult *= 3
+>             partial[key] = cls._compute_pattern_value(name, inv)
+> 
+>         if end >= total:
+>             cls.WHITE_PATTERN_VALUE_TABLES[name] = tuple(partial)
+>             cls.PARTIAL_WHITE_PATTERN_VALUE_TABLES.pop(name, None)
+>             cls.PARTIAL_WHITE_PATTERN_VALUE_INDEXES.pop(name, None)
+>             cls.PATTERN_CACHE = {}
+>         else:
+>             cls.PARTIAL_WHITE_PATTERN_VALUE_INDEXES[name] = end
+> 
+>     @classmethod
+>     def _pattern_value_table_black(cls, name: str):
+>         cached = cls.PATTERN_VALUE_TABLES.get(name)
+>         if cached is not None:
+>             return cached
+> 
+>         size = cls.PATTERN_SIZES[name]
+>         partial = cls.PARTIAL_PATTERN_VALUE_TABLES.get(name)
+>         if partial is None:
+>             table = tuple(cls._compute_pattern_value(name, key) for key in range(3 ** size))
+>         else:
+>             for key in range(3 ** size):
+>                 if partial[key] is None:
+>                     partial[key] = cls._compute_pattern_value(name, key)
+>             table = tuple(partial)
+>             cls.PARTIAL_PATTERN_VALUE_TABLES.pop(name, None)
+>             cls.PARTIAL_PATTERN_VALUE_INDEXES.pop(name, None)
+>         cls.PATTERN_VALUE_TABLES[name] = table
+>         cls.PATTERN_CACHE = {}
+>         return table
+> 
+>     @classmethod
+>     def _pattern_value_table_white(cls, name: str):
+>         cached = cls.WHITE_PATTERN_VALUE_TABLES.get(name)
+>         if cached is not None:
+>             return cached
+> 
+>         size = cls.PATTERN_SIZES[name]
+>         partial = cls.PARTIAL_WHITE_PATTERN_VALUE_TABLES.get(name)
+>         if partial is None:
+>             table = [0.0] * (3 ** size)
+>             for key in range(3 ** size):
+>                 inv = 0
+>                 mult = 1
+>                 temp_k = key
+>                 for _ in range(size):
+>                     d = temp_k % 3
+>                     temp_k //= 3
+>                     if d == 0: inv += mult
+>                     elif d == 2: inv += 2 * mult
+>                     mult *= 3
+>                 table[key] = cls._compute_pattern_value(name, inv)
+>             table = tuple(table)
+>         else:
+>             for key in range(3 ** size):
+>                 if partial[key] is None:
+>                     inv = 0
+>                     mult = 1
+>                     temp_k = key
+>                     for _ in range(size):
+>                         d = temp_k % 3
+>                         temp_k //= 3
+>                         if d == 0: inv += mult
+>                         elif d == 2: inv += 2 * mult
+>                         mult *= 3
+>                     partial[key] = cls._compute_pattern_value(name, inv)
+>             table = tuple(partial)
+>             cls.PARTIAL_WHITE_PATTERN_VALUE_TABLES.pop(name, None)
+>             cls.PARTIAL_WHITE_PATTERN_VALUE_INDEXES.pop(name, None)
+>         cls.WHITE_PATTERN_VALUE_TABLES[name] = table
+>         cls.PATTERN_CACHE = {}
+>         return table
+1523c1669
+<     def _ensure_evaluate_patterns_tables(cls):
+---
+>     def _ensure_evaluate_patterns_tables_black(cls):
+1532d1677
+<         group_infos = cls._pattern_key_group_infos()
+1535d1679
+<         name_to_table_idx = {}
+1537,1539d1680
+<             table_idx = len(tables)
+<             name_to_table_idx[name] = table_idx
+<             
+1542,1544c1683
+<             
+<             multiplied_table = tuple(val * weight for val in original_table)
+<             tables.append(multiplied_table)
+---
+>             tables.append(tuple(val * weight for val in original_table))
+1547a1687,1706
+> 
+>     @classmethod
+>     def _ensure_evaluate_patterns_tables_white(cls):
+>         if cls.WHITE_EVALUATE_PATTERNS_TABLES is not None:
+>             return True
+>             
+>         for name in cls.ACTIVE_PATTERN_NAMES:
+>             if name not in cls.WHITE_PATTERN_VALUE_TABLES:
+>                 return False
+>                 
+>         final_dense, final_bias = cls._params()[2]
+>         
+>         tables = []
+>         for name in cls.ACTIVE_PATTERN_NAMES:
+>             original_table = cls.WHITE_PATTERN_VALUE_TABLES[name]
+>             weight = final_dense[cls._pattern_name_to_final_index()[name]]
+>             tables.append(tuple(val * weight for val in original_table))
+>             
+>         cls.WHITE_EVALUATE_PATTERNS_TABLES = tuple(tables)
+>         return True
+1567,1568c1726,1728
+<     def _additional_key_bits(self, state: tuple[int, int], surrounds: tuple[int, int] | None = None) -> int:
+<         cached = MyPlayer.ADDITIONAL_KEY_CACHE.get(state)
+---
+>     def _additional_key_bits(self, state: tuple[int, int], surrounds: tuple[int, int] | None = None, is_white: bool = False) -> int:
+>         cache = MyPlayer.WHITE_ADDITIONAL_KEY_CACHE if is_white else MyPlayer.ADDITIONAL_KEY_CACHE
+>         cached = cache.get(state)
+1576a1737,1740
+>         if is_white:
+>             mobility = -mobility
+>             surround_black, surround_white = surround_white, surround_black
+> 
+1581c1745
+<         MyPlayer.ADDITIONAL_KEY_CACHE[state] = result
+---
+>         cache[state] = result

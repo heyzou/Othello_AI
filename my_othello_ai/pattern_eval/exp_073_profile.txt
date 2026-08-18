@@ -1,0 +1,606 @@
+[BOOK]   Turn  1 | Total:  340.55 ms | Book: 340.55 ms (100.0%) | Eval:    0.00 ms (  0.0%) | Search(Other):    0.00 ms (  0.0%)
+[SEARCH] Turn  3 | Total:  499.67 ms | Book:   0.00 ms (  0.0%) | Eval:  133.68 ms ( 26.8%) | Search(Other):  365.99 ms ( 73.2%)
+         ├─ [Search Breakdown] MoveGen:    5.85 ms ( 1.6%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.22 ms ( 0.1%) | TTHash:    0.69 ms ( 0.2%) | Control:  359.22 ms (98.2%)
+         ├─ [Eval Breakdown]   Patterns:   81.87 ms (61.2%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    9.45 ms ( 7.1%) | CacheHit:    0.65 ms ( 0.5%)
+         ├─ [Nodes] Visited: 721 | Evaluated: 7656
+         └─ [Cache] EVAL: 5988 (21.8%) | TTHash: 681 regs (5.4%) | LMove: 1293 (33.7%) | CombL: 6387 (12.3%)
+[SEARCH] Turn  5 | Total:  637.25 ms | Book:   0.00 ms (  0.0%) | Eval:  213.17 ms ( 33.5%) | Search(Other):  424.08 ms ( 66.5%)
+         ├─ [Search Breakdown] MoveGen:   11.72 ms ( 2.8%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.41 ms ( 0.1%) | TTHash:    1.37 ms ( 0.3%) | Control:  410.57 ms (96.8%)
+         ├─ [Eval Breakdown]   Patterns:  130.87 ms (61.4%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:   11.97 ms ( 5.6%) | CacheHit:    1.54 ms ( 0.7%)
+         ├─ [Nodes] Visited: 1326 | Evaluated: 16114
+         └─ [Cache] EVAL: 18534 (22.1%) | TTHash: 1892 regs (7.6%) | LMove: 3768 (33.9%) | CombL: 19333 (13.8%)
+[SEARCH] Turn  7 | Total:  660.04 ms | Book:   0.00 ms (  0.0%) | Eval:  233.76 ms ( 35.4%) | Search(Other):  426.28 ms ( 64.6%)
+         ├─ [Search Breakdown] MoveGen:   12.75 ms ( 3.0%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.37 ms ( 0.1%) | TTHash:    1.18 ms ( 0.3%) | Control:  411.98 ms (96.6%)
+         ├─ [Eval Breakdown]   Patterns:  147.93 ms (63.3%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    9.91 ms ( 4.2%) | CacheHit:    1.55 ms ( 0.7%)
+         ├─ [Nodes] Visited: 1188 | Evaluated: 17386
+         └─ [Cache] EVAL: 32202 (21.4%) | TTHash: 3019 regs (4.4%) | LMove: 6324 (29.8%) | CombL: 33908 (10.2%)
+[SEARCH] Turn  9 | Total:  742.58 ms | Book:   0.00 ms (  0.0%) | Eval:  281.43 ms ( 37.9%) | Search(Other):  461.15 ms ( 62.1%)
+         ├─ [Search Breakdown] MoveGen:   15.66 ms ( 3.4%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.49 ms ( 0.1%) | TTHash:    1.64 ms ( 0.4%) | Control:  443.37 ms (96.1%)
+         ├─ [Eval Breakdown]   Patterns:  167.48 ms (59.5%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:   13.29 ms ( 4.7%) | CacheHit:    2.08 ms ( 0.7%)
+         ├─ [Nodes] Visited: 1589 | Evaluated: 22059
+         └─ [Cache] EVAL: 49805 (20.2%) | TTHash: 4504 regs (6.1%) | LMove: 9395 (32.6%) | CombL: 52366 (10.7%)
+[SEARCH] Turn 11 | Total: 1254.40 ms | Book:   0.00 ms (  0.0%) | Eval:  618.91 ms ( 49.3%) | Search(Other):  635.49 ms ( 50.7%)
+         ├─ [Search Breakdown] MoveGen:   34.54 ms ( 5.4%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.78 ms ( 0.1%) | TTHash:    2.87 ms ( 0.5%) | Control:  597.30 ms (94.0%)
+         ├─ [Eval Breakdown]   Patterns:  361.20 ms (58.4%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:   20.47 ms ( 3.3%) | CacheHit:    4.09 ms ( 0.7%)
+         ├─ [Nodes] Visited: 2728 | Evaluated: 50718
+         └─ [Cache] EVAL: 91494 (17.8%) | TTHash: 7083 regs (4.5%) | LMove: 16105 (27.4%) | CombL: 96004 (9.8%)
+[SEARCH] Turn 13 | Total: 1153.82 ms | Book:   0.00 ms (  0.0%) | Eval:  551.60 ms ( 47.8%) | Search(Other):  602.22 ms ( 52.2%)
+         ├─ [Search Breakdown] MoveGen:   32.02 ms ( 5.3%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.81 ms ( 0.1%) | TTHash:    2.68 ms ( 0.4%) | Control:  566.71 ms (94.1%)
+         ├─ [Eval Breakdown]   Patterns:  327.29 ms (59.3%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:   14.52 ms ( 2.6%) | CacheHit:    4.10 ms ( 0.7%)
+         ├─ [Nodes] Visited: 2665 | Evaluated: 47707
+         └─ [Cache] EVAL: 129895 (19.5%) | TTHash: 9573 regs (6.3%) | LMove: 22467 (28.7%) | CombL: 136212 (10.2%)
+[SEARCH] Turn 15 | Total: 1791.09 ms | Book:   0.00 ms (  0.0%) | Eval:  976.04 ms ( 54.5%) | Search(Other):  815.04 ms ( 45.5%)
+         ├─ [Search Breakdown] MoveGen:   58.78 ms ( 7.2%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    1.29 ms ( 0.2%) | TTHash:    4.56 ms ( 0.6%) | Control:  750.42 ms (92.1%)
+         ├─ [Eval Breakdown]   Patterns:  562.53 ms (57.6%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:   27.91 ms ( 2.9%) | CacheHit:    6.81 ms ( 0.7%)
+         ├─ [Nodes] Visited: 4482 | Evaluated: 83383
+         └─ [Cache] EVAL: 198201 (18.1%) | TTHash: 13790 regs (5.6%) | LMove: 33144 (24.1%) | CombL: 209136 (7.7%)
+[SEARCH] Turn 17 | Total: 1318.66 ms | Book:   0.00 ms (  0.0%) | Eval:  675.73 ms ( 51.2%) | Search(Other):  642.93 ms ( 48.8%)
+         ├─ [Search Breakdown] MoveGen:   45.98 ms ( 7.2%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.98 ms ( 0.2%) | TTHash:    3.42 ms ( 0.5%) | Control:  592.54 ms (92.2%)
+         ├─ [Eval Breakdown]   Patterns:  331.89 ms (49.1%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:   17.83 ms ( 2.6%) | CacheHit:    4.40 ms ( 0.7%)
+         ├─ [Nodes] Visited: 3405 | Evaluated: 59310
+         └─ [Cache] EVAL: 247715 (16.5%) | TTHash: 16988 regs (5.6%) | LMove: 41509 (23.4%) | CombL: 262007 (8.7%)
+[SEARCH] Turn 19 | Total:  360.30 ms | Book:   0.00 ms (  0.0%) | Eval:  172.28 ms ( 47.8%) | Search(Other):  188.01 ms ( 52.2%)
+         ├─ [Search Breakdown] MoveGen:   20.82 ms (11.1%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.41 ms ( 0.2%) | TTHash:    1.60 ms ( 0.9%) | Control:  165.18 ms (87.9%)
+         ├─ [Eval Breakdown]   Patterns:   40.33 ms (23.4%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    7.59 ms ( 4.4%) | CacheHit:    1.92 ms ( 1.1%)
+         ├─ [Nodes] Visited: 1613 | Evaluated: 26748
+         └─ [Cache] EVAL: 8115 (15.7%) | TTHash: 18469 regs (7.3%) | LMove: 45120 (22.6%) | CombL: 285757 (7.8%)
+[SEARCH] Turn 21 | Total: 1341.32 ms | Book:   0.00 ms (  0.0%) | Eval:  659.00 ms ( 49.1%) | Search(Other):  682.31 ms ( 50.9%)
+         ├─ [Search Breakdown] MoveGen:   80.51 ms (11.8%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    1.60 ms ( 0.2%) | TTHash:    5.19 ms ( 0.8%) | Control:  595.02 ms (87.2%)
+         ├─ [Eval Breakdown]   Patterns:  139.55 ms (21.2%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:   32.73 ms ( 5.0%) | CacheHit:    7.96 ms ( 1.2%)
+         ├─ [Nodes] Visited: 4901 | Evaluated: 108133
+         └─ [Cache] EVAL: 98148 (16.7%) | TTHash: 23118 regs (4.9%) | LMove: 59906 (22.4%) | CombL: 382259 (7.7%)
+[SEARCH] Turn 23 | Total: 1569.20 ms | Book:   0.00 ms (  0.0%) | Eval:  801.80 ms ( 51.1%) | Search(Other):  767.39 ms ( 48.9%)
+         ├─ [Search Breakdown] MoveGen:  106.30 ms (13.9%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    1.82 ms ( 0.2%) | TTHash:    6.00 ms ( 0.8%) | Control:  653.27 ms (85.1%)
+         ├─ [Eval Breakdown]   Patterns:  154.12 ms (19.2%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:   33.66 ms ( 4.2%) | CacheHit:    9.73 ms ( 1.2%)
+         ├─ [Nodes] Visited: 5693 | Evaluated: 120246
+         └─ [Cache] EVAL: 196455 (18.2%) | TTHash: 28461 regs (6.0%) | LMove: 65536 (21.4%) | CombL: 487872 (8.0%)
+[SEARCH] Turn 25 | Total: 1315.38 ms | Book:   0.00 ms (  0.0%) | Eval:  591.50 ms ( 45.0%) | Search(Other):  723.89 ms ( 55.0%)
+         ├─ [Search Breakdown] MoveGen:  126.58 ms (17.5%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    2.11 ms ( 0.3%) | TTHash:    6.80 ms ( 0.9%) | Control:  588.40 ms (81.3%)
+         ├─ [Eval Breakdown]   Patterns:  128.34 ms (21.7%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:   27.89 ms ( 4.7%) | CacheHit:   10.89 ms ( 1.8%)
+         ├─ [Nodes] Visited: 6396 | Evaluated: 100821
+         └─ [Cache] EVAL: 12203 (22.7%) | TTHash: 34443 regs (6.4%) | LMove: 65536 (28.2%) | CombL: 569303 (9.9%)
+[SEARCH] Turn 27 | Total:  535.62 ms | Book:   0.00 ms (  0.0%) | Eval:  231.49 ms ( 43.2%) | Search(Other):  304.12 ms ( 56.8%)
+         ├─ [Search Breakdown] MoveGen:   45.17 ms (14.9%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    1.06 ms ( 0.4%) | TTHash:    2.99 ms ( 1.0%) | Control:  254.90 ms (83.8%)
+         ├─ [Eval Breakdown]   Patterns:   49.99 ms (21.6%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:   10.36 ms ( 4.5%) | CacheHit:    5.33 ms ( 2.3%)
+         ├─ [Nodes] Visited: 2837 | Evaluated: 42778
+         └─ [Cache] EVAL: 42894 (28.3%) | TTHash: 37116 regs (5.2%) | LMove: 65536 (32.1%) | CombL: 601792 (12.1%)
+[SEARCH] Turn 29 | Total:  195.45 ms | Book:   0.00 ms (  0.0%) | Eval:   79.71 ms ( 40.8%) | Search(Other):  115.74 ms ( 59.2%)
+         ├─ [Search Breakdown] MoveGen:   18.12 ms (15.7%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.41 ms ( 0.4%) | TTHash:    1.37 ms ( 1.2%) | Control:   95.85 ms (82.8%)
+         ├─ [Eval Breakdown]   Patterns:   16.79 ms (21.1%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    3.64 ms ( 4.6%) | CacheHit:    1.99 ms ( 2.5%)
+         ├─ [Nodes] Visited: 1292 | Evaluated: 14521
+         └─ [Cache] EVAL: 53134 (29.5%) | TTHash: 38304 regs (7.4%) | LMove: 65536 (38.3%) | CombL: 612490 (14.6%)
+[SEARCH] Turn 31 | Total:  745.40 ms | Book:   0.00 ms (  0.0%) | Eval:  339.77 ms ( 45.6%) | Search(Other):  405.63 ms ( 54.4%)
+         ├─ [Search Breakdown] MoveGen:   69.08 ms (17.0%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.98 ms ( 0.2%) | TTHash:    3.95 ms ( 1.0%) | Control:  331.61 ms (81.8%)
+         ├─ [Eval Breakdown]   Patterns:   75.49 ms (22.2%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:   15.73 ms ( 4.6%) | CacheHit:    4.98 ms ( 1.5%)
+         ├─ [Nodes] Visited: 3883 | Evaluated: 56439
+         └─ [Cache] EVAL: 98794 (19.1%) | TTHash: 41859 regs (8.4%) | LMove: 65536 (26.6%) | CombL: 661263 (8.1%)
+[SEARCH] Turn 33 | Total:   96.69 ms | Book:   0.00 ms (  0.0%) | Eval:   42.61 ms ( 44.1%) | Search(Other):   54.07 ms ( 55.9%)
+         ├─ [Search Breakdown] MoveGen:    9.76 ms (18.0%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.18 ms ( 0.3%) | TTHash:    0.74 ms ( 1.4%) | Control:   43.39 ms (80.2%)
+         ├─ [Eval Breakdown]   Patterns:    9.31 ms (21.9%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    2.72 ms ( 6.4%) | CacheHit:    0.84 ms ( 2.0%)
+         ├─ [Nodes] Visited: 721 | Evaluated: 6991
+         └─ [Cache] EVAL: 104151 (23.4%) | TTHash: 42539 regs (5.0%) | LMove: 65536 (41.5%) | CombL: 666763 (12.7%)
+[SEARCH] Turn 35 | Total:   64.87 ms | Book:   0.00 ms (  0.0%) | Eval:   27.64 ms ( 42.6%) | Search(Other):   37.23 ms ( 57.4%)
+         ├─ [Search Breakdown] MoveGen:    6.60 ms (17.7%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.15 ms ( 0.4%) | TTHash:    0.61 ms ( 1.7%) | Control:   29.88 ms (80.2%)
+         ├─ [Eval Breakdown]   Patterns:    5.83 ms (21.1%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    2.28 ms ( 8.2%) | CacheHit:    0.55 ms ( 2.0%)
+         ├─ [Nodes] Visited: 616 | Evaluated: 4569
+         └─ [Cache] EVAL: 107519 (26.3%) | TTHash: 43083 regs (10.9%) | LMove: 65536 (48.5%) | CombL: 670216 (14.0%)
+[SEARCH] Turn 37 | Total:  222.41 ms | Book:   0.00 ms (  0.0%) | Eval:  144.37 ms ( 64.9%) | Search(Other):   78.04 ms ( 35.1%)
+         ├─ [Search Breakdown] MoveGen:   15.90 ms (20.4%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.25 ms ( 0.3%) | TTHash:    1.01 ms ( 1.3%) | Control:   60.88 ms (78.0%)
+         ├─ [Eval Breakdown]   Patterns:   12.62 ms ( 8.7%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    4.64 ms ( 3.2%) | CacheHit:    1.02 ms ( 0.7%)
+         ├─ [Nodes] Visited: 1007 | Evaluated: 9359
+         └─ [Cache] EVAL: 114649 (23.8%) | TTHash: 44009 regs (7.3%) | LMove: 65536 (36.5%) | CombL: 677817 (12.3%)
+[SEARCH] Turn 39 | Total:  173.33 ms | Book:   0.00 ms (  0.0%) | Eval:   59.70 ms ( 34.4%) | Search(Other):  113.63 ms ( 65.6%)
+         ├─ [Search Breakdown] MoveGen:   15.85 ms (14.0%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.31 ms ( 0.3%) | TTHash:    1.24 ms ( 1.1%) | Control:   96.23 ms (84.7%)
+         ├─ [Eval Breakdown]   Patterns:   13.12 ms (22.0%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    5.20 ms ( 8.7%) | CacheHit:    1.21 ms ( 2.0%)
+         ├─ [Nodes] Visited: 1198 | Evaluated: 9498
+         └─ [Cache] EVAL: 121719 (25.6%) | TTHash: 45135 regs (5.8%) | LMove: 65536 (47.0%) | CombL: 684845 (18.0%)
+[SEARCH] Turn 41 | Total:   74.74 ms | Book:   0.00 ms (  0.0%) | Eval:   28.58 ms ( 38.2%) | Search(Other):   46.16 ms ( 61.8%)
+         ├─ [Search Breakdown] MoveGen:    8.59 ms (18.6%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.20 ms ( 0.4%) | TTHash:    0.74 ms ( 1.6%) | Control:   36.64 ms (79.4%)
+         ├─ [Eval Breakdown]   Patterns:    6.09 ms (21.3%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    2.34 ms ( 8.2%) | CacheHit:    0.75 ms ( 2.6%)
+         ├─ [Nodes] Visited: 720 | Evaluated: 5020
+         └─ [Cache] EVAL: 125106 (32.5%) | TTHash: 45803 regs (6.9%) | LMove: 65536 (50.5%) | CombL: 688311 (16.9%)
+[SEARCH] Turn 43 | Total:   82.46 ms | Book:   0.00 ms (  0.0%) | Eval:   31.92 ms ( 38.7%) | Search(Other):   50.54 ms ( 61.3%)
+         ├─ [Search Breakdown] MoveGen:    9.91 ms (19.6%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.21 ms ( 0.4%) | TTHash:    0.87 ms ( 1.7%) | Control:   39.55 ms (78.3%)
+         ├─ [Eval Breakdown]   Patterns:    6.90 ms (21.6%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    2.72 ms ( 8.5%) | CacheHit:    0.77 ms ( 2.4%)
+         ├─ [Nodes] Visited: 876 | Evaluated: 5400
+         └─ [Cache] EVAL: 128857 (30.5%) | TTHash: 46599 regs (8.6%) | LMove: 65536 (46.4%) | CombL: 692195 (16.2%)
+[SEARCH] Turn 45 | Total:  115.97 ms | Book:   0.00 ms (  0.0%) | Eval:   40.43 ms ( 34.9%) | Search(Other):   75.54 ms ( 65.1%)
+         ├─ [Search Breakdown] MoveGen:   15.39 ms (20.4%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.33 ms ( 0.4%) | TTHash:    1.24 ms ( 1.6%) | Control:   58.59 ms (77.6%)
+         ├─ [Eval Breakdown]   Patterns:    8.73 ms (21.6%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    3.64 ms ( 9.0%) | CacheHit:    1.10 ms ( 2.7%)
+         ├─ [Nodes] Visited: 1261 | Evaluated: 7065
+         └─ [Cache] EVAL: 133535 (33.8%) | TTHash: 47757 regs (7.8%) | LMove: 65536 (50.4%) | CombL: 696962 (21.4%)
+[SEARCH] Turn 47 | Total:   80.68 ms | Book:   0.00 ms (  0.0%) | Eval:   35.03 ms ( 43.4%) | Search(Other):   45.66 ms ( 56.6%)
+         ├─ [Search Breakdown] MoveGen:    9.35 ms (20.5%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.24 ms ( 0.5%) | TTHash:    0.91 ms ( 2.0%) | Control:   35.16 ms (77.0%)
+         ├─ [Eval Breakdown]   Patterns:    4.44 ms (12.7%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    1.79 ms ( 5.1%) | CacheHit:    0.80 ms ( 2.3%)
+         ├─ [Nodes] Visited: 911 | Evaluated: 4056
+         └─ [Cache] EVAL: 135885 (42.1%) | TTHash: 48580 regs (9.5%) | LMove: 65536 (54.8%) | CombL: 699357 (24.0%)
+[SEARCH] Turn 49 | Total:  403.65 ms | Book:   0.00 ms (  0.0%) | Eval:    0.00 ms (  0.0%) | Search(Other):  403.65 ms (100.0%)
+         ├─ [Search Breakdown] MoveGen:    0.00 ms ( 0.0%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.00 ms ( 0.0%) | TTHash:    0.00 ms ( 0.0%) | Control:  403.65 ms (100.0%)
+         ├─ [Eval Breakdown]   Patterns:    0.00 ms ( 0.0%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    0.00 ms ( 0.0%) | CacheHit:    0.00 ms ( 0.0%)
+         ├─ [Nodes] Visited: 0 | Evaluated: 0
+         └─ [Cache] EVAL: 135885 (0.0%) | TTHash: 48580 regs (0.0%) | LMove: 65536 (100.0%) | CombL: 742659 (83.4%)
+[SEARCH] Turn 51 | Total:   30.25 ms | Book:   0.00 ms (  0.0%) | Eval:    0.00 ms (  0.0%) | Search(Other):   30.25 ms (100.0%)
+         ├─ [Search Breakdown] MoveGen:    0.00 ms ( 0.0%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.00 ms ( 0.0%) | TTHash:    0.00 ms ( 0.0%) | Control:   30.25 ms (100.0%)
+         ├─ [Eval Breakdown]   Patterns:    0.00 ms ( 0.0%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    0.00 ms ( 0.0%) | CacheHit:    0.00 ms ( 0.0%)
+         ├─ [Nodes] Visited: 0 | Evaluated: 0
+         └─ [Cache] EVAL: 135885 (0.0%) | TTHash: 48580 regs (0.0%) | LMove: 65536 (100.0%) | CombL: 742770 (99.6%)
+[SEARCH] Turn 53 | Total:    2.86 ms | Book:   0.00 ms (  0.0%) | Eval:    0.00 ms (  0.0%) | Search(Other):    2.86 ms (100.0%)
+         ├─ [Search Breakdown] MoveGen:    0.00 ms ( 0.1%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.00 ms ( 0.0%) | TTHash:    0.00 ms ( 0.0%) | Control:    2.86 ms (99.9%)
+         ├─ [Eval Breakdown]   Patterns:    0.00 ms ( 0.0%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    0.00 ms ( 0.0%) | CacheHit:    0.00 ms ( 0.0%)
+         ├─ [Nodes] Visited: 0 | Evaluated: 0
+         └─ [Cache] EVAL: 135885 (0.0%) | TTHash: 48580 regs (0.0%) | LMove: 65536 (100.0%) | CombL: 742826 (97.4%)
+[SEARCH] Turn 55 | Total:    0.74 ms | Book:   0.00 ms (  0.0%) | Eval:    0.00 ms (  0.0%) | Search(Other):    0.74 ms (100.0%)
+         ├─ [Search Breakdown] MoveGen:    0.04 ms ( 6.0%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.00 ms ( 0.0%) | TTHash:    0.00 ms ( 0.0%) | Control:    0.69 ms (94.0%)
+         ├─ [Eval Breakdown]   Patterns:    0.00 ms ( 0.0%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    0.00 ms ( 0.0%) | CacheHit:    0.00 ms ( 0.0%)
+         ├─ [Nodes] Visited: 0 | Evaluated: 0
+         └─ [Cache] EVAL: 135885 (0.0%) | TTHash: 48580 regs (0.0%) | LMove: 65536 (0.0%) | CombL: 742837 (97.9%)
+[SEARCH] Turn 56 | Total:    0.38 ms | Book:   0.00 ms (  0.0%) | Eval:    0.00 ms (  0.0%) | Search(Other):    0.38 ms ( 99.9%)
+         ├─ [Search Breakdown] MoveGen:    0.04 ms (10.6%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.00 ms ( 0.0%) | TTHash:    0.00 ms ( 0.0%) | Control:    0.34 ms (89.4%)
+         ├─ [Eval Breakdown]   Patterns:    0.00 ms ( 0.0%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    0.00 ms ( 0.0%) | CacheHit:    0.00 ms ( 0.0%)
+         ├─ [Nodes] Visited: 0 | Evaluated: 0
+         └─ [Cache] EVAL: 135885 (0.0%) | TTHash: 48580 regs (0.0%) | LMove: 65536 (0.0%) | CombL: 742843 (97.1%)
+[SEARCH] Turn 57 | Total:    0.16 ms | Book:   0.00 ms (  0.0%) | Eval:    0.00 ms (  0.0%) | Search(Other):    0.16 ms ( 99.8%)
+         ├─ [Search Breakdown] MoveGen:    0.02 ms (10.2%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.00 ms ( 0.0%) | TTHash:    0.00 ms ( 0.0%) | Control:    0.14 ms (89.8%)
+         ├─ [Eval Breakdown]   Patterns:    0.00 ms ( 0.0%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    0.00 ms ( 0.0%) | CacheHit:    0.00 ms ( 0.0%)
+         ├─ [Nodes] Visited: 0 | Evaluated: 0
+         └─ [Cache] EVAL: 135885 (0.0%) | TTHash: 48580 regs (0.0%) | LMove: 65536 (0.0%) | CombL: 742843 (100.0%)
+[SEARCH] Turn 59 | Total:    0.10 ms | Book:   0.00 ms (  0.0%) | Eval:    0.00 ms (  0.0%) | Search(Other):    0.10 ms ( 99.7%)
+         ├─ [Search Breakdown] MoveGen:    0.02 ms (17.3%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.00 ms ( 0.0%) | TTHash:    0.00 ms ( 0.0%) | Control:    0.08 ms (82.7%)
+         ├─ [Eval Breakdown]   Patterns:    0.00 ms ( 0.0%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    0.00 ms ( 0.0%) | CacheHit:    0.00 ms ( 0.0%)
+         ├─ [Nodes] Visited: 0 | Evaluated: 0
+         └─ [Cache] EVAL: 135885 (0.0%) | TTHash: 48580 regs (0.0%) | LMove: 65536 (0.0%) | CombL: 742843 (100.0%)
+[SEARCH] Turn 60 | Total:    0.08 ms | Book:   0.00 ms (  0.0%) | Eval:    0.00 ms (  0.0%) | Search(Other):    0.08 ms ( 99.6%)
+         ├─ [Search Breakdown] MoveGen:    0.02 ms (20.9%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.00 ms ( 0.0%) | TTHash:    0.00 ms ( 0.0%) | Control:    0.06 ms (79.1%)
+         ├─ [Eval Breakdown]   Patterns:    0.00 ms ( 0.0%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    0.00 ms ( 0.0%) | CacheHit:    0.00 ms ( 0.0%)
+         ├─ [Nodes] Visited: 0 | Evaluated: 0
+         └─ [Cache] EVAL: 135885 (0.0%) | TTHash: 48580 regs (0.0%) | LMove: 65536 (0.0%) | CombL: 742843 (100.0%)
+[BOOK]   Turn  2 | Total:    0.05 ms | Book:   0.05 ms ( 99.4%) | Eval:    0.00 ms (  0.0%) | Search(Other):    0.00 ms (  0.0%)
+[BOOK]   Turn  4 | Total:    0.05 ms | Book:   0.05 ms ( 99.6%) | Eval:    0.00 ms (  0.0%) | Search(Other):    0.00 ms (  0.0%)
+[SEARCH] Turn  6 | Total:  119.38 ms | Book:   0.00 ms (  0.0%) | Eval:   53.43 ms ( 44.8%) | Search(Other):   65.95 ms ( 55.2%)
+         ├─ [Search Breakdown] MoveGen:   16.42 ms (24.9%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.22 ms ( 0.3%) | TTHash:    0.70 ms ( 1.1%) | Control:   48.62 ms (73.7%)
+         ├─ [Eval Breakdown]   Patterns:   10.77 ms (20.2%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    3.94 ms ( 7.4%) | CacheHit:    0.81 ms ( 1.5%)
+         ├─ [Nodes] Visited: 673 | Evaluated: 8455
+         └─ [Cache] EVAL: 142581 (20.8%) | TTHash: 49219 regs (4.5%) | LMove: 65536 (34.4%) | CombL: 749809 (13.3%)
+[SEARCH] Turn  8 | Total:   64.59 ms | Book:   0.00 ms (  0.0%) | Eval:   27.76 ms ( 43.0%) | Search(Other):   36.84 ms ( 57.0%)
+         ├─ [Search Breakdown] MoveGen:    9.20 ms (25.0%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.12 ms ( 0.3%) | TTHash:    0.37 ms ( 1.0%) | Control:   27.14 ms (73.7%)
+         ├─ [Eval Breakdown]   Patterns:    5.74 ms (20.7%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    2.12 ms ( 7.6%) | CacheHit:    0.55 ms ( 2.0%)
+         ├─ [Nodes] Visited: 378 | Evaluated: 4830
+         └─ [Cache] EVAL: 146146 (26.2%) | TTHash: 49560 regs (6.9%) | LMove: 65536 (34.7%) | CombL: 753553 (12.6%)
+[SEARCH] Turn 10 | Total:  122.33 ms | Book:   0.00 ms (  0.0%) | Eval:   52.56 ms ( 43.0%) | Search(Other):   69.78 ms ( 57.0%)
+         ├─ [Search Breakdown] MoveGen:   16.51 ms (23.7%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.21 ms ( 0.3%) | TTHash:    0.61 ms ( 0.9%) | Control:   52.44 ms (75.2%)
+         ├─ [Eval Breakdown]   Patterns:   10.79 ms (20.5%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    4.05 ms ( 7.7%) | CacheHit:    1.26 ms ( 2.4%)
+         ├─ [Nodes] Visited: 573 | Evaluated: 9219
+         └─ [Cache] EVAL: 152637 (29.6%) | TTHash: 50072 regs (6.3%) | LMove: 65536 (37.2%) | CombL: 760427 (10.9%)
+[SEARCH] Turn 12 | Total:  470.29 ms | Book:   0.00 ms (  0.0%) | Eval:  215.88 ms ( 45.9%) | Search(Other):  254.41 ms ( 54.1%)
+         ├─ [Search Breakdown] MoveGen:   67.55 ms (26.6%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.67 ms ( 0.3%) | TTHash:    2.11 ms ( 0.8%) | Control:  184.07 ms (72.4%)
+         ├─ [Eval Breakdown]   Patterns:   42.48 ms (19.7%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:   12.96 ms ( 6.0%) | CacheHit:    3.49 ms ( 1.6%)
+         ├─ [Nodes] Visited: 2009 | Evaluated: 32715
+         └─ [Cache] EVAL: 178243 (21.7%) | TTHash: 51947 regs (5.7%) | LMove: 65536 (31.0%) | CombL: 787160 (11.5%)
+[SEARCH] Turn 14 | Total:  645.60 ms | Book:   0.00 ms (  0.0%) | Eval:  273.37 ms ( 42.3%) | Search(Other):  372.23 ms ( 57.7%)
+         ├─ [Search Breakdown] MoveGen:  107.28 ms (28.8%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.92 ms ( 0.2%) | TTHash:    2.84 ms ( 0.8%) | Control:  261.18 ms (70.2%)
+         ├─ [Eval Breakdown]   Patterns:   59.67 ms (21.8%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:   13.97 ms ( 5.1%) | CacheHit:    4.61 ms ( 1.7%)
+         ├─ [Nodes] Visited: 2732 | Evaluated: 44845
+         └─ [Cache] EVAL: 213532 (21.3%) | TTHash: 54560 regs (4.0%) | LMove: 65536 (28.7%) | CombL: 824867 (9.4%)
+[SEARCH] Turn 16 | Total:  190.24 ms | Book:   0.00 ms (  0.0%) | Eval:   76.03 ms ( 40.0%) | Search(Other):  114.21 ms ( 60.0%)
+         ├─ [Search Breakdown] MoveGen:   35.35 ms (31.0%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.35 ms ( 0.3%) | TTHash:    1.02 ms ( 0.9%) | Control:   77.49 ms (67.8%)
+         ├─ [Eval Breakdown]   Patterns:   17.09 ms (22.5%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    3.87 ms ( 5.1%) | CacheHit:    1.48 ms ( 2.0%)
+         ├─ [Nodes] Visited: 1020 | Evaluated: 13004
+         └─ [Cache] EVAL: 223445 (23.8%) | TTHash: 55499 regs (7.0%) | LMove: 65536 (32.5%) | CombL: 835374 (11.4%)
+[SEARCH] Turn 18 | Total:  364.08 ms | Book:   0.00 ms (  0.0%) | Eval:  149.05 ms ( 40.9%) | Search(Other):  215.03 ms ( 59.1%)
+         ├─ [Search Breakdown] MoveGen:   65.94 ms (30.7%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.57 ms ( 0.3%) | TTHash:    1.72 ms ( 0.8%) | Control:  146.79 ms (68.3%)
+         ├─ [Eval Breakdown]   Patterns:   33.29 ms (22.3%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    8.53 ms ( 5.7%) | CacheHit:    2.89 ms ( 1.9%)
+         ├─ [Nodes] Visited: 1637 | Evaluated: 25442
+         └─ [Cache] EVAL: 242912 (23.5%) | TTHash: 57017 regs (6.8%) | LMove: 65536 (33.6%) | CombL: 855692 (11.4%)
+[SEARCH] Turn 20 | Total:  552.48 ms | Book:   0.00 ms (  0.0%) | Eval:  284.85 ms ( 51.6%) | Search(Other):  267.63 ms ( 48.4%)
+         ├─ [Search Breakdown] MoveGen:   84.29 ms (31.5%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.67 ms ( 0.3%) | TTHash:    2.05 ms ( 0.8%) | Control:  180.62 ms (67.5%)
+         ├─ [Eval Breakdown]   Patterns:   42.73 ms (15.0%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:   72.55 ms (25.5%) | CacheHit:    3.18 ms ( 1.1%)
+         ├─ [Nodes] Visited: 1975 | Evaluated: 31069
+         └─ [Cache] EVAL: 5052 (21.8%) | TTHash: 58892 regs (4.4%) | LMove: 65536 (33.8%) | CombL: 880723 (10.6%)
+[SEARCH] Turn 22 | Total:  249.97 ms | Book:   0.00 ms (  0.0%) | Eval:  119.51 ms ( 47.8%) | Search(Other):  130.45 ms ( 52.2%)
+         ├─ [Search Breakdown] MoveGen:   42.00 ms (32.2%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.34 ms ( 0.3%) | TTHash:    1.05 ms ( 0.8%) | Control:   87.06 ms (66.7%)
+         ├─ [Eval Breakdown]   Patterns:   20.30 ms (17.0%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    4.87 ms ( 4.1%) | CacheHit:    1.27 ms ( 1.1%)
+         ├─ [Nodes] Visited: 997 | Evaluated: 13974
+         └─ [Cache] EVAL: 16221 (20.1%) | TTHash: 59851 regs (3.6%) | LMove: 65536 (36.4%) | CombL: 891708 (12.7%)
+[SEARCH] Turn 24 | Total:  169.77 ms | Book:   0.00 ms (  0.0%) | Eval:   61.19 ms ( 36.0%) | Search(Other):  108.58 ms ( 64.0%)
+         ├─ [Search Breakdown] MoveGen:   35.41 ms (32.6%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.35 ms ( 0.3%) | TTHash:    1.02 ms ( 0.9%) | Control:   71.80 ms (66.1%)
+         ├─ [Eval Breakdown]   Patterns:   14.25 ms (23.3%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    2.90 ms ( 4.7%) | CacheHit:    1.43 ms ( 2.3%)
+         ├─ [Nodes] Visited: 990 | Evaluated: 10694
+         └─ [Cache] EVAL: 23804 (29.1%) | TTHash: 60791 regs (4.8%) | LMove: 65536 (40.3%) | CombL: 899431 (15.2%)
+[SEARCH] Turn 26 | Total:  207.40 ms | Book:   0.00 ms (  0.0%) | Eval:   74.26 ms ( 35.8%) | Search(Other):  133.14 ms ( 64.2%)
+         ├─ [Search Breakdown] MoveGen:   44.47 ms (33.4%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.41 ms ( 0.3%) | TTHash:    1.26 ms ( 0.9%) | Control:   87.01 ms (65.3%)
+         ├─ [Eval Breakdown]   Patterns:   17.48 ms (23.5%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    3.75 ms ( 5.1%) | CacheHit:    1.85 ms ( 2.5%)
+         ├─ [Nodes] Visited: 1194 | Evaluated: 13013
+         └─ [Cache] EVAL: 33004 (29.3%) | TTHash: 61916 regs (4.3%) | LMove: 65536 (40.4%) | CombL: 908946 (14.0%)
+[SEARCH] Turn 28 | Total:  367.63 ms | Book:   0.00 ms (  0.0%) | Eval:  137.36 ms ( 37.4%) | Search(Other):  230.26 ms ( 62.6%)
+         ├─ [Search Breakdown] MoveGen:   80.17 ms (34.8%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.57 ms ( 0.2%) | TTHash:    1.75 ms ( 0.8%) | Control:  147.77 ms (64.2%)
+         ├─ [Eval Breakdown]   Patterns:   32.50 ms (23.7%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    6.15 ms ( 4.5%) | CacheHit:    2.45 ms ( 1.8%)
+         ├─ [Nodes] Visited: 1654 | Evaluated: 22829
+         └─ [Cache] EVAL: 50565 (23.1%) | TTHash: 63450 regs (6.2%) | LMove: 65536 (33.9%) | CombL: 927196 (12.3%)
+[SEARCH] Turn 30 | Total:  797.80 ms | Book:   0.00 ms (  0.0%) | Eval:  291.29 ms ( 36.5%) | Search(Other):  506.51 ms ( 63.5%)
+         ├─ [Search Breakdown] MoveGen:  182.76 ms (36.1%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    1.01 ms ( 0.2%) | TTHash:    3.59 ms ( 0.7%) | Control:  319.15 ms (63.0%)
+         ├─ [Eval Breakdown]   Patterns:   68.15 ms (23.4%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:   13.45 ms ( 4.6%) | CacheHit:    4.87 ms ( 1.7%)
+         ├─ [Nodes] Visited: 3286 | Evaluated: 46965
+         └─ [Cache] EVAL: 87729 (20.9%) | TTHash: 66495 regs (7.2%) | LMove: 65536 (31.7%) | CombL: 966358 (11.0%)
+[SEARCH] Turn 32 | Total: 1011.97 ms | Book:   0.00 ms (  0.0%) | Eval:  375.74 ms ( 37.1%) | Search(Other):  636.23 ms ( 62.9%)
+         ├─ [Search Breakdown] MoveGen:  246.60 ms (38.8%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    1.29 ms ( 0.2%) | TTHash:    4.66 ms ( 0.7%) | Control:  383.68 ms (60.3%)
+         ├─ [Eval Breakdown]   Patterns:   89.21 ms (23.7%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:   18.39 ms ( 4.9%) | CacheHit:    6.25 ms ( 1.7%)
+         ├─ [Nodes] Visited: 4313 | Evaluated: 59728
+         └─ [Cache] EVAL: 135371 (20.2%) | TTHash: 70528 regs (6.4%) | LMove: 65536 (30.7%) | CombL: 1016704 (9.8%)
+[SEARCH] Turn 34 | Total:  531.04 ms | Book:   0.00 ms (  0.0%) | Eval:  184.99 ms ( 34.8%) | Search(Other):  346.05 ms ( 65.2%)
+         ├─ [Search Breakdown] MoveGen:  141.21 ms (40.8%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.74 ms ( 0.2%) | TTHash:    2.41 ms ( 0.7%) | Control:  201.70 ms (58.3%)
+         ├─ [Eval Breakdown]   Patterns:   44.06 ms (23.8%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    9.04 ms ( 4.9%) | CacheHit:    3.94 ms ( 2.1%)
+         ├─ [Nodes] Visited: 2257 | Evaluated: 30845
+         └─ [Cache] EVAL: 158398 (25.3%) | TTHash: 72622 regs (6.9%) | LMove: 65536 (26.8%) | CombL: 1041385 (9.7%)
+[SEARCH] Turn 36 | Total:  230.30 ms | Book:   0.00 ms (  0.0%) | Eval:   79.37 ms ( 34.5%) | Search(Other):  150.93 ms ( 65.5%)
+         ├─ [Search Breakdown] MoveGen:   59.15 ms (39.2%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.32 ms ( 0.2%) | TTHash:    1.22 ms ( 0.8%) | Control:   90.24 ms (59.8%)
+         ├─ [Eval Breakdown]   Patterns:   18.69 ms (23.6%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    4.71 ms ( 5.9%) | CacheHit:    1.50 ms ( 1.9%)
+         ├─ [Nodes] Visited: 1188 | Evaluated: 12730
+         └─ [Cache] EVAL: 168120 (23.6%) | TTHash: 73716 regs (6.7%) | LMove: 65536 (41.3%) | CombL: 1051385 (13.0%)
+[SEARCH] Turn 38 | Total:  542.39 ms | Book:   0.00 ms (  0.0%) | Eval:  247.33 ms ( 45.6%) | Search(Other):  295.07 ms ( 54.4%)
+         ├─ [Search Breakdown] MoveGen:  108.79 ms (36.9%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.59 ms ( 0.2%) | TTHash:    2.10 ms ( 0.7%) | Control:  183.58 ms (62.2%)
+         ├─ [Eval Breakdown]   Patterns:   28.71 ms (11.6%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    7.89 ms ( 3.2%) | CacheHit:    2.57 ms ( 1.0%)
+         ├─ [Nodes] Visited: 2005 | Evaluated: 18985
+         └─ [Cache] EVAL: 182174 (26.0%) | TTHash: 75579 regs (6.6%) | LMove: 65536 (37.2%) | CombL: 1066093 (14.6%)
+[SEARCH] Turn 40 | Total:  360.86 ms | Book:   0.00 ms (  0.0%) | Eval:  110.60 ms ( 30.6%) | Search(Other):  250.26 ms ( 69.4%)
+         ├─ [Search Breakdown] MoveGen:  111.61 ms (44.6%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.60 ms ( 0.2%) | TTHash:    2.27 ms ( 0.9%) | Control:  135.77 ms (54.3%)
+         ├─ [Eval Breakdown]   Patterns:   26.14 ms (23.6%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    6.49 ms ( 5.9%) | CacheHit:    2.55 ms ( 2.3%)
+         ├─ [Nodes] Visited: 2255 | Evaluated: 17948
+         └─ [Cache] EVAL: 195152 (27.7%) | TTHash: 77700 regs (5.3%) | LMove: 65536 (42.0%) | CombL: 1079663 (15.9%)
+[SEARCH] Turn 42 | Total:   63.41 ms | Book:   0.00 ms (  0.0%) | Eval:   18.00 ms ( 28.4%) | Search(Other):   45.41 ms ( 71.6%)
+         ├─ [Search Breakdown] MoveGen:   19.61 ms (43.2%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.14 ms ( 0.3%) | TTHash:    0.55 ms ( 1.2%) | Control:   25.12 ms (55.3%)
+         ├─ [Eval Breakdown]   Patterns:    4.06 ms (22.6%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    1.49 ms ( 8.3%) | CacheHit:    0.51 ms ( 2.8%)
+         ├─ [Nodes] Visited: 567 | Evaluated: 3085
+         └─ [Cache] EVAL: 197152 (35.2%) | TTHash: 78200 regs (10.8%) | LMove: 65536 (51.9%) | CombL: 1081731 (18.9%)
+[SEARCH] Turn 44 | Total:   84.17 ms | Book:   0.00 ms (  0.0%) | Eval:   23.03 ms ( 27.4%) | Search(Other):   61.14 ms ( 72.6%)
+         ├─ [Search Breakdown] MoveGen:   28.70 ms (46.9%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.17 ms ( 0.3%) | TTHash:    0.65 ms ( 1.1%) | Control:   31.62 ms (51.7%)
+         ├─ [Eval Breakdown]   Patterns:    5.28 ms (22.9%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    1.82 ms ( 7.9%) | CacheHit:    0.59 ms ( 2.5%)
+         ├─ [Nodes] Visited: 676 | Evaluated: 3762
+         └─ [Cache] EVAL: 199693 (32.5%) | TTHash: 78804 regs (9.5%) | LMove: 65536 (47.2%) | CombL: 1084489 (17.2%)
+[SEARCH] Turn 46 | Total:  157.98 ms | Book:   0.00 ms (  0.0%) | Eval:   39.04 ms ( 24.7%) | Search(Other):  118.94 ms ( 75.3%)
+         ├─ [Search Breakdown] MoveGen:   59.07 ms (49.7%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.30 ms ( 0.3%) | TTHash:    1.17 ms ( 1.0%) | Control:   58.39 ms (49.1%)
+         ├─ [Eval Breakdown]   Patterns:    8.86 ms (22.7%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    3.00 ms ( 7.7%) | CacheHit:    1.31 ms ( 3.4%)
+         ├─ [Nodes] Visited: 1157 | Evaluated: 6778
+         └─ [Cache] EVAL: 203837 (38.9%) | TTHash: 79896 regs (5.3%) | LMove: 65536 (47.3%) | CombL: 1089075 (20.1%)
+[SEARCH] Turn 47 | Total:   91.42 ms | Book:   0.00 ms (  0.0%) | Eval:   21.66 ms ( 23.7%) | Search(Other):   69.76 ms ( 76.3%)
+         ├─ [Search Breakdown] MoveGen:   32.30 ms (46.3%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.23 ms ( 0.3%) | TTHash:    0.92 ms ( 1.3%) | Control:   36.32 ms (52.1%)
+         ├─ [Eval Breakdown]   Patterns:    5.04 ms (23.3%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    1.47 ms ( 6.8%) | CacheHit:    0.89 ms ( 4.1%)
+         ├─ [Nodes] Visited: 928 | Evaluated: 4162
+         └─ [Cache] EVAL: 206183 (43.6%) | TTHash: 80725 regs (9.7%) | LMove: 65536 (57.5%) | CombL: 1091294 (31.4%)
+[SEARCH] Turn 49 | Total:  654.62 ms | Book:   0.00 ms (  0.0%) | Eval:    0.00 ms (  0.0%) | Search(Other):  654.62 ms (100.0%)
+         ├─ [Search Breakdown] MoveGen:    0.00 ms ( 0.0%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.00 ms ( 0.0%) | TTHash:    0.00 ms ( 0.0%) | Control:  654.62 ms (100.0%)
+         ├─ [Eval Breakdown]   Patterns:    0.00 ms ( 0.0%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    0.00 ms ( 0.0%) | CacheHit:    0.00 ms ( 0.0%)
+         ├─ [Nodes] Visited: 0 | Evaluated: 0
+         └─ [Cache] EVAL: 206183 (0.0%) | TTHash: 80725 regs (0.0%) | LMove: 65536 (100.0%) | CombL: 1153779 (85.9%)
+[SEARCH] Turn 51 | Total:   41.23 ms | Book:   0.00 ms (  0.0%) | Eval:    0.00 ms (  0.0%) | Search(Other):   41.23 ms (100.0%)
+         ├─ [Search Breakdown] MoveGen:    0.00 ms ( 0.0%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.00 ms ( 0.0%) | TTHash:    0.00 ms ( 0.0%) | Control:   41.23 ms (100.0%)
+         ├─ [Eval Breakdown]   Patterns:    0.00 ms ( 0.0%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    0.00 ms ( 0.0%) | CacheHit:    0.00 ms ( 0.0%)
+         ├─ [Nodes] Visited: 0 | Evaluated: 0
+         └─ [Cache] EVAL: 206183 (0.0%) | TTHash: 80725 regs (0.0%) | LMove: 65536 (100.0%) | CombL: 1155668 (94.1%)
+[SEARCH] Turn 53 | Total:    7.45 ms | Book:   0.00 ms (  0.0%) | Eval:    0.00 ms (  0.0%) | Search(Other):    7.45 ms (100.0%)
+         ├─ [Search Breakdown] MoveGen:    0.00 ms ( 0.0%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.00 ms ( 0.0%) | TTHash:    0.00 ms ( 0.0%) | Control:    7.45 ms (100.0%)
+         ├─ [Eval Breakdown]   Patterns:    0.00 ms ( 0.0%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    0.00 ms ( 0.0%) | CacheHit:    0.00 ms ( 0.0%)
+         ├─ [Nodes] Visited: 0 | Evaluated: 0
+         └─ [Cache] EVAL: 206183 (0.0%) | TTHash: 80725 regs (0.0%) | LMove: 65536 (100.0%) | CombL: 1155920 (95.7%)
+[SEARCH] Turn 55 | Total:    1.38 ms | Book:   0.00 ms (  0.0%) | Eval:    0.00 ms (  0.0%) | Search(Other):    1.38 ms (100.0%)
+         ├─ [Search Breakdown] MoveGen:    0.15 ms (10.6%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.00 ms ( 0.0%) | TTHash:    0.00 ms ( 0.0%) | Control:    1.23 ms (89.4%)
+         ├─ [Eval Breakdown]   Patterns:    0.00 ms ( 0.0%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    0.00 ms ( 0.0%) | CacheHit:    0.00 ms ( 0.0%)
+         ├─ [Nodes] Visited: 0 | Evaluated: 0
+         └─ [Cache] EVAL: 206183 (0.0%) | TTHash: 80725 regs (0.0%) | LMove: 65536 (0.0%) | CombL: 1155974 (93.6%)
+[SEARCH] Turn 57 | Total:    0.36 ms | Book:   0.00 ms (  0.0%) | Eval:    0.00 ms (  0.0%) | Search(Other):    0.36 ms ( 99.9%)
+         ├─ [Search Breakdown] MoveGen:    0.14 ms (40.2%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.00 ms ( 0.0%) | TTHash:    0.00 ms ( 0.0%) | Control:    0.21 ms (59.8%)
+         ├─ [Eval Breakdown]   Patterns:    0.00 ms ( 0.0%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    0.00 ms ( 0.0%) | CacheHit:    0.00 ms ( 0.0%)
+         ├─ [Nodes] Visited: 0 | Evaluated: 0
+         └─ [Cache] EVAL: 206183 (0.0%) | TTHash: 80725 regs (0.0%) | LMove: 65536 (0.0%) | CombL: 1155974 (100.0%)
+[SEARCH] Turn 58 | Total:    0.15 ms | Book:   0.00 ms (  0.0%) | Eval:    0.00 ms (  0.0%) | Search(Other):    0.15 ms ( 99.8%)
+         ├─ [Search Breakdown] MoveGen:    0.04 ms (28.0%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.00 ms ( 0.0%) | TTHash:    0.00 ms ( 0.0%) | Control:    0.11 ms (72.0%)
+         ├─ [Eval Breakdown]   Patterns:    0.00 ms ( 0.0%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    0.00 ms ( 0.0%) | CacheHit:    0.00 ms ( 0.0%)
+         ├─ [Nodes] Visited: 0 | Evaluated: 0
+         └─ [Cache] EVAL: 206183 (0.0%) | TTHash: 80725 regs (0.0%) | LMove: 65536 (0.0%) | CombL: 1155974 (100.0%)
+[SEARCH] Turn 60 | Total:    0.11 ms | Book:   0.00 ms (  0.0%) | Eval:    0.00 ms (  0.0%) | Search(Other):    0.11 ms ( 99.7%)
+         ├─ [Search Breakdown] MoveGen:    0.04 ms (37.9%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.00 ms ( 0.0%) | TTHash:    0.00 ms ( 0.0%) | Control:    0.07 ms (62.1%)
+         ├─ [Eval Breakdown]   Patterns:    0.00 ms ( 0.0%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    0.00 ms ( 0.0%) | CacheHit:    0.00 ms ( 0.0%)
+         ├─ [Nodes] Visited: 0 | Evaluated: 0
+         └─ [Cache] EVAL: 206183 (0.0%) | TTHash: 80725 regs (0.0%) | LMove: 65536 (0.0%) | CombL: 1155974 (100.0%)
+[BOOK]   Turn  1 | Total:  336.42 ms | Book: 336.42 ms (100.0%) | Eval:    0.00 ms (  0.0%) | Search(Other):    0.00 ms (  0.0%)
+[SEARCH] Turn  3 | Total:  495.63 ms | Book:   0.00 ms (  0.0%) | Eval:  131.86 ms ( 26.6%) | Search(Other):  363.77 ms ( 73.4%)
+         ├─ [Search Breakdown] MoveGen:    5.89 ms ( 1.6%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.22 ms ( 0.1%) | TTHash:    1.10 ms ( 0.3%) | Control:  356.56 ms (98.0%)
+         ├─ [Eval Breakdown]   Patterns:   79.84 ms (60.6%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:   18.84 ms (14.3%) | CacheHit:    0.67 ms ( 0.5%)
+         ├─ [Nodes] Visited: 721 | Evaluated: 7656
+         └─ [Cache] EVAL: 5988 (21.8%) | TTHash: 681 regs (5.4%) | LMove: 1293 (33.7%) | CombL: 6387 (12.3%)
+[SEARCH] Turn  5 | Total:  627.56 ms | Book:   0.00 ms (  0.0%) | Eval:  208.58 ms ( 33.2%) | Search(Other):  418.98 ms ( 66.8%)
+         ├─ [Search Breakdown] MoveGen:   11.34 ms ( 2.7%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.40 ms ( 0.1%) | TTHash:    1.28 ms ( 0.3%) | Control:  405.96 ms (96.9%)
+         ├─ [Eval Breakdown]   Patterns:  128.42 ms (61.6%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:   11.77 ms ( 5.6%) | CacheHit:    1.45 ms ( 0.7%)
+         ├─ [Nodes] Visited: 1326 | Evaluated: 16114
+         └─ [Cache] EVAL: 18534 (22.1%) | TTHash: 1892 regs (7.6%) | LMove: 3768 (33.9%) | CombL: 19333 (13.8%)
+[SEARCH] Turn  7 | Total:  655.50 ms | Book:   0.00 ms (  0.0%) | Eval:  234.04 ms ( 35.7%) | Search(Other):  421.47 ms ( 64.3%)
+         ├─ [Search Breakdown] MoveGen:   13.03 ms ( 3.1%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.37 ms ( 0.1%) | TTHash:    1.20 ms ( 0.3%) | Control:  406.87 ms (96.5%)
+         ├─ [Eval Breakdown]   Patterns:  146.32 ms (62.5%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:   10.17 ms ( 4.3%) | CacheHit:    1.58 ms ( 0.7%)
+         ├─ [Nodes] Visited: 1188 | Evaluated: 17386
+         └─ [Cache] EVAL: 32202 (21.4%) | TTHash: 3019 regs (4.4%) | LMove: 6324 (29.8%) | CombL: 33908 (10.2%)
+[SEARCH] Turn  9 | Total:  741.35 ms | Book:   0.00 ms (  0.0%) | Eval:  280.52 ms ( 37.8%) | Search(Other):  460.83 ms ( 62.2%)
+         ├─ [Search Breakdown] MoveGen:   15.49 ms ( 3.4%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.48 ms ( 0.1%) | TTHash:    1.56 ms ( 0.3%) | Control:  443.30 ms (96.2%)
+         ├─ [Eval Breakdown]   Patterns:  166.63 ms (59.4%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:   13.36 ms ( 4.8%) | CacheHit:    1.98 ms ( 0.7%)
+         ├─ [Nodes] Visited: 1589 | Evaluated: 22059
+         └─ [Cache] EVAL: 49805 (20.2%) | TTHash: 4504 regs (6.1%) | LMove: 9395 (32.6%) | CombL: 52366 (10.7%)
+[SEARCH] Turn 11 | Total: 1271.97 ms | Book:   0.00 ms (  0.0%) | Eval:  627.17 ms ( 49.3%) | Search(Other):  644.80 ms ( 50.7%)
+         ├─ [Search Breakdown] MoveGen:   34.88 ms ( 5.4%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.82 ms ( 0.1%) | TTHash:    2.81 ms ( 0.4%) | Control:  606.29 ms (94.0%)
+         ├─ [Eval Breakdown]   Patterns:  364.30 ms (58.1%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:   21.56 ms ( 3.4%) | CacheHit:    4.22 ms ( 0.7%)
+         ├─ [Nodes] Visited: 2728 | Evaluated: 50718
+         └─ [Cache] EVAL: 91494 (17.8%) | TTHash: 7083 regs (4.5%) | LMove: 16105 (27.4%) | CombL: 96004 (9.8%)
+[SEARCH] Turn 13 | Total: 1175.58 ms | Book:   0.00 ms (  0.0%) | Eval:  563.48 ms ( 47.9%) | Search(Other):  612.10 ms ( 52.1%)
+         ├─ [Search Breakdown] MoveGen:   32.86 ms ( 5.4%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.83 ms ( 0.1%) | TTHash:    2.69 ms ( 0.4%) | Control:  575.71 ms (94.1%)
+         ├─ [Eval Breakdown]   Patterns:  331.26 ms (58.8%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:   16.04 ms ( 2.8%) | CacheHit:    4.34 ms ( 0.8%)
+         ├─ [Nodes] Visited: 2665 | Evaluated: 47707
+         └─ [Cache] EVAL: 129895 (19.5%) | TTHash: 9573 regs (6.3%) | LMove: 22467 (28.7%) | CombL: 136212 (10.2%)
+[SEARCH] Turn 15 | Total: 1872.19 ms | Book:   0.00 ms (  0.0%) | Eval: 1020.45 ms ( 54.5%) | Search(Other):  851.74 ms ( 45.5%)
+         ├─ [Search Breakdown] MoveGen:   61.13 ms ( 7.2%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    1.36 ms ( 0.2%) | TTHash:    4.59 ms ( 0.5%) | Control:  784.66 ms (92.1%)
+         ├─ [Eval Breakdown]   Patterns:  588.51 ms (57.7%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:   31.37 ms ( 3.1%) | CacheHit:    7.25 ms ( 0.7%)
+         ├─ [Nodes] Visited: 4482 | Evaluated: 83383
+         └─ [Cache] EVAL: 198201 (18.1%) | TTHash: 13790 regs (5.6%) | LMove: 33144 (24.1%) | CombL: 209136 (7.7%)
+[SEARCH] Turn 17 | Total: 1338.74 ms | Book:   0.00 ms (  0.0%) | Eval:  687.91 ms ( 51.4%) | Search(Other):  650.83 ms ( 48.6%)
+         ├─ [Search Breakdown] MoveGen:   46.98 ms ( 7.2%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    1.01 ms ( 0.2%) | TTHash:    3.40 ms ( 0.5%) | Control:  599.43 ms (92.1%)
+         ├─ [Eval Breakdown]   Patterns:  335.89 ms (48.8%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:   19.45 ms ( 2.8%) | CacheHit:    4.61 ms ( 0.7%)
+         ├─ [Nodes] Visited: 3405 | Evaluated: 59310
+         └─ [Cache] EVAL: 247715 (16.5%) | TTHash: 16988 regs (5.6%) | LMove: 41509 (23.4%) | CombL: 262007 (8.7%)
+[SEARCH] Turn 19 | Total:  362.09 ms | Book:   0.00 ms (  0.0%) | Eval:  173.54 ms ( 47.9%) | Search(Other):  188.54 ms ( 52.1%)
+         ├─ [Search Breakdown] MoveGen:   20.79 ms (11.0%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.41 ms ( 0.2%) | TTHash:    1.56 ms ( 0.8%) | Control:  165.78 ms (87.9%)
+         ├─ [Eval Breakdown]   Patterns:   40.79 ms (23.5%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    8.17 ms ( 4.7%) | CacheHit:    1.93 ms ( 1.1%)
+         ├─ [Nodes] Visited: 1613 | Evaluated: 26748
+         └─ [Cache] EVAL: 8115 (15.7%) | TTHash: 18469 regs (7.3%) | LMove: 45120 (22.6%) | CombL: 285757 (7.8%)
+[SEARCH] Turn 21 | Total: 1378.31 ms | Book:   0.00 ms (  0.0%) | Eval:  682.30 ms ( 49.5%) | Search(Other):  696.02 ms ( 50.5%)
+         ├─ [Search Breakdown] MoveGen:   82.12 ms (11.8%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    1.64 ms ( 0.2%) | TTHash:    5.17 ms ( 0.7%) | Control:  607.09 ms (87.2%)
+         ├─ [Eval Breakdown]   Patterns:  144.66 ms (21.2%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:   36.24 ms ( 5.3%) | CacheHit:    8.29 ms ( 1.2%)
+         ├─ [Nodes] Visited: 4901 | Evaluated: 108133
+         └─ [Cache] EVAL: 98148 (16.7%) | TTHash: 23118 regs (4.9%) | LMove: 59906 (22.4%) | CombL: 382259 (7.7%)
+[SEARCH] Turn 23 | Total: 1600.31 ms | Book:   0.00 ms (  0.0%) | Eval:  820.54 ms ( 51.3%) | Search(Other):  779.77 ms ( 48.7%)
+         ├─ [Search Breakdown] MoveGen:  107.76 ms (13.8%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    1.84 ms ( 0.2%) | TTHash:    5.94 ms ( 0.8%) | Control:  664.24 ms (85.2%)
+         ├─ [Eval Breakdown]   Patterns:  158.13 ms (19.3%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:   37.07 ms ( 4.5%) | CacheHit:    9.98 ms ( 1.2%)
+         ├─ [Nodes] Visited: 5693 | Evaluated: 120246
+         └─ [Cache] EVAL: 196455 (18.2%) | TTHash: 28461 regs (6.0%) | LMove: 65536 (21.4%) | CombL: 487872 (8.0%)
+[SEARCH] Turn 25 | Total: 1312.12 ms | Book:   0.00 ms (  0.0%) | Eval:  593.65 ms ( 45.2%) | Search(Other):  718.47 ms ( 54.8%)
+         ├─ [Search Breakdown] MoveGen:  125.30 ms (17.4%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    2.07 ms ( 0.3%) | TTHash:    6.61 ms ( 0.9%) | Control:  584.49 ms (81.4%)
+         ├─ [Eval Breakdown]   Patterns:  130.40 ms (22.0%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:   29.33 ms ( 4.9%) | CacheHit:   10.81 ms ( 1.8%)
+         ├─ [Nodes] Visited: 6396 | Evaluated: 100821
+         └─ [Cache] EVAL: 12203 (22.7%) | TTHash: 34443 regs (6.4%) | LMove: 65536 (28.2%) | CombL: 569303 (9.9%)
+[SEARCH] Turn 27 | Total:  540.92 ms | Book:   0.00 ms (  0.0%) | Eval:  236.27 ms ( 43.7%) | Search(Other):  304.65 ms ( 56.3%)
+         ├─ [Search Breakdown] MoveGen:   45.44 ms (14.9%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    1.06 ms ( 0.3%) | TTHash:    2.94 ms ( 1.0%) | Control:  255.22 ms (83.8%)
+         ├─ [Eval Breakdown]   Patterns:   51.82 ms (21.9%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:   11.40 ms ( 4.8%) | CacheHit:    5.54 ms ( 2.3%)
+         ├─ [Nodes] Visited: 2837 | Evaluated: 42778
+         └─ [Cache] EVAL: 42894 (28.3%) | TTHash: 37116 regs (5.2%) | LMove: 65536 (32.1%) | CombL: 601792 (12.1%)
+[SEARCH] Turn 29 | Total:  209.61 ms | Book:   0.00 ms (  0.0%) | Eval:   86.38 ms ( 41.2%) | Search(Other):  123.22 ms ( 58.8%)
+         ├─ [Search Breakdown] MoveGen:   20.38 ms (16.5%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.45 ms ( 0.4%) | TTHash:    1.44 ms ( 1.2%) | Control:  100.96 ms (81.9%)
+         ├─ [Eval Breakdown]   Patterns:   18.72 ms (21.7%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    4.37 ms ( 5.1%) | CacheHit:    2.30 ms ( 2.7%)
+         ├─ [Nodes] Visited: 1292 | Evaluated: 14521
+         └─ [Cache] EVAL: 53134 (29.5%) | TTHash: 38304 regs (7.4%) | LMove: 65536 (38.3%) | CombL: 612490 (14.6%)
+[SEARCH] Turn 31 | Total:  774.52 ms | Book:   0.00 ms (  0.0%) | Eval:  356.90 ms ( 46.1%) | Search(Other):  417.62 ms ( 53.9%)
+         ├─ [Search Breakdown] MoveGen:   72.25 ms (17.3%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    1.01 ms ( 0.2%) | TTHash:    3.98 ms ( 1.0%) | Control:  340.38 ms (81.5%)
+         ├─ [Eval Breakdown]   Patterns:   79.22 ms (22.2%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:   18.51 ms ( 5.2%) | CacheHit:    5.29 ms ( 1.5%)
+         ├─ [Nodes] Visited: 3883 | Evaluated: 56439
+         └─ [Cache] EVAL: 98794 (19.1%) | TTHash: 41859 regs (8.4%) | LMove: 65536 (26.6%) | CombL: 661263 (8.1%)
+[SEARCH] Turn 33 | Total:   97.07 ms | Book:   0.00 ms (  0.0%) | Eval:   42.52 ms ( 43.8%) | Search(Other):   54.55 ms ( 56.2%)
+         ├─ [Search Breakdown] MoveGen:    9.81 ms (18.0%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.18 ms ( 0.3%) | TTHash:    0.71 ms ( 1.3%) | Control:   43.85 ms (80.4%)
+         ├─ [Eval Breakdown]   Patterns:    9.27 ms (21.8%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    2.68 ms ( 6.3%) | CacheHit:    0.83 ms ( 1.9%)
+         ├─ [Nodes] Visited: 721 | Evaluated: 6991
+         └─ [Cache] EVAL: 104151 (23.4%) | TTHash: 42539 regs (5.0%) | LMove: 65536 (41.5%) | CombL: 666763 (12.7%)
+[SEARCH] Turn 35 | Total:   68.38 ms | Book:   0.00 ms (  0.0%) | Eval:   29.80 ms ( 43.6%) | Search(Other):   38.58 ms ( 56.4%)
+         ├─ [Search Breakdown] MoveGen:    7.32 ms (19.0%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.15 ms ( 0.4%) | TTHash:    0.65 ms ( 1.7%) | Control:   30.45 ms (78.9%)
+         ├─ [Eval Breakdown]   Patterns:    6.39 ms (21.4%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    2.75 ms ( 9.2%) | CacheHit:    0.68 ms ( 2.3%)
+         ├─ [Nodes] Visited: 616 | Evaluated: 4569
+         └─ [Cache] EVAL: 107519 (26.3%) | TTHash: 43083 regs (10.9%) | LMove: 65536 (48.5%) | CombL: 670216 (14.0%)
+[SEARCH] Turn 37 | Total:  226.43 ms | Book:   0.00 ms (  0.0%) | Eval:  147.05 ms ( 64.9%) | Search(Other):   79.38 ms ( 35.1%)
+         ├─ [Search Breakdown] MoveGen:   16.67 ms (21.0%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.26 ms ( 0.3%) | TTHash:    1.00 ms ( 1.3%) | Control:   61.44 ms (77.4%)
+         ├─ [Eval Breakdown]   Patterns:   13.05 ms ( 8.9%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    5.04 ms ( 3.4%) | CacheHit:    1.13 ms ( 0.8%)
+         ├─ [Nodes] Visited: 1007 | Evaluated: 9359
+         └─ [Cache] EVAL: 114649 (23.8%) | TTHash: 44009 regs (7.3%) | LMove: 65536 (36.5%) | CombL: 677817 (12.3%)
+[SEARCH] Turn 39 | Total:  174.71 ms | Book:   0.00 ms (  0.0%) | Eval:   60.59 ms ( 34.7%) | Search(Other):  114.12 ms ( 65.3%)
+         ├─ [Search Breakdown] MoveGen:   16.05 ms (14.1%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.31 ms ( 0.3%) | TTHash:    1.23 ms ( 1.1%) | Control:   96.53 ms (84.6%)
+         ├─ [Eval Breakdown]   Patterns:   13.33 ms (22.0%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    5.37 ms ( 8.9%) | CacheHit:    1.22 ms ( 2.0%)
+         ├─ [Nodes] Visited: 1198 | Evaluated: 9498
+         └─ [Cache] EVAL: 121719 (25.6%) | TTHash: 45135 regs (5.8%) | LMove: 65536 (47.0%) | CombL: 684845 (18.0%)
+[SEARCH] Turn 41 | Total:   77.46 ms | Book:   0.00 ms (  0.0%) | Eval:   30.35 ms ( 39.2%) | Search(Other):   47.11 ms ( 60.8%)
+         ├─ [Search Breakdown] MoveGen:    9.07 ms (19.3%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.20 ms ( 0.4%) | TTHash:    0.78 ms ( 1.7%) | Control:   37.06 ms (78.7%)
+         ├─ [Eval Breakdown]   Patterns:    6.79 ms (22.4%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    2.66 ms ( 8.8%) | CacheHit:    0.91 ms ( 3.0%)
+         ├─ [Nodes] Visited: 720 | Evaluated: 5020
+         └─ [Cache] EVAL: 125106 (32.5%) | TTHash: 45803 regs (6.9%) | LMove: 65536 (50.5%) | CombL: 688311 (16.9%)
+[SEARCH] Turn 43 | Total:   82.82 ms | Book:   0.00 ms (  0.0%) | Eval:   32.28 ms ( 39.0%) | Search(Other):   50.54 ms ( 61.0%)
+         ├─ [Search Breakdown] MoveGen:   10.01 ms (19.8%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.21 ms ( 0.4%) | TTHash:    0.85 ms ( 1.7%) | Control:   39.48 ms (78.1%)
+         ├─ [Eval Breakdown]   Patterns:    6.91 ms (21.4%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    2.85 ms ( 8.8%) | CacheHit:    0.79 ms ( 2.5%)
+         ├─ [Nodes] Visited: 876 | Evaluated: 5400
+         └─ [Cache] EVAL: 128857 (30.5%) | TTHash: 46599 regs (8.6%) | LMove: 65536 (46.4%) | CombL: 692195 (16.2%)
+[SEARCH] Turn 45 | Total:  121.58 ms | Book:   0.00 ms (  0.0%) | Eval:   43.59 ms ( 35.9%) | Search(Other):   77.99 ms ( 64.1%)
+         ├─ [Search Breakdown] MoveGen:   16.78 ms (21.5%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.34 ms ( 0.4%) | TTHash:    1.30 ms ( 1.7%) | Control:   59.58 ms (76.4%)
+         ├─ [Eval Breakdown]   Patterns:    9.78 ms (22.4%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    4.11 ms ( 9.4%) | CacheHit:    1.35 ms ( 3.1%)
+         ├─ [Nodes] Visited: 1261 | Evaluated: 7065
+         └─ [Cache] EVAL: 133535 (33.8%) | TTHash: 47757 regs (7.8%) | LMove: 65536 (50.4%) | CombL: 696962 (21.4%)
+[SEARCH] Turn 47 | Total:   83.35 ms | Book:   0.00 ms (  0.0%) | Eval:   36.88 ms ( 44.2%) | Search(Other):   46.47 ms ( 55.8%)
+         ├─ [Search Breakdown] MoveGen:    9.89 ms (21.3%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.24 ms ( 0.5%) | TTHash:    0.93 ms ( 2.0%) | Control:   35.41 ms (76.2%)
+         ├─ [Eval Breakdown]   Patterns:    4.88 ms (13.2%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    2.01 ms ( 5.4%) | CacheHit:    0.93 ms ( 2.5%)
+         ├─ [Nodes] Visited: 911 | Evaluated: 4056
+         └─ [Cache] EVAL: 135885 (42.1%) | TTHash: 48580 regs (9.5%) | LMove: 65536 (54.8%) | CombL: 699357 (24.0%)
+[SEARCH] Turn 49 | Total:  410.72 ms | Book:   0.00 ms (  0.0%) | Eval:    0.00 ms (  0.0%) | Search(Other):  410.72 ms (100.0%)
+         ├─ [Search Breakdown] MoveGen:    0.00 ms ( 0.0%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.00 ms ( 0.0%) | TTHash:    0.00 ms ( 0.0%) | Control:  410.72 ms (100.0%)
+         ├─ [Eval Breakdown]   Patterns:    0.00 ms ( 0.0%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    0.00 ms ( 0.0%) | CacheHit:    0.00 ms ( 0.0%)
+         ├─ [Nodes] Visited: 0 | Evaluated: 0
+         └─ [Cache] EVAL: 135885 (0.0%) | TTHash: 48580 regs (0.0%) | LMove: 65536 (100.0%) | CombL: 742659 (83.4%)
+[SEARCH] Turn 51 | Total:   31.14 ms | Book:   0.00 ms (  0.0%) | Eval:    0.00 ms (  0.0%) | Search(Other):   31.14 ms (100.0%)
+         ├─ [Search Breakdown] MoveGen:    0.00 ms ( 0.0%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.00 ms ( 0.0%) | TTHash:    0.00 ms ( 0.0%) | Control:   31.13 ms (100.0%)
+         ├─ [Eval Breakdown]   Patterns:    0.00 ms ( 0.0%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    0.00 ms ( 0.0%) | CacheHit:    0.00 ms ( 0.0%)
+         ├─ [Nodes] Visited: 0 | Evaluated: 0
+         └─ [Cache] EVAL: 135885 (0.0%) | TTHash: 48580 regs (0.0%) | LMove: 65536 (100.0%) | CombL: 742770 (99.6%)
+[SEARCH] Turn 53 | Total:    2.74 ms | Book:   0.00 ms (  0.0%) | Eval:    0.00 ms (  0.0%) | Search(Other):    2.74 ms (100.0%)
+         ├─ [Search Breakdown] MoveGen:    0.00 ms ( 0.1%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.00 ms ( 0.0%) | TTHash:    0.00 ms ( 0.0%) | Control:    2.74 ms (99.9%)
+         ├─ [Eval Breakdown]   Patterns:    0.00 ms ( 0.0%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    0.00 ms ( 0.0%) | CacheHit:    0.00 ms ( 0.0%)
+         ├─ [Nodes] Visited: 0 | Evaluated: 0
+         └─ [Cache] EVAL: 135885 (0.0%) | TTHash: 48580 regs (0.0%) | LMove: 65536 (100.0%) | CombL: 742826 (97.4%)
+[SEARCH] Turn 55 | Total:    0.72 ms | Book:   0.00 ms (  0.0%) | Eval:    0.00 ms (  0.0%) | Search(Other):    0.72 ms ( 99.9%)
+         ├─ [Search Breakdown] MoveGen:    0.04 ms ( 5.5%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.00 ms ( 0.0%) | TTHash:    0.00 ms ( 0.0%) | Control:    0.68 ms (94.5%)
+         ├─ [Eval Breakdown]   Patterns:    0.00 ms ( 0.0%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    0.00 ms ( 0.0%) | CacheHit:    0.00 ms ( 0.0%)
+         ├─ [Nodes] Visited: 0 | Evaluated: 0
+         └─ [Cache] EVAL: 135885 (0.0%) | TTHash: 48580 regs (0.0%) | LMove: 65536 (0.0%) | CombL: 742837 (97.9%)
+[SEARCH] Turn 56 | Total:    0.37 ms | Book:   0.00 ms (  0.0%) | Eval:    0.00 ms (  0.0%) | Search(Other):    0.37 ms ( 99.9%)
+         ├─ [Search Breakdown] MoveGen:    0.04 ms (10.2%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.00 ms ( 0.0%) | TTHash:    0.00 ms ( 0.0%) | Control:    0.34 ms (89.8%)
+         ├─ [Eval Breakdown]   Patterns:    0.00 ms ( 0.0%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    0.00 ms ( 0.0%) | CacheHit:    0.00 ms ( 0.0%)
+         ├─ [Nodes] Visited: 0 | Evaluated: 0
+         └─ [Cache] EVAL: 135885 (0.0%) | TTHash: 48580 regs (0.0%) | LMove: 65536 (0.0%) | CombL: 742843 (97.1%)
+[SEARCH] Turn 57 | Total:    0.16 ms | Book:   0.00 ms (  0.0%) | Eval:    0.00 ms (  0.0%) | Search(Other):    0.16 ms ( 99.8%)
+         ├─ [Search Breakdown] MoveGen:    0.02 ms (10.7%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.00 ms ( 0.0%) | TTHash:    0.00 ms ( 0.0%) | Control:    0.15 ms (89.3%)
+         ├─ [Eval Breakdown]   Patterns:    0.00 ms ( 0.0%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    0.00 ms ( 0.0%) | CacheHit:    0.00 ms ( 0.0%)
+         ├─ [Nodes] Visited: 0 | Evaluated: 0
+         └─ [Cache] EVAL: 135885 (0.0%) | TTHash: 48580 regs (0.0%) | LMove: 65536 (0.0%) | CombL: 742843 (100.0%)
+[SEARCH] Turn 59 | Total:    0.09 ms | Book:   0.00 ms (  0.0%) | Eval:    0.00 ms (  0.0%) | Search(Other):    0.09 ms ( 99.7%)
+         ├─ [Search Breakdown] MoveGen:    0.02 ms (18.1%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.00 ms ( 0.0%) | TTHash:    0.00 ms ( 0.0%) | Control:    0.08 ms (81.9%)
+         ├─ [Eval Breakdown]   Patterns:    0.00 ms ( 0.0%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    0.00 ms ( 0.0%) | CacheHit:    0.00 ms ( 0.0%)
+         ├─ [Nodes] Visited: 0 | Evaluated: 0
+         └─ [Cache] EVAL: 135885 (0.0%) | TTHash: 48580 regs (0.0%) | LMove: 65536 (0.0%) | CombL: 742843 (100.0%)
+[SEARCH] Turn 60 | Total:    0.08 ms | Book:   0.00 ms (  0.0%) | Eval:    0.00 ms (  0.0%) | Search(Other):    0.08 ms ( 99.7%)
+         ├─ [Search Breakdown] MoveGen:    0.02 ms (21.2%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.00 ms ( 0.0%) | TTHash:    0.00 ms ( 0.0%) | Control:    0.06 ms (78.8%)
+         ├─ [Eval Breakdown]   Patterns:    0.00 ms ( 0.0%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    0.00 ms ( 0.0%) | CacheHit:    0.00 ms ( 0.0%)
+         ├─ [Nodes] Visited: 0 | Evaluated: 0
+         └─ [Cache] EVAL: 135885 (0.0%) | TTHash: 48580 regs (0.0%) | LMove: 65536 (0.0%) | CombL: 742843 (100.0%)
+[BOOK]   Turn  2 | Total:    0.05 ms | Book:   0.05 ms ( 99.5%) | Eval:    0.00 ms (  0.0%) | Search(Other):    0.00 ms (  0.0%)
+[BOOK]   Turn  4 | Total:    0.05 ms | Book:   0.05 ms ( 99.4%) | Eval:    0.00 ms (  0.0%) | Search(Other):    0.00 ms (  0.0%)
+[SEARCH] Turn  6 | Total:  123.01 ms | Book:   0.00 ms (  0.0%) | Eval:   55.38 ms ( 45.0%) | Search(Other):   67.63 ms ( 55.0%)
+         ├─ [Search Breakdown] MoveGen:   17.52 ms (25.9%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.22 ms ( 0.3%) | TTHash:    0.70 ms ( 1.0%) | Control:   49.18 ms (72.7%)
+         ├─ [Eval Breakdown]   Patterns:   11.14 ms (20.1%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    4.34 ms ( 7.8%) | CacheHit:    0.91 ms ( 1.6%)
+         ├─ [Nodes] Visited: 673 | Evaluated: 8455
+         └─ [Cache] EVAL: 142581 (20.8%) | TTHash: 49219 regs (4.5%) | LMove: 65536 (34.4%) | CombL: 749809 (13.3%)
+[SEARCH] Turn  8 | Total:   65.88 ms | Book:   0.00 ms (  0.0%) | Eval:   28.82 ms ( 43.7%) | Search(Other):   37.06 ms ( 56.3%)
+         ├─ [Search Breakdown] MoveGen:    9.39 ms (25.4%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.12 ms ( 0.3%) | TTHash:    0.37 ms ( 1.0%) | Control:   27.17 ms (73.3%)
+         ├─ [Eval Breakdown]   Patterns:    5.94 ms (20.6%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    2.41 ms ( 8.4%) | CacheHit:    0.62 ms ( 2.1%)
+         ├─ [Nodes] Visited: 378 | Evaluated: 4830
+         └─ [Cache] EVAL: 146146 (26.2%) | TTHash: 49560 regs (6.9%) | LMove: 65536 (34.7%) | CombL: 753553 (12.6%)
+[SEARCH] Turn 10 | Total:  126.14 ms | Book:   0.00 ms (  0.0%) | Eval:   55.12 ms ( 43.7%) | Search(Other):   71.02 ms ( 56.3%)
+         ├─ [Search Breakdown] MoveGen:   17.31 ms (24.4%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.23 ms ( 0.3%) | TTHash:    0.62 ms ( 0.9%) | Control:   52.87 ms (74.4%)
+         ├─ [Eval Breakdown]   Patterns:   11.36 ms (20.6%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    4.63 ms ( 8.4%) | CacheHit:    1.47 ms ( 2.7%)
+         ├─ [Nodes] Visited: 573 | Evaluated: 9219
+         └─ [Cache] EVAL: 152637 (29.6%) | TTHash: 50072 regs (6.3%) | LMove: 65536 (37.2%) | CombL: 760427 (10.9%)
+[SEARCH] Turn 12 | Total:  479.17 ms | Book:   0.00 ms (  0.0%) | Eval:  221.00 ms ( 46.1%) | Search(Other):  258.17 ms ( 53.9%)
+         ├─ [Search Breakdown] MoveGen:   68.71 ms (26.6%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.68 ms ( 0.3%) | TTHash:    2.07 ms ( 0.8%) | Control:  186.71 ms (72.3%)
+         ├─ [Eval Breakdown]   Patterns:   43.81 ms (19.8%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:   13.79 ms ( 6.2%) | CacheHit:    3.66 ms ( 1.7%)
+         ├─ [Nodes] Visited: 2009 | Evaluated: 32715
+         └─ [Cache] EVAL: 178243 (21.7%) | TTHash: 51947 regs (5.7%) | LMove: 65536 (31.0%) | CombL: 787160 (11.5%)
+[SEARCH] Turn 14 | Total:  645.30 ms | Book:   0.00 ms (  0.0%) | Eval:  274.56 ms ( 42.5%) | Search(Other):  370.74 ms ( 57.5%)
+         ├─ [Search Breakdown] MoveGen:  108.46 ms (29.3%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.93 ms ( 0.3%) | TTHash:    2.76 ms ( 0.7%) | Control:  258.60 ms (69.8%)
+         ├─ [Eval Breakdown]   Patterns:   60.37 ms (22.0%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:   15.36 ms ( 5.6%) | CacheHit:    4.72 ms ( 1.7%)
+         ├─ [Nodes] Visited: 2732 | Evaluated: 44845
+         └─ [Cache] EVAL: 213532 (21.3%) | TTHash: 54560 regs (4.0%) | LMove: 65536 (28.7%) | CombL: 824867 (9.4%)
+[SEARCH] Turn 16 | Total:  192.34 ms | Book:   0.00 ms (  0.0%) | Eval:   77.19 ms ( 40.1%) | Search(Other):  115.15 ms ( 59.9%)
+         ├─ [Search Breakdown] MoveGen:   36.49 ms (31.7%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.35 ms ( 0.3%) | TTHash:    0.99 ms ( 0.9%) | Control:   77.32 ms (67.1%)
+         ├─ [Eval Breakdown]   Patterns:   17.46 ms (22.6%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    4.44 ms ( 5.8%) | CacheHit:    1.52 ms ( 2.0%)
+         ├─ [Nodes] Visited: 1020 | Evaluated: 13004
+         └─ [Cache] EVAL: 223445 (23.8%) | TTHash: 55499 regs (7.0%) | LMove: 65536 (32.5%) | CombL: 835374 (11.4%)
+[SEARCH] Turn 18 | Total:  377.52 ms | Book:   0.00 ms (  0.0%) | Eval:  154.92 ms ( 41.0%) | Search(Other):  222.60 ms ( 59.0%)
+         ├─ [Search Breakdown] MoveGen:   70.09 ms (31.5%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.58 ms ( 0.3%) | TTHash:    1.75 ms ( 0.8%) | Control:  150.17 ms (67.5%)
+         ├─ [Eval Breakdown]   Patterns:   34.61 ms (22.3%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    9.57 ms ( 6.2%) | CacheHit:    3.14 ms ( 2.0%)
+         ├─ [Nodes] Visited: 1637 | Evaluated: 25442
+         └─ [Cache] EVAL: 242912 (23.5%) | TTHash: 57017 regs (6.8%) | LMove: 65536 (33.6%) | CombL: 855692 (11.4%)
+[SEARCH] Turn 20 | Total:  563.55 ms | Book:   0.00 ms (  0.0%) | Eval:  290.16 ms ( 51.5%) | Search(Other):  273.39 ms ( 48.5%)
+         ├─ [Search Breakdown] MoveGen:   87.90 ms (32.2%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.68 ms ( 0.2%) | TTHash:    2.06 ms ( 0.8%) | Control:  182.75 ms (66.8%)
+         ├─ [Eval Breakdown]   Patterns:   44.12 ms (15.2%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:   73.38 ms (25.3%) | CacheHit:    3.54 ms ( 1.2%)
+         ├─ [Nodes] Visited: 1975 | Evaluated: 31069
+         └─ [Cache] EVAL: 5052 (21.8%) | TTHash: 58892 regs (4.4%) | LMove: 65536 (33.8%) | CombL: 880723 (10.6%)
+[SEARCH] Turn 22 | Total:  260.61 ms | Book:   0.00 ms (  0.0%) | Eval:  124.81 ms ( 47.9%) | Search(Other):  135.80 ms ( 52.1%)
+         ├─ [Search Breakdown] MoveGen:   44.56 ms (32.8%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.37 ms ( 0.3%) | TTHash:    1.09 ms ( 0.8%) | Control:   89.78 ms (66.1%)
+         ├─ [Eval Breakdown]   Patterns:   21.85 ms (17.5%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    5.83 ms ( 4.7%) | CacheHit:    1.37 ms ( 1.1%)
+         ├─ [Nodes] Visited: 997 | Evaluated: 13974
+         └─ [Cache] EVAL: 16221 (20.1%) | TTHash: 59851 regs (3.6%) | LMove: 65536 (36.4%) | CombL: 891708 (12.7%)
+[SEARCH] Turn 24 | Total:  170.17 ms | Book:   0.00 ms (  0.0%) | Eval:   62.23 ms ( 36.6%) | Search(Other):  107.94 ms ( 63.4%)
+         ├─ [Search Breakdown] MoveGen:   36.21 ms (33.5%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.34 ms ( 0.3%) | TTHash:    1.02 ms ( 0.9%) | Control:   70.36 ms (65.2%)
+         ├─ [Eval Breakdown]   Patterns:   14.62 ms (23.5%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    3.45 ms ( 5.5%) | CacheHit:    1.52 ms ( 2.4%)
+         ├─ [Nodes] Visited: 990 | Evaluated: 10694
+         └─ [Cache] EVAL: 23804 (29.1%) | TTHash: 60791 regs (4.8%) | LMove: 65536 (40.3%) | CombL: 899431 (15.2%)
+[SEARCH] Turn 26 | Total:  211.13 ms | Book:   0.00 ms (  0.0%) | Eval:   76.84 ms ( 36.4%) | Search(Other):  134.29 ms ( 63.6%)
+         ├─ [Search Breakdown] MoveGen:   45.72 ms (34.0%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.42 ms ( 0.3%) | TTHash:    1.28 ms ( 1.0%) | Control:   86.87 ms (64.7%)
+         ├─ [Eval Breakdown]   Patterns:   18.24 ms (23.7%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    4.45 ms ( 5.8%) | CacheHit:    2.02 ms ( 2.6%)
+         ├─ [Nodes] Visited: 1194 | Evaluated: 13013
+         └─ [Cache] EVAL: 33004 (29.3%) | TTHash: 61916 regs (4.3%) | LMove: 65536 (40.4%) | CombL: 908946 (14.0%)
+[SEARCH] Turn 28 | Total:  371.23 ms | Book:   0.00 ms (  0.0%) | Eval:  140.21 ms ( 37.8%) | Search(Other):  231.02 ms ( 62.2%)
+         ├─ [Search Breakdown] MoveGen:   82.24 ms (35.6%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.57 ms ( 0.2%) | TTHash:    1.74 ms ( 0.8%) | Control:  146.47 ms (63.4%)
+         ├─ [Eval Breakdown]   Patterns:   33.37 ms (23.8%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    7.12 ms ( 5.1%) | CacheHit:    2.65 ms ( 1.9%)
+         ├─ [Nodes] Visited: 1654 | Evaluated: 22829
+         └─ [Cache] EVAL: 50565 (23.1%) | TTHash: 63450 regs (6.2%) | LMove: 65536 (33.9%) | CombL: 927196 (12.3%)
+[SEARCH] Turn 30 | Total:  827.29 ms | Book:   0.00 ms (  0.0%) | Eval:  305.55 ms ( 36.9%) | Search(Other):  521.73 ms ( 63.1%)
+         ├─ [Search Breakdown] MoveGen:  191.56 ms (36.7%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    1.05 ms ( 0.2%) | TTHash:    3.63 ms ( 0.7%) | Control:  325.49 ms (62.4%)
+         ├─ [Eval Breakdown]   Patterns:   72.04 ms (23.6%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:   15.71 ms ( 5.1%) | CacheHit:    5.26 ms ( 1.7%)
+         ├─ [Nodes] Visited: 3286 | Evaluated: 46965
+         └─ [Cache] EVAL: 87729 (20.9%) | TTHash: 66495 regs (7.2%) | LMove: 65536 (31.7%) | CombL: 966358 (11.0%)
+[SEARCH] Turn 32 | Total: 1015.80 ms | Book:   0.00 ms (  0.0%) | Eval:  375.21 ms ( 36.9%) | Search(Other):  640.59 ms ( 63.1%)
+         ├─ [Search Breakdown] MoveGen:  251.70 ms (39.3%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    1.27 ms ( 0.2%) | TTHash:    4.52 ms ( 0.7%) | Control:  383.09 ms (59.8%)
+         ├─ [Eval Breakdown]   Patterns:   89.93 ms (24.0%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:   18.97 ms ( 5.1%) | CacheHit:    6.21 ms ( 1.7%)
+         ├─ [Nodes] Visited: 4313 | Evaluated: 59728
+         └─ [Cache] EVAL: 135371 (20.2%) | TTHash: 70528 regs (6.4%) | LMove: 65536 (30.7%) | CombL: 1016704 (9.8%)
+[SEARCH] Turn 34 | Total:  543.52 ms | Book:   0.00 ms (  0.0%) | Eval:  190.41 ms ( 35.0%) | Search(Other):  353.10 ms ( 65.0%)
+         ├─ [Search Breakdown] MoveGen:  146.29 ms (41.4%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.74 ms ( 0.2%) | TTHash:    2.39 ms ( 0.7%) | Control:  203.69 ms (57.7%)
+         ├─ [Eval Breakdown]   Patterns:   45.64 ms (24.0%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:   10.38 ms ( 5.5%) | CacheHit:    4.20 ms ( 2.2%)
+         ├─ [Nodes] Visited: 2257 | Evaluated: 30845
+         └─ [Cache] EVAL: 158398 (25.3%) | TTHash: 72622 regs (6.9%) | LMove: 65536 (26.8%) | CombL: 1041385 (9.7%)
+[SEARCH] Turn 36 | Total:  237.91 ms | Book:   0.00 ms (  0.0%) | Eval:   83.31 ms ( 35.0%) | Search(Other):  154.60 ms ( 65.0%)
+         ├─ [Search Breakdown] MoveGen:   61.76 ms (39.9%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.34 ms ( 0.2%) | TTHash:    1.24 ms ( 0.8%) | Control:   91.27 ms (59.0%)
+         ├─ [Eval Breakdown]   Patterns:   19.82 ms (23.8%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    5.67 ms ( 6.8%) | CacheHit:    1.71 ms ( 2.0%)
+         ├─ [Nodes] Visited: 1188 | Evaluated: 12730
+         └─ [Cache] EVAL: 168120 (23.6%) | TTHash: 73716 regs (6.7%) | LMove: 65536 (41.3%) | CombL: 1051385 (13.0%)
+[SEARCH] Turn 38 | Total:  546.59 ms | Book:   0.00 ms (  0.0%) | Eval:  248.08 ms ( 45.4%) | Search(Other):  298.51 ms ( 54.6%)
+         ├─ [Search Breakdown] MoveGen:  112.09 ms (37.5%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.60 ms ( 0.2%) | TTHash:    2.05 ms ( 0.7%) | Control:  183.77 ms (61.6%)
+         ├─ [Eval Breakdown]   Patterns:   29.27 ms (11.8%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    8.37 ms ( 3.4%) | CacheHit:    2.58 ms ( 1.0%)
+         ├─ [Nodes] Visited: 2005 | Evaluated: 18985
+         └─ [Cache] EVAL: 182174 (26.0%) | TTHash: 75579 regs (6.6%) | LMove: 65536 (37.2%) | CombL: 1066093 (14.6%)
+[SEARCH] Turn 40 | Total:  370.46 ms | Book:   0.00 ms (  0.0%) | Eval:  115.00 ms ( 31.0%) | Search(Other):  255.45 ms ( 69.0%)
+         ├─ [Search Breakdown] MoveGen:  116.15 ms (45.5%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.62 ms ( 0.2%) | TTHash:    2.33 ms ( 0.9%) | Control:  136.35 ms (53.4%)
+         ├─ [Eval Breakdown]   Patterns:   28.01 ms (24.4%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    7.57 ms ( 6.6%) | CacheHit:    2.86 ms ( 2.5%)
+         ├─ [Nodes] Visited: 2255 | Evaluated: 17948
+         └─ [Cache] EVAL: 195152 (27.7%) | TTHash: 77700 regs (5.3%) | LMove: 65536 (42.0%) | CombL: 1079663 (15.9%)
+[SEARCH] Turn 42 | Total:   64.96 ms | Book:   0.00 ms (  0.0%) | Eval:   18.53 ms ( 28.5%) | Search(Other):   46.43 ms ( 71.5%)
+         ├─ [Search Breakdown] MoveGen:   20.51 ms (44.2%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.14 ms ( 0.3%) | TTHash:    0.54 ms ( 1.2%) | Control:   25.24 ms (54.4%)
+         ├─ [Eval Breakdown]   Patterns:    4.21 ms (22.7%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    1.61 ms ( 8.7%) | CacheHit:    0.57 ms ( 3.1%)
+         ├─ [Nodes] Visited: 567 | Evaluated: 3085
+         └─ [Cache] EVAL: 197152 (35.2%) | TTHash: 78200 regs (10.8%) | LMove: 65536 (51.9%) | CombL: 1081731 (18.9%)
+[SEARCH] Turn 44 | Total:   86.29 ms | Book:   0.00 ms (  0.0%) | Eval:   23.86 ms ( 27.7%) | Search(Other):   62.43 ms ( 72.3%)
+         ├─ [Search Breakdown] MoveGen:   29.89 ms (47.9%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.17 ms ( 0.3%) | TTHash:    0.66 ms ( 1.1%) | Control:   31.71 ms (50.8%)
+         ├─ [Eval Breakdown]   Patterns:    5.55 ms (23.3%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    1.99 ms ( 8.4%) | CacheHit:    0.67 ms ( 2.8%)
+         ├─ [Nodes] Visited: 676 | Evaluated: 3762
+         └─ [Cache] EVAL: 199693 (32.5%) | TTHash: 78804 regs (9.5%) | LMove: 65536 (47.2%) | CombL: 1084489 (17.2%)
+[SEARCH] Turn 46 | Total:  163.66 ms | Book:   0.00 ms (  0.0%) | Eval:   41.74 ms ( 25.5%) | Search(Other):  121.93 ms ( 74.5%)
+         ├─ [Search Breakdown] MoveGen:   61.93 ms (50.8%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.32 ms ( 0.3%) | TTHash:    1.23 ms ( 1.0%) | Control:   58.46 ms (47.9%)
+         ├─ [Eval Breakdown]   Patterns:   10.15 ms (24.3%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    3.46 ms ( 8.3%) | CacheHit:    1.59 ms ( 3.8%)
+         ├─ [Nodes] Visited: 1157 | Evaluated: 6778
+         └─ [Cache] EVAL: 203837 (38.9%) | TTHash: 79896 regs (5.3%) | LMove: 65536 (47.3%) | CombL: 1089075 (20.1%)
+[SEARCH] Turn 47 | Total:  106.95 ms | Book:   0.00 ms (  0.0%) | Eval:   24.17 ms ( 22.6%) | Search(Other):   82.78 ms ( 77.4%)
+         ├─ [Search Breakdown] MoveGen:   36.74 ms (44.4%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.30 ms ( 0.4%) | TTHash:    1.19 ms ( 1.4%) | Control:   44.55 ms (53.8%)
+         ├─ [Eval Breakdown]   Patterns:    5.74 ms (23.7%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    1.65 ms ( 6.8%) | CacheHit:    1.20 ms ( 5.0%)
+         ├─ [Nodes] Visited: 928 | Evaluated: 4162
+         └─ [Cache] EVAL: 206183 (43.6%) | TTHash: 80725 regs (9.7%) | LMove: 65536 (57.5%) | CombL: 1091294 (31.4%)
+[SEARCH] Turn 49 | Total:  665.65 ms | Book:   0.00 ms (  0.0%) | Eval:    0.00 ms (  0.0%) | Search(Other):  665.65 ms (100.0%)
+         ├─ [Search Breakdown] MoveGen:    0.00 ms ( 0.0%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.00 ms ( 0.0%) | TTHash:    0.00 ms ( 0.0%) | Control:  665.65 ms (100.0%)
+         ├─ [Eval Breakdown]   Patterns:    0.00 ms ( 0.0%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    0.00 ms ( 0.0%) | CacheHit:    0.00 ms ( 0.0%)
+         ├─ [Nodes] Visited: 0 | Evaluated: 0
+         └─ [Cache] EVAL: 206183 (0.0%) | TTHash: 80725 regs (0.0%) | LMove: 65536 (100.0%) | CombL: 1153779 (85.9%)
+[SEARCH] Turn 51 | Total:   42.02 ms | Book:   0.00 ms (  0.0%) | Eval:    0.00 ms (  0.0%) | Search(Other):   42.02 ms (100.0%)
+         ├─ [Search Breakdown] MoveGen:    0.00 ms ( 0.0%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.00 ms ( 0.0%) | TTHash:    0.00 ms ( 0.0%) | Control:   42.02 ms (100.0%)
+         ├─ [Eval Breakdown]   Patterns:    0.00 ms ( 0.0%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    0.00 ms ( 0.0%) | CacheHit:    0.00 ms ( 0.0%)
+         ├─ [Nodes] Visited: 0 | Evaluated: 0
+         └─ [Cache] EVAL: 206183 (0.0%) | TTHash: 80725 regs (0.0%) | LMove: 65536 (100.0%) | CombL: 1155668 (94.1%)
+[SEARCH] Turn 53 | Total:    7.49 ms | Book:   0.00 ms (  0.0%) | Eval:    0.00 ms (  0.0%) | Search(Other):    7.49 ms (100.0%)
+         ├─ [Search Breakdown] MoveGen:    0.00 ms ( 0.0%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.00 ms ( 0.0%) | TTHash:    0.00 ms ( 0.0%) | Control:    7.49 ms (100.0%)
+         ├─ [Eval Breakdown]   Patterns:    0.00 ms ( 0.0%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    0.00 ms ( 0.0%) | CacheHit:    0.00 ms ( 0.0%)
+         ├─ [Nodes] Visited: 0 | Evaluated: 0
+         └─ [Cache] EVAL: 206183 (0.0%) | TTHash: 80725 regs (0.0%) | LMove: 65536 (100.0%) | CombL: 1155920 (95.7%)
+[SEARCH] Turn 55 | Total:    1.34 ms | Book:   0.00 ms (  0.0%) | Eval:    0.00 ms (  0.0%) | Search(Other):    1.34 ms (100.0%)
+         ├─ [Search Breakdown] MoveGen:    0.12 ms ( 9.2%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.00 ms ( 0.0%) | TTHash:    0.00 ms ( 0.0%) | Control:    1.22 ms (90.8%)
+         ├─ [Eval Breakdown]   Patterns:    0.00 ms ( 0.0%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    0.00 ms ( 0.0%) | CacheHit:    0.00 ms ( 0.0%)
+         ├─ [Nodes] Visited: 0 | Evaluated: 0
+         └─ [Cache] EVAL: 206183 (0.0%) | TTHash: 80725 regs (0.0%) | LMove: 65536 (0.0%) | CombL: 1155974 (93.6%)
+[SEARCH] Turn 57 | Total:    0.33 ms | Book:   0.00 ms (  0.0%) | Eval:    0.00 ms (  0.0%) | Search(Other):    0.33 ms ( 99.9%)
+         ├─ [Search Breakdown] MoveGen:    0.12 ms (36.3%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.00 ms ( 0.0%) | TTHash:    0.00 ms ( 0.0%) | Control:    0.21 ms (63.7%)
+         ├─ [Eval Breakdown]   Patterns:    0.00 ms ( 0.0%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    0.00 ms ( 0.0%) | CacheHit:    0.00 ms ( 0.0%)
+         ├─ [Nodes] Visited: 0 | Evaluated: 0
+         └─ [Cache] EVAL: 206183 (0.0%) | TTHash: 80725 regs (0.0%) | LMove: 65536 (0.0%) | CombL: 1155974 (100.0%)
+[SEARCH] Turn 58 | Total:    0.15 ms | Book:   0.00 ms (  0.0%) | Eval:    0.00 ms (  0.0%) | Search(Other):    0.15 ms ( 99.8%)
+         ├─ [Search Breakdown] MoveGen:    0.05 ms (30.1%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.00 ms ( 0.0%) | TTHash:    0.00 ms ( 0.0%) | Control:    0.11 ms (69.9%)
+         ├─ [Eval Breakdown]   Patterns:    0.00 ms ( 0.0%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    0.00 ms ( 0.0%) | CacheHit:    0.00 ms ( 0.0%)
+         ├─ [Nodes] Visited: 0 | Evaluated: 0
+         └─ [Cache] EVAL: 206183 (0.0%) | TTHash: 80725 regs (0.0%) | LMove: 65536 (0.0%) | CombL: 1155974 (100.0%)
+[SEARCH] Turn 60 | Total:    0.11 ms | Book:   0.00 ms (  0.0%) | Eval:    0.00 ms (  0.0%) | Search(Other):    0.11 ms ( 99.7%)
+         ├─ [Search Breakdown] MoveGen:    0.05 ms (40.7%) | ApplyMove:    0.00 ms ( 0.0%) | MoveOrder:    0.00 ms ( 0.0%) | TTHash:    0.00 ms ( 0.0%) | Control:    0.07 ms (59.3%)
+         ├─ [Eval Breakdown]   Patterns:    0.00 ms ( 0.0%) | Mobility:    0.00 ms ( 0.0%) | Surround:    0.00 ms ( 0.0%) | AddMLP:    0.00 ms ( 0.0%) | CacheHit:    0.00 ms ( 0.0%)
+         ├─ [Nodes] Visited: 0 | Evaluated: 0
+         └─ [Cache] EVAL: 206183 (0.0%) | TTHash: 80725 regs (0.0%) | LMove: 65536 (0.0%) | CombL: 1155974 (100.0%)

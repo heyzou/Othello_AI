@@ -97,6 +97,7 @@ class MyPlayer(BasePlayer):
         "triangle",
         "corner3x3",
     )
+    PRECOMPUTED_PATTERN_NAMES = ()
     INIT_PRECOMPUTED_PATTERN_NAMES = (
         "diagonal8",
         "diagonal7",
@@ -686,7 +687,7 @@ class MyPlayer(BasePlayer):
     ENDGAME_EXACT_EMPTY = 12
     SIMPLE_ALPHA_BETA_DEPTH = 2
     PROBCUT_MIN_DEPTH = 3
-    PROBCUT_MARGIN = 0.16
+    PROBCUT_MARGIN = 0.20
     PROBCUT_SHALLOW_DEPTHS = (0, 0, 0, 1, 2, 1, 2, 3, 4, 3, 4, 3, 4, 5, 6)
     LEGAL_MOVES_CACHE_MAX_SIZE = 131072
     EVAL_CACHE_MAX_SIZE = 524288
@@ -713,18 +714,6 @@ class MyPlayer(BasePlayer):
     )
     PATTERN_BIT_SPECS = None
     PATTERN_KEY_META = None
-
-    
-    _nodes_evaluated = 0
-    _nodes_visited = 0
-    _tthash_hits = 0
-    _tthash_gets = 0
-    _eval_cache_hits = 0
-    _eval_cache_gets = 0
-    _legal_moves_cache_hits = 0
-    _legal_moves_cache_gets = 0
-    _combined_legal_cache_hits = 0
-    _combined_legal_cache_gets = 0
 
 
 
@@ -763,19 +752,14 @@ class MyPlayer(BasePlayer):
     EVALUATE_PATTERNS_FUNC = None
     EVALUATE_PATTERNS_TABLES = None
     BOOK_CACHE = None
+    KILLER_MOVES = [[None, None] for _ in range(64)]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        MyPlayer.SEARCH_HASH_TABLE = [None] * MyPlayer.SEARCH_HASH_TABLE_SIZE
-        MyPlayer.EVAL_CACHE.clear()
-        MyPlayer.LEGAL_MOVES_CACHE.clear()
-        MyPlayer.COMBINED_LEGAL_CACHE.clear()
-        MyPlayer.SEARCH_HASH_REG_COUNT = 0
         MyPlayer._pattern_bit_specs()
         MyPlayer._pattern_key_meta()
         MyPlayer._precompute_init_evaluation_tables()
         MyPlayer._warm_init_evaluation_table_steps()
-
     def next_move(self, board: Board) -> Move:
 
         self._pattern_bit_specs()
@@ -814,37 +798,73 @@ class MyPlayer(BasePlayer):
                 alpha = max(alpha, best_score)
             return self._pos_to_move(best_move)
 
-        # 反復深化（Iterative Deepening: 深さ 1 から SEARCH_DEPTH - 1 まで段階的に探索）
+        # 反復深化（Iterative Deepening: 深さ 1 から SEARCH_DEPTH まで段階的に探索）
         for current_depth in range(1, self.SEARCH_DEPTH + 1):
-            alpha = float("-inf")
-            beta = float("inf")
-            iter_best_move = best_move
-            iter_best_score = float("-inf")
-
-            ordered_moves = self._order_move_positions_by_weight(moves)
-            if iter_best_move in ordered_moves:
-                ordered_moves.remove(iter_best_move)
-                ordered_moves.insert(0, iter_best_move)
-
-            for move in ordered_moves:
-                child = self._apply_move_full(
-                    state, pattern_keys, None, move, self.color
-                )
-                next_state, next_pattern_keys, next_surrounds = child
+            if current_depth >= 4:
+                # Aspiration Window: 初期窓幅 ±2.5（Fail発生率を大幅削減）
+                delta = 2.5
+                alpha = best_score - delta
+                beta = best_score + delta
+            else:
+                delta = float("inf")
+                alpha = float("-inf")
+                beta = float("inf")
+            
+            while True:
+                iter_best_move = best_move
+                iter_best_score = float("-inf")
+                current_alpha = alpha
                 
-                score = -self._negascout(
-                    next_state,
-                    next_pattern_keys,
-                    next_surrounds,
-                    depth=current_depth,
-                    current_color=self._opponent_of(self.color),
-                    alpha=-beta,
-                    beta=-alpha,
-                )
-                if score > iter_best_score:
-                    iter_best_score = score
-                    iter_best_move = move
-                alpha = max(alpha, iter_best_score)
+                ordered_moves = self._order_move_positions_by_weight(moves)
+                if iter_best_move in ordered_moves:
+                    ordered_moves.remove(iter_best_move)
+                    ordered_moves.insert(0, iter_best_move)
+
+                for index, move in enumerate(ordered_moves):
+                    child = self._apply_move_full(
+                        state, pattern_keys, None, move, self.color
+                    )
+                    next_state, next_pattern_keys, next_surrounds = child
+                    
+                    if index == 0 or current_depth <= 1:
+                        score = -self._negascout(
+                            next_state, next_pattern_keys, next_surrounds, depth=current_depth,
+                            current_color=self._opponent_of(self.color),
+                            alpha=-beta, beta=-current_alpha
+                        )
+                    else:
+                        # PVS / NegaScout root search
+                        score = -self._negascout(
+                            next_state, next_pattern_keys, next_surrounds, depth=current_depth,
+                            current_color=self._opponent_of(self.color),
+                            alpha=-current_alpha - 1.0, beta=-current_alpha
+                        )
+                        if current_alpha < score < beta:
+                            score = -self._negascout(
+                                next_state, next_pattern_keys, next_surrounds, depth=current_depth,
+                                current_color=self._opponent_of(self.color),
+                                alpha=-beta, beta=-score
+                            )
+                            
+                    if score > iter_best_score:
+                        iter_best_score = score
+                        iter_best_move = move
+                    current_alpha = max(current_alpha, iter_best_score)
+                    if current_alpha >= beta:
+                        break
+
+                # Fail low / Fail high: 段階的（指数的）に窓を拡大
+                if iter_best_score <= alpha:
+                    delta *= 2.0
+                    alpha = best_score - delta
+                    continue
+                elif iter_best_score >= beta:
+                    delta *= 2.0
+                    beta = best_score + delta
+                    continue
+                else:
+                    # 窓内に収まったため探索完了
+                    break
 
             best_move = iter_best_move
             best_score = iter_best_score
@@ -941,7 +961,7 @@ class MyPlayer(BasePlayer):
 
         # 葉ノードでは、現在手番から見た盤面評価を返す。
         if depth == 0:
-            return self._evaluate_for_color_bits_lazy(state, current_color, pattern_keys, surrounds, alpha, beta)
+            return self._evaluate_for_color_bits(state, current_color, pattern_keys, surrounds)
 
         original_alpha = alpha
         original_beta = beta
@@ -981,17 +1001,26 @@ class MyPlayer(BasePlayer):
         if tt_entry is not None and tt_entry[0] == search_key:
             tt_best_move = tt_entry[4]
 
-        # 1. TT 最善手が存在する場合、他の手を一切展開・評価せずに最優先で試す（完全遅延評価）
+        # 1. TT move が存在する場合、他の手を一切評価せずに最優先で試す（完全遅延評価）
         if tt_best_move is not None and tt_best_move in moves:
-            child = self._apply_move_full(
-                state, pattern_keys, surrounds, tt_best_move, current_color
+            flips = self._flips_bits(state, tt_best_move, current_color)
+            move_bit = 1 << tt_best_move
+            black_bits, white_bits = state
+            if current_color == Cell.BLACK:
+                next_state = ((black_bits | flips | move_bit), (white_bits & ~flips))
+            else:
+                next_state = ((black_bits & ~flips), (white_bits | flips | move_bit))
+            next_pattern_keys, next_surrounds = self._update_patterns_and_surrounds(
+                state, pattern_keys, surrounds, tt_best_move, current_color, flips
             )
-            next_state, next_pattern_keys, next_surrounds = child
             score = -self._negascout(
                 next_state, next_pattern_keys, next_surrounds, depth - 1, next_color, -beta, -alpha, allow_probcut
             )
             if score >= beta:
-                # TT手で即座にベータカット成功！他の手の評価・展開をすべてスキップ
+                # TT手で即座にベータカット成功！キラー手記録＆他手スキップ
+                if tt_best_move != MyPlayer.KILLER_MOVES[depth][0]:
+                    MyPlayer.KILLER_MOVES[depth][1] = MyPlayer.KILLER_MOVES[depth][0]
+                    MyPlayer.KILLER_MOVES[depth][0] = tt_best_move
                 self._search_hash_register(search_key, depth, score, original_alpha, original_beta, tt_best_move)
                 return score
 
@@ -1007,43 +1036,74 @@ class MyPlayer(BasePlayer):
             remaining_moves = moves
             start_index = 0
 
-        # 2. TT手でカットできなかった場合のみ、残りの手をソートして探索
+        # 2. TT手でカットできなかった場合、残りの手をキラー手・評価付きでソートして探索
         if remaining_moves:
-            remaining_moves = self._order_move_positions_by_weight(remaining_moves)
+            ordered_remaining = self._order_move_positions_by_weight(remaining_moves)
             children = []
-            for move in remaining_moves:
-                child = self._apply_move_full(
-                    state, pattern_keys, surrounds, move, current_color
-                )
-                next_state, next_pattern_keys, next_surrounds = child
+            killer0, killer1 = MyPlayer.KILLER_MOVES[depth]
+            for move in ordered_remaining:
+                flips = self._flips_bits(state, move, current_color)
+                move_bit = 1 << move
+                black_bits, white_bits = state
+                if current_color == Cell.BLACK:
+                    next_state = ((black_bits | flips | move_bit), (white_bits & ~flips))
+                else:
+                    next_state = ((black_bits & ~flips), (white_bits | flips | move_bit))
+
                 order_score = 0.0
-                if depth >= 2 and len(remaining_moves) > 1:
-                    order_score = self._evaluate_for_color_bits(next_state, current_color, next_pattern_keys, next_surrounds)
-                children.append((move, next_state, next_pattern_keys, next_surrounds, order_score))
+                if move == killer0:
+                    order_score += 500.0
+                elif move == killer1:
+                    order_score += 250.0
+
+                next_pattern_keys = None
+                next_surrounds = None
+                if depth >= 2 and len(ordered_remaining) > 1:
+                    cached_eval = MyPlayer.EVAL_CACHE.get(next_state)
+                    if cached_eval is not None:
+                        order_score += cached_eval if current_color == Cell.BLACK else -cached_eval
+                    else:
+                        next_pattern_keys, next_surrounds = self._update_patterns_and_surrounds(
+                            state, pattern_keys, surrounds, move, current_color, flips
+                        )
+                        order_score += self._evaluate_for_color_bits(next_state, current_color, next_pattern_keys, next_surrounds)
+
+                children.append([move, next_state, flips, next_pattern_keys, next_surrounds, order_score])
 
             if depth >= 2 and len(children) > 1:
-                children.sort(key=lambda child: child[4], reverse=True)
+                children.sort(key=lambda child: child[5], reverse=True)
 
-            search_window = beta if start_index == 0 else alpha + 1
+            search_window = alpha + 1 if start_index > 0 else beta
+            for i, child in enumerate(children):
+                index = start_index + i
+                move = child[0]
+                next_state = child[1]
+                flips = child[2]
+                if child[3] is None:
+                    child[3], child[4] = self._update_patterns_and_surrounds(
+                        state, pattern_keys, surrounds, move, current_color, flips
+                    )
+                next_pattern_keys = child[3]
+                next_surrounds = child[4]
 
-            for index_offset, child in enumerate(children):
-                index = start_index + index_offset
-                move, next_state, next_pattern_keys, next_surrounds, _ = child
-
-                # --- LMR (Late Move Reductions) ---
+                # --- 安全な条件付き LMR (Tactical LMR) ---
                 reduction = 0
-                if depth >= 4 and index >= 3:
+                if (
+                    depth >= 4
+                    and index >= 3
+                    and move not in (0, 7, 56, 63)
+                    and move != killer0
+                    and move != killer1
+                ):
                     reduction = 1
 
                 score = -self._negascout(
                     next_state, next_pattern_keys, next_surrounds, depth - 1 - reduction, next_color, -search_window, -alpha, allow_probcut
                 )
-
                 if reduction > 0 and score > alpha:
                     score = -self._negascout(
                         next_state, next_pattern_keys, next_surrounds, depth - 1, next_color, -search_window, -alpha, allow_probcut
                     )
-
                 if alpha < score < beta and index > 0 and depth > 1:
                     score = -self._negascout(
                         next_state, next_pattern_keys, next_surrounds, depth - 1, next_color, -beta, -score, allow_probcut
@@ -1055,6 +1115,10 @@ class MyPlayer(BasePlayer):
 
                 alpha = max(alpha, score)
                 if alpha >= beta:
+                    # ベータカット発生時にキラー手を更新
+                    if move != MyPlayer.KILLER_MOVES[depth][0]:
+                        MyPlayer.KILLER_MOVES[depth][1] = MyPlayer.KILLER_MOVES[depth][0]
+                        MyPlayer.KILLER_MOVES[depth][0] = move
                     break
                 search_window = alpha + 1
 
@@ -1085,18 +1149,20 @@ class MyPlayer(BasePlayer):
         beta: float,
     ) -> float | None:
         entry = cls.SEARCH_HASH_TABLE[cls._search_hash_index(key)]
-        if entry is not None:
-            entry_key, lower, upper, entry_depth, best_move = entry
-            if entry_key == key and entry_depth >= depth:
-                if lower >= beta:
-                    cls.SEARCH_HASH_GET_COUNT += 1
-                    return lower
-                elif upper <= alpha:
-                    cls.SEARCH_HASH_GET_COUNT += 1
-                    return upper
-                elif lower == upper:
-                    cls.SEARCH_HASH_GET_COUNT += 1
-                    return lower
+        if entry is None:
+            return None
+        entry_key, lower, upper, entry_depth, best_move = entry
+        if entry_key != key or entry_depth < depth:
+            return None
+        if lower >= beta:
+            cls.SEARCH_HASH_GET_COUNT += 1
+            return lower
+        if upper <= alpha:
+            cls.SEARCH_HASH_GET_COUNT += 1
+            return upper
+        if lower == upper:
+            cls.SEARCH_HASH_GET_COUNT += 1
+            return lower
         return None
 
     @classmethod
@@ -1140,7 +1206,7 @@ class MyPlayer(BasePlayer):
             surrounds = self._surround_counts_bits(state)
 
         if depth == 0:
-            return self._evaluate_for_color_bits_lazy(state, current_color, pattern_keys, surrounds, alpha, beta)
+            return self._evaluate_for_color_bits(state, current_color, pattern_keys, surrounds)
 
         moves = self._legal_moves_bits(state, current_color)
         next_color = self._opponent_of(current_color)
@@ -1150,6 +1216,7 @@ class MyPlayer(BasePlayer):
                 return self._terminal_score_for_color_bits(state, current_color)
             return -self._alpha_beta_simple(state, pattern_keys, surrounds, depth, next_color, -beta, -alpha)
 
+        moves = self._order_move_positions_by_weight(moves)
         best_score = float("-inf")
         for move in moves:
             next_state, next_pattern_keys, next_surrounds = self._apply_move_full(
@@ -1191,19 +1258,23 @@ class MyPlayer(BasePlayer):
         
         margin = self.PROBCUT_MARGIN + 0.02 * depth
         estimate = self._evaluate_for_color_bits(state, current_color, pattern_keys, surrounds)
-        if estimate >= beta + margin:
+        
+        # 明らかな大差局面（大差勝ち/大差負け）のみ即カット（安全マージン十分）
+        if estimate >= beta + margin + 0.3:
             return beta
-        if estimate <= alpha - margin:
+        if estimate <= alpha - margin - 0.3:
             return alpha
+            
         if depth < self.PROBCUT_MIN_DEPTH:
             return None
 
         if depth < len(self.PROBCUT_SHALLOW_DEPTHS):
             probe_depth = self.PROBCUT_SHALLOW_DEPTHS[depth]
         else:
-            probe_depth = max(1, depth - 8)
+            probe_depth = max(1, depth - 4)
         if probe_depth <= 0:
             return None
+
         if beta < float("inf") and estimate + margin >= beta:
             high = beta + margin
             high_score = self._negascout(
@@ -1220,56 +1291,7 @@ class MyPlayer(BasePlayer):
             if low_score <= low:
                 return alpha
 
-    def _evaluate_for_color_bits_lazy(
-        self,
-        state: tuple[int, int],
-        color: Cell,
-        pattern_keys: tuple[int, ...] | None = None,
-        surrounds: tuple[int, int] | None = None,
-        alpha: float = float("-inf"),
-        beta: float = float("inf"),
-    ) -> float:
-        cached = MyPlayer.EVAL_CACHE.get(state)
-        if cached is not None:
-            return cached if color == Cell.BLACK else -cached
-
-        if pattern_keys is None:
-            pattern_keys = self._pattern_keys_from_state(state)
-        final_dense, final_bias = self._params()[2]
-        
-        if MyPlayer._ensure_evaluate_patterns_tables():
-            pat_score = MyPlayer._evaluate_patterns_func_static(
-                pattern_keys,
-                MyPlayer.EVALUATE_PATTERNS_TABLES,
-                final_bias
-            )
-        else:
-            pat_score = 0.0
-
-        # Additional feature (Mobility + Surround) contribution is mathematically in [-0.96, +0.01]
-        if color == Cell.BLACK:
-            min_score = pat_score - 0.96
-            max_score = pat_score + 0.01
-        else:
-            min_score = -pat_score - 0.01
-            max_score = -pat_score + 0.96
-
-        # Lazy Mobility Cutoff: If guaranteed fail-high or fail-low, skip mobility!
-        if min_score >= beta:
-            return min_score
-        if max_score <= alpha:
-            return max_score
-
-        # Otherwise calculate exact additional feature (Mobility + Surround)
-        add_key = self._additional_key_bits(state, surrounds)
-        add_value = self._add_value(add_key)
-        full_score = pat_score + add_value * final_dense[len(self.PATTERN_SIZES)]
-        
-        cache = MyPlayer.EVAL_CACHE
-        if len(cache) >= self.EVAL_CACHE_MAX_SIZE:
-            cache.clear()
-        cache[state] = full_score
-        return full_score if color == Cell.BLACK else -full_score
+        return None
 
     def _evaluate_for_color_bits(
         self,
@@ -1292,6 +1314,7 @@ class MyPlayer(BasePlayer):
         cached = MyPlayer.EVAL_CACHE.get(state)
         
         if cached is not None:
+
             return cached
 
         if pattern_keys is None:
@@ -1325,6 +1348,7 @@ class MyPlayer(BasePlayer):
         if len(cache) >= self.EVAL_CACHE_MAX_SIZE:
             cache.clear()
         cache[state] = result
+
         return result
 
     @classmethod
@@ -1380,6 +1404,14 @@ class MyPlayer(BasePlayer):
         cached_table = cls.PATTERN_VALUE_TABLES.get(name)
         if cached_table is not None:
             return cached_table[key]
+        partial = cls.PARTIAL_PATTERN_VALUE_TABLES.get(name)
+        if partial is not None:
+            val = partial[key]
+            if val is not None:
+                return val
+            val = cls._compute_pattern_value(name, key)
+            partial[key] = val
+            return val
         return cls._compute_pattern_value(name, key)
 
     @classmethod
@@ -1484,6 +1516,10 @@ class MyPlayer(BasePlayer):
     def _precompute_init_evaluation_tables(cls) -> None:
         for name in cls.INIT_PRECOMPUTED_PATTERN_NAMES:
             cls._pattern_value_table(name)
+        for name in cls.WARM_PATTERN_NAMES:
+            if name not in cls.PATTERN_VALUE_TABLES and name not in cls.PARTIAL_PATTERN_VALUE_TABLES:
+                size = cls.PATTERN_SIZES[name]
+                cls.PARTIAL_PATTERN_VALUE_TABLES[name] = [None] * (3 ** size)
 
     @classmethod
     def _warm_init_evaluation_table_steps(cls) -> None:
@@ -1493,8 +1529,6 @@ class MyPlayer(BasePlayer):
 
     @classmethod
     def _warm_evaluation_table_steps(cls, actual_turn: int) -> None:
-        # Gradient: 40 steps at turn 0, decreasing by 2 per turn. Min 10 steps.
-        # This makes Turn 1 heavier (~38 steps) to ensure it finishes by Turn 9 or 10.
         steps = max(10, 40 - actual_turn * 2)
         for _ in range(steps):
             if not cls._warm_evaluation_table_step():
@@ -1653,8 +1687,7 @@ class MyPlayer(BasePlayer):
 
     def _mobility_diff_bits(self, state: tuple[int, int]) -> int:
         black_legal, white_legal = self._combined_legal_masks(state)
-        res = black_legal.bit_count() - white_legal.bit_count()
-        return res
+        return black_legal.bit_count() - white_legal.bit_count()
 
     NEIGHBOR_MASKS = tuple(
         sum(1 << ((i // 8 + dr) * 8 + (i % 8 + dc))
@@ -1712,12 +1745,6 @@ class MyPlayer(BasePlayer):
         cached = MyPlayer.LEGAL_MOVES_CACHE.get(key)
         if cached is not None:
             return cached
-            
-        res = self._legal_moves_bits_inner(state, color)
-        return res
-        
-    def _legal_moves_bits_inner(self, state: tuple[int, int], color: Cell) -> tuple[int, ...]:
-        key = self._legal_moves_cache_key_bits(state, color)
 
         moves = self._legal_moves_bits_uncached(state, color)
         self._legal_moves_cache_register(key, moves)
@@ -1895,6 +1922,33 @@ class MyPlayer(BasePlayer):
             white_bits |= flips | move_bit
             black_bits &= ~flips
         return black_bits, white_bits
+
+
+    def _update_patterns_and_surrounds(
+        self,
+        state: tuple[int, int],
+        pattern_keys: tuple[int, ...],
+        surrounds: tuple[int, int],
+        pos: int,
+        color: Cell,
+        flips: int,
+    ) -> tuple[tuple[int, ...], tuple[int, int]]:
+        next_surrounds = MyPlayer._update_surround(state, surrounds, pos, color, flips)
+        keys = list(pattern_keys)
+        bits = flips
+        if color == Cell.BLACK:
+            MyPlayer.UPDATE_POS_BLACK_FUNCS_STATIC[pos](keys)
+            while bits:
+                bit = bits & -bits
+                MyPlayer.UPDATE_FLIP_BLACK_FUNCS_STATIC[bit.bit_length() - 1](keys)
+                bits ^= bit
+        else:
+            MyPlayer.UPDATE_POS_WHITE_FUNCS_STATIC[pos](keys)
+            while bits:
+                bit = bits & -bits
+                MyPlayer.UPDATE_FLIP_WHITE_FUNCS_STATIC[bit.bit_length() - 1](keys)
+                bits ^= bit
+        return tuple(keys), next_surrounds
 
     def _apply_move_full(
         self,

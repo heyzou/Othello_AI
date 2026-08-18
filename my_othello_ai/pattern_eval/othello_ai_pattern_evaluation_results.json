@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-16 12:40:12",
+  "generated_at": "2026-08-18 17:00:44",
   "summaries": [
     {
       "label": "MyPlayer as BLACK vs AdvancedPlayer",
@@ -13,19 +13,19 @@
       "avg_my_diff": 50.0,
       "best_my_diff": 50,
       "worst_my_diff": 50,
-      "elapsed_sec": 35.22310256958008,
-      "sec_per_game": 35.22310256958008,
+      "elapsed_sec": 54.34994292259216,
+      "sec_per_game": 54.34994292259216,
       "slowest_move_overall": {
         "game_index": 1,
         "turn_index": 15,
         "color": "black",
         "player": "MyPlayer",
-        "elapsed_sec": 5.247661097964738,
+        "elapsed_sec": 13.966512401937507,
         "move": [
-          5,
-          1
+          0,
+          3
         ],
-        "elapsed_ms": 5247.661097964738
+        "elapsed_ms": 13966.512401937507
       }
     },
     {
@@ -35,24 +35,24 @@
       "losses": 0,
       "draws": 0,
       "win_rate": 1.0,
-      "avg_my_score": 60.0,
-      "avg_opp_score": 4.0,
-      "avg_my_diff": 56.0,
-      "best_my_diff": 56,
-      "worst_my_diff": 56,
-      "elapsed_sec": 14.272893190383911,
-      "sec_per_game": 14.272893190383911,
+      "avg_my_score": 64.0,
+      "avg_opp_score": 0.0,
+      "avg_my_diff": 64.0,
+      "best_my_diff": 64,
+      "worst_my_diff": 64,
+      "elapsed_sec": 18.874942302703857,
+      "sec_per_game": 18.874942302703857,
       "slowest_move_overall": {
         "game_index": 1,
-        "turn_index": 18,
+        "turn_index": 14,
         "color": "white",
         "player": "MyPlayer",
-        "elapsed_sec": 1.3836805879836902,
+        "elapsed_sec": 2.8864771290682256,
         "move": [
-          7,
+          1,
           4
         ],
-        "elapsed_ms": 1383.6805879836902
+        "elapsed_ms": 2886.4771290682256
       }
     }
   ],
@@ -62,20 +62,20 @@
     "losses": 0,
     "draws": 0,
     "win_rate": 1.0,
-    "avg_my_diff": 53.0,
-    "best_my_diff": 56,
+    "avg_my_diff": 57.0,
+    "best_my_diff": 64,
     "worst_my_diff": 50,
     "slowest_move_overall": {
       "game_index": 1,
       "turn_index": 15,
       "color": "black",
       "player": "MyPlayer",
-      "elapsed_sec": 5.247661097964738,
+      "elapsed_sec": 13.966512401937507,
       "move": [
-        5,
-        1
+        0,
+        3
       ],
-      "elapsed_ms": 5247.661097964738
+      "elapsed_ms": 13966.512401937507
     }
   },
   "records": {
@@ -89,7 +89,7 @@
         "opp_score": 7,
         "my_diff": 50,
         "game_index": 1,
-        "record_text": "d3e3f4c3f5f6e6f3c4c6d6c5b3a3b6f7g3g4e7a6b4a4f2f8h4e2d1f1b2a1e1c1d2h3h2g1e8d8a2d7b1c2h1b5g2g5g6h7h6h5c7b7a8c8a5a7b8g8g7h8",
+        "record_text": "d3e3f4c3f5f6e6f3c4c6d6c5d2c1d1e1g5d7e7g6g3h3f7f8e8d8g4h6f2f1e2h4c2b1h5g2b3a2b4a4b5a6h1b6h2b2g1a3c7c8a1a5b7a7a8b8g8g7h7h8",
         "skip_reason": "",
         "completed": true,
         "slowest_move": {
@@ -97,39 +97,39 @@
           "turn_index": 15,
           "color": "black",
           "player": "MyPlayer",
-          "elapsed_sec": 5.247661097964738,
+          "elapsed_sec": 13.966512401937507,
           "move": [
-            5,
-            1
+            0,
+            3
           ],
-          "elapsed_ms": 5247.661097964738
+          "elapsed_ms": 13966.512401937507
         }
       }
     ],
     "white": [
       {
         "outcome": "win",
-        "black_score": 4,
-        "white_score": 60,
-        "diff_black": -56,
-        "my_score": 60,
-        "opp_score": 4,
-        "my_diff": 56,
+        "black_score": 0,
+        "white_score": 64,
+        "diff_black": -64,
+        "my_score": 64,
+        "opp_score": 0,
+        "my_diff": 64,
         "game_index": 1,
-        "record_text": "d3c5f6d2b5f4f3f5e3c4c3e6g5c2d1g6f7e8h6g4h4h5g8g3c1h3h2e7g7e2d6b6c6h8e1f8a6f2d8h7f1h1g2b7c7g1a8c8d7b8a4a5b4a3b3b2a1a2a7b1",
+        "record_text": "d3c5f6d2b5f4f3f5e3c4c3e6g5e2e1g6d7c2g4d1h6d6c6f1b1f2g2g3h3f7g1c1f8h1a6a5h2b4h4a7h5a1b2b3a2a4a3c8d8a8e7b6b8b7g7h7h8e8g8c7",
         "skip_reason": "",
         "completed": true,
         "slowest_move": {
           "game_index": 1,
-          "turn_index": 18,
+          "turn_index": 14,
           "color": "white",
           "player": "MyPlayer",
-          "elapsed_sec": 1.3836805879836902,
+          "elapsed_sec": 2.8864771290682256,
           "move": [
-            7,
+            1,
             4
           ],
-          "elapsed_ms": 1383.6805879836902
+          "elapsed_ms": 2886.4771290682256
         }
       }
     ]

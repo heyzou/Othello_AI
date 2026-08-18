@@ -714,6 +714,16 @@ class MyPlayer(BasePlayer):
     PATTERN_BIT_SPECS = None
     PATTERN_KEY_META = None
 
+    _accum_eval_time = 0.0
+    _accum_eval_hit_time = 0.0
+    _accum_eval_pattern_time = 0.0
+    _accum_eval_mobility_time = 0.0
+    _accum_eval_surround_time = 0.0
+    _accum_eval_add_mlp_time = 0.0
+    _accum_search_movegen_time = 0.0
+    _accum_search_applymove_time = 0.0
+    _accum_search_moveorder_time = 0.0
+    _accum_search_tthash_time = 0.0
     
     _nodes_evaluated = 0
     _nodes_visited = 0
@@ -723,6 +733,8 @@ class MyPlayer(BasePlayer):
     _eval_cache_gets = 0
     _legal_moves_cache_hits = 0
     _legal_moves_cache_gets = 0
+    _legal_move_mask_cache_hits = 0
+    _legal_move_mask_cache_gets = 0
     _combined_legal_cache_hits = 0
     _combined_legal_cache_gets = 0
 
@@ -771,12 +783,130 @@ class MyPlayer(BasePlayer):
         MyPlayer.LEGAL_MOVES_CACHE.clear()
         MyPlayer.COMBINED_LEGAL_CACHE.clear()
         MyPlayer.SEARCH_HASH_REG_COUNT = 0
+        MyPlayer._tthash_collision_count = 0
+        MyPlayer._tthash_overwrite_shallower_diff_key = 0
+        MyPlayer._tthash_overwrite_deeper_diff_key = 0
+        MyPlayer._lmr_attempts = 0
+        MyPlayer._lmr_researches = 0
         MyPlayer._pattern_bit_specs()
         MyPlayer._pattern_key_meta()
         MyPlayer._precompute_init_evaluation_tables()
         MyPlayer._warm_init_evaluation_table_steps()
 
+    def _log_profile(self, total_time: float, is_book: bool, actual_turn: int) -> None:
+        total_ms = total_time * 1000
+        book_ms = getattr(self, '_t_book', 0.0) * 1000
+        search_ms = getattr(self, '_t_search', 0.0) * 1000
+        eval_ms = MyPlayer._accum_eval_time * 1000
+        other_search_ms = max(0, search_ms - eval_ms)
+        
+        book_pct = (book_ms / total_ms) * 100 if total_ms > 0 else 0
+        eval_pct = (eval_ms / total_ms) * 100 if total_ms > 0 else 0
+        other_pct = (other_search_ms / total_ms) * 100 if total_ms > 0 else 0
+        
+        prefix = "[BOOK]  " if is_book else "[SEARCH]"
+        
+        mgen_ms = MyPlayer._accum_search_movegen_time * 1000
+        app_ms = MyPlayer._accum_search_applymove_time * 1000
+        mord_ms = MyPlayer._accum_search_moveorder_time * 1000
+        tt_ms = MyPlayer._accum_search_tthash_time * 1000
+        ctrl_ms = max(0, other_search_ms - (mgen_ms + app_ms + mord_ms + tt_ms))
+        
+        mgen_pct = (mgen_ms / other_search_ms) * 100 if other_search_ms > 0 else 0
+        app_pct = (app_ms / other_search_ms) * 100 if other_search_ms > 0 else 0
+        mord_pct = (mord_ms / other_search_ms) * 100 if other_search_ms > 0 else 0
+        tt_pct = (tt_ms / other_search_ms) * 100 if other_search_ms > 0 else 0
+        ctrl_pct = (ctrl_ms / other_search_ms) * 100 if other_search_ms > 0 else 0
+        
+        pat_ms = MyPlayer._accum_eval_pattern_time * 1000
+        mob_ms = MyPlayer._accum_eval_mobility_time * 1000
+        sur_ms = MyPlayer._accum_eval_surround_time * 1000
+        add_ms = MyPlayer._accum_eval_add_mlp_time * 1000
+        hit_ms = MyPlayer._accum_eval_hit_time * 1000
+        
+        pat_pct = (pat_ms / eval_ms) * 100 if eval_ms > 0 else 0
+        mob_pct = (mob_ms / eval_ms) * 100 if eval_ms > 0 else 0
+        sur_pct = (sur_ms / eval_ms) * 100 if eval_ms > 0 else 0
+        add_pct = (add_ms / eval_ms) * 100 if eval_ms > 0 else 0
+        hit_pct = (hit_ms / eval_ms) * 100 if eval_ms > 0 else 0
+
+        prefix_plain = "[BOOK]  " if is_book else "[SEARCH]"
+        
+        # Plain text for file
+        log_lines_plain = []
+        log_lines_plain.append(
+            f"{prefix_plain} Turn {actual_turn:2d} | Total: {total_ms:7.2f} ms | Book: {book_ms:6.2f} ms ({book_pct:5.1f}%) | Eval: {eval_ms:7.2f} ms ({eval_pct:5.1f}%) | Search(Other): {other_search_ms:7.2f} ms ({other_pct:5.1f}%)\n"
+        )
+        if not is_book:
+            log_lines_plain.append(
+                f"         ├─ [Search Breakdown] MoveGen: {mgen_ms:7.2f} ms ({mgen_pct:4.1f}%) | ApplyMove: {app_ms:7.2f} ms ({app_pct:4.1f}%) | MoveOrder: {mord_ms:7.2f} ms ({mord_pct:4.1f}%) | TTHash: {tt_ms:7.2f} ms ({tt_pct:4.1f}%) | Control: {ctrl_ms:7.2f} ms ({ctrl_pct:4.1f}%)\n"
+            )
+            log_lines_plain.append(
+                f"         ├─ [Eval Breakdown]   Patterns: {pat_ms:7.2f} ms ({pat_pct:4.1f}%) | Mobility: {mob_ms:7.2f} ms ({mob_pct:4.1f}%) | Surround: {sur_ms:7.2f} ms ({sur_pct:4.1f}%) | AddMLP: {add_ms:7.2f} ms ({add_pct:4.1f}%) | CacheHit: {hit_ms:7.2f} ms ({hit_pct:4.1f}%)\n"
+            )
+            
+            eval_hit_rate = (MyPlayer._eval_cache_hits / MyPlayer._eval_cache_gets * 100) if MyPlayer._eval_cache_gets > 0 else 0
+            tt_hit_rate = (MyPlayer._tthash_hits / MyPlayer._tthash_gets * 100) if MyPlayer._tthash_gets > 0 else 0
+            lmoves_hit_rate = (MyPlayer._legal_moves_cache_hits / MyPlayer._legal_moves_cache_gets * 100) if MyPlayer._legal_moves_cache_gets > 0 else 0
+            comb_hit_rate = (MyPlayer._combined_legal_cache_hits / MyPlayer._combined_legal_cache_gets * 100) if MyPlayer._combined_legal_cache_gets > 0 else 0
+            
+            lmr_pct = (MyPlayer._lmr_researches / MyPlayer._lmr_attempts * 100) if MyPlayer._lmr_attempts > 0 else 0.0
+            log_lines_plain.append(
+                f"         ├─ [Nodes]           Visited: {MyPlayer._nodes_visited} | Evaluated: {MyPlayer._nodes_evaluated} | LMR: {MyPlayer._lmr_attempts} attempts, {MyPlayer._lmr_researches} researches ({lmr_pct:.1f}%)\n"
+            )
+            log_lines_plain.append(
+                f"         ├─ [Cache]           EVAL: {len(MyPlayer.EVAL_CACHE)} ({eval_hit_rate:.1f}%) | TTHash: {MyPlayer.SEARCH_HASH_REG_COUNT} regs ({tt_hit_rate:.1f}%) | LMove: {len(MyPlayer.LEGAL_MOVES_CACHE)} ({lmoves_hit_rate:.1f}%) | CombL: {len(MyPlayer.COMBINED_LEGAL_CACHE)} ({comb_hit_rate:.1f}%)\n"
+            )
+            log_lines_plain.append(
+                f"         └─ [TT Overwrites]   Collisions: {MyPlayer._tthash_collision_count} | Shallower: {MyPlayer._tthash_overwrite_shallower_diff_key} | Deeper/Eq: {MyPlayer._tthash_overwrite_deeper_diff_key}\n"
+            )
+
+        # File output to exp_094_profile.txt (clean text without raw ANSI escapes)
+        with open("exp_094_profile.txt", "a", encoding="utf-8") as f:
+            for line in log_lines_plain:
+                f.write(line)
+
+        # Colored output for terminal
+        CYAN = "\033[1;36m"
+        GREEN = "\033[1;32m"
+        YELLOW = "\033[1;33m"
+        RESET = "\033[0m"
+        prefix_color = f"{GREEN}[BOOK]  {RESET}" if is_book else f"{CYAN}[SEARCH]{RESET}"
+        print(f"{prefix_color} Turn {actual_turn:2d} | My Move Time: {YELLOW}{total_time:.3f} s{RESET}")
+
+        # Reset counters
+        MyPlayer._accum_eval_time = 0.0
+        MyPlayer._accum_eval_hit_time = 0.0
+        MyPlayer._accum_eval_pattern_time = 0.0
+        MyPlayer._accum_eval_mobility_time = 0.0
+        MyPlayer._accum_eval_surround_time = 0.0
+        MyPlayer._accum_eval_add_mlp_time = 0.0
+        MyPlayer._accum_search_movegen_time = 0.0
+        MyPlayer._accum_search_applymove_time = 0.0
+        MyPlayer._accum_search_moveorder_time = 0.0
+        MyPlayer._accum_search_tthash_time = 0.0
+        
+        self._t_book = 0.0
+        self._t_search = 0.0
+
+        MyPlayer._nodes_visited = 0
+        MyPlayer._nodes_evaluated = 0
+        MyPlayer._tthash_hits = 0
+        MyPlayer._tthash_gets = 0
+        MyPlayer._eval_cache_hits = 0
+        MyPlayer._eval_cache_gets = 0
+        MyPlayer._legal_moves_cache_hits = 0
+        MyPlayer._legal_moves_cache_gets = 0
+        MyPlayer._legal_move_mask_cache_hits = 0
+        MyPlayer._legal_move_mask_cache_gets = 0
+        MyPlayer._combined_legal_cache_hits = 0
+        MyPlayer._combined_legal_cache_gets = 0
+        MyPlayer._lmr_attempts = 0
+        MyPlayer._lmr_researches = 0
+        
     def next_move(self, board: Board) -> Move:
+        import time
+        start_total = time.perf_counter()
 
         self._pattern_bit_specs()
 
@@ -790,6 +920,9 @@ class MyPlayer(BasePlayer):
         book_move = self._book_move_bits(state)
 
         if book_move is not None and self._move_to_pos(book_move) in moves:
+            self._t_book = time.perf_counter() - start_total
+            total_time = time.perf_counter() - start_total
+            self._log_profile(total_time, True, actual_turn)
             return book_move
 
 
@@ -812,6 +945,9 @@ class MyPlayer(BasePlayer):
                     best_score = score
                     best_move = move_pos
                 alpha = max(alpha, best_score)
+            self._t_search = time.perf_counter() - start_total
+            total_time = time.perf_counter() - start_total
+            self._log_profile(total_time, False, actual_turn)
             return self._pos_to_move(best_move)
 
         # 反復深化（Iterative Deepening: 深さ 1 から SEARCH_DEPTH - 1 まで段階的に探索）
@@ -836,7 +972,7 @@ class MyPlayer(BasePlayer):
                     next_state,
                     next_pattern_keys,
                     next_surrounds,
-                    depth=current_depth,
+                    depth=current_depth - 1,
                     current_color=self._opponent_of(self.color),
                     alpha=-beta,
                     beta=-alpha,
@@ -848,6 +984,9 @@ class MyPlayer(BasePlayer):
 
             best_move = iter_best_move
             best_score = iter_best_score
+        self._t_search = time.perf_counter() - start_total
+        total_time = time.perf_counter() - start_total
+        self._log_profile(total_time, False, actual_turn)
         return self._pos_to_move(best_move)
 
     def _move_number(self, board: Board) -> int:
@@ -866,7 +1005,10 @@ class MyPlayer(BasePlayer):
 
 
     def _order_move_positions_by_weight(self, moves: tuple[int, ...] | list[int]) -> list[int]:
+        import time
+        t0 = time.perf_counter()
         res = sorted(moves, key=lambda pos: self.ORDER_WEIGHTS[pos // 8][pos % 8], reverse=True)
+        MyPlayer._accum_search_moveorder_time += time.perf_counter() - t0
         return res
 
     def _endgame_move_gen_and_sort(self, state: tuple[int, int], color: Cell, next_color: Cell) -> list[tuple[int, tuple[int, int], int]]:
@@ -940,8 +1082,9 @@ class MyPlayer(BasePlayer):
             surrounds = self._surround_counts_bits(state)
 
         # 葉ノードでは、現在手番から見た盤面評価を返す。
+        MyPlayer._nodes_visited += 1
         if depth == 0:
-            return self._evaluate_for_color_bits_lazy(state, current_color, pattern_keys, surrounds, alpha, beta)
+            return self._evaluate_for_color_bits(state, current_color, pattern_keys, surrounds)
 
         original_alpha = alpha
         original_beta = beta
@@ -981,82 +1124,69 @@ class MyPlayer(BasePlayer):
         if tt_entry is not None and tt_entry[0] == search_key:
             tt_best_move = tt_entry[4]
 
-        # 1. TT 最善手が存在する場合、他の手を一切展開・評価せずに最優先で試す（完全遅延評価）
-        if tt_best_move is not None and tt_best_move in moves:
+        moves = self._order_move_positions_by_weight(moves)
+        children = []
+        for move in moves:
             child = self._apply_move_full(
-                state, pattern_keys, surrounds, tt_best_move, current_color
+                state, pattern_keys, surrounds, move, current_color
             )
             next_state, next_pattern_keys, next_surrounds = child
+            
+            order_score = 0.0
+            if move == tt_best_move:
+                order_score = 10000.0
+            elif depth >= 2 and len(moves) > 1:
+                order_score = self._evaluate_for_color_bits(next_state, current_color, next_pattern_keys, next_surrounds)
+
+            children.append((move, next_state, next_pattern_keys, next_surrounds, order_score))
+
+        if depth >= 2 and len(children) > 1:
+            children.sort(key=lambda child: child[4], reverse=True)
+
+        search_window = beta
+        best_score = float("-inf")
+        best_child_move = children[0][0] if children else None
+
+        for index, child in enumerate(children):
+            move = child[0]
+            next_state = child[1]
+            next_pattern_keys = child[2]
+            next_surrounds = child[3]
+            
+            # --- LMR (Late Move Reductions) ---
+            reduction = 0
+            if depth >= 4 and index >= 3:
+                reduction = 1
+                MyPlayer._lmr_attempts += 1
+                
+            # 1手目は通常窓、2手目以降は狭い窓で先に読む。
             score = -self._negascout(
-                next_state, next_pattern_keys, next_surrounds, depth - 1, next_color, -beta, -alpha, allow_probcut
+                next_state, next_pattern_keys, next_surrounds, depth - 1 - reduction, next_color, -search_window, -alpha, allow_probcut
             )
-            if score >= beta:
-                # TT手で即座にベータカット成功！他の手の評価・展開をすべてスキップ
-                self._search_hash_register(search_key, depth, score, original_alpha, original_beta, tt_best_move)
-                return score
 
-            if score > alpha:
-                alpha = score
-            best_score = score
-            best_child_move = tt_best_move
-            remaining_moves = [m for m in moves if m != tt_best_move]
-            start_index = 1
-        else:
-            best_score = float("-inf")
-            best_child_move = moves[0] if moves else None
-            remaining_moves = moves
-            start_index = 0
-
-        # 2. TT手でカットできなかった場合のみ、残りの手をソートして探索
-        if remaining_moves:
-            remaining_moves = self._order_move_positions_by_weight(remaining_moves)
-            children = []
-            for move in remaining_moves:
-                child = self._apply_move_full(
-                    state, pattern_keys, surrounds, move, current_color
-                )
-                next_state, next_pattern_keys, next_surrounds = child
-                order_score = 0.0
-                if depth >= 2 and len(remaining_moves) > 1:
-                    order_score = self._evaluate_for_color_bits(next_state, current_color, next_pattern_keys, next_surrounds)
-                children.append((move, next_state, next_pattern_keys, next_surrounds, order_score))
-
-            if depth >= 2 and len(children) > 1:
-                children.sort(key=lambda child: child[4], reverse=True)
-
-            search_window = beta if start_index == 0 else alpha + 1
-
-            for index_offset, child in enumerate(children):
-                index = start_index + index_offset
-                move, next_state, next_pattern_keys, next_surrounds, _ = child
-
-                # --- LMR (Late Move Reductions) ---
-                reduction = 0
-                if depth >= 4 and index >= 3:
-                    reduction = 1
-
+            # LMRによって浅く読んだ結果がalphaを超えた場合（良い手だった場合）
+            # もしくは、通常のNegaScoutの狭い窓の探索結果がalphaを超えた場合は、深い通常窓で読み直す。
+            if reduction > 0 and score > alpha:
+                MyPlayer._lmr_researches += 1
+                # LMR前の深さで、しかもNegaScoutの狭い窓で読み直す（まだ1番目の手ではないため）
                 score = -self._negascout(
-                    next_state, next_pattern_keys, next_surrounds, depth - 1 - reduction, next_color, -search_window, -alpha, allow_probcut
+                    next_state, next_pattern_keys, next_surrounds, depth - 1, next_color, -search_window, -alpha, allow_probcut
                 )
 
-                if reduction > 0 and score > alpha:
-                    score = -self._negascout(
-                        next_state, next_pattern_keys, next_surrounds, depth - 1, next_color, -search_window, -alpha, allow_probcut
-                    )
+            # 狭い窓で有望そうなら、通常窓で読み直す。
+            if alpha < score < beta and index > 0 and depth > 1:
+                score = -self._negascout(
+                    next_state, next_pattern_keys, next_surrounds, depth - 1, next_color, -beta, -score, allow_probcut
+                )
 
-                if alpha < score < beta and index > 0 and depth > 1:
-                    score = -self._negascout(
-                        next_state, next_pattern_keys, next_surrounds, depth - 1, next_color, -beta, -score, allow_probcut
-                    )
+            if score > best_score:
+                best_score = score
+                best_child_move = move
 
-                if score > best_score:
-                    best_score = score
-                    best_child_move = move
-
-                alpha = max(alpha, score)
-                if alpha >= beta:
-                    break
-                search_window = alpha + 1
+            alpha = max(alpha, score)
+            if alpha >= beta:
+                break
+            search_window = alpha + 1
 
         self._search_hash_register(search_key, depth, best_score, original_alpha, original_beta, best_child_move)
         return best_score
@@ -1084,20 +1214,28 @@ class MyPlayer(BasePlayer):
         alpha: float,
         beta: float,
     ) -> float | None:
+        import time
+        t0 = time.perf_counter()
+        cls._tthash_gets += 1
         entry = cls.SEARCH_HASH_TABLE[cls._search_hash_index(key)]
+        res = None
         if entry is not None:
             entry_key, lower, upper, entry_depth, best_move = entry
             if entry_key == key and entry_depth >= depth:
                 if lower >= beta:
                     cls.SEARCH_HASH_GET_COUNT += 1
-                    return lower
+                    res = lower
                 elif upper <= alpha:
                     cls.SEARCH_HASH_GET_COUNT += 1
-                    return upper
+                    res = upper
                 elif lower == upper:
                     cls.SEARCH_HASH_GET_COUNT += 1
-                    return lower
-        return None
+                    res = lower
+        
+        if res is not None:
+            cls._tthash_hits += 1
+        cls._accum_search_tthash_time += time.perf_counter() - t0
+        return res
 
     @classmethod
     def _search_hash_register(
@@ -1111,8 +1249,16 @@ class MyPlayer(BasePlayer):
     ) -> None:
         idx = cls._search_hash_index(key)
         existing = cls.SEARCH_HASH_TABLE[idx]
-        if existing is not None and existing[0] == key and existing[3] > depth:
-            return
+        if existing is not None:
+            if existing[0] == key:
+                if existing[3] > depth:
+                    return
+            else:
+                cls._tthash_collision_count += 1
+                if existing[3] > depth:
+                    cls._tthash_overwrite_shallower_diff_key += 1
+                else:
+                    cls._tthash_overwrite_deeper_diff_key += 1
 
         lower = float("-inf")
         upper = float("inf")
@@ -1140,7 +1286,7 @@ class MyPlayer(BasePlayer):
             surrounds = self._surround_counts_bits(state)
 
         if depth == 0:
-            return self._evaluate_for_color_bits_lazy(state, current_color, pattern_keys, surrounds, alpha, beta)
+            return self._evaluate_for_color_bits(state, current_color, pattern_keys, surrounds)
 
         moves = self._legal_moves_bits(state, current_color)
         next_color = self._opponent_of(current_color)
@@ -1220,56 +1366,7 @@ class MyPlayer(BasePlayer):
             if low_score <= low:
                 return alpha
 
-    def _evaluate_for_color_bits_lazy(
-        self,
-        state: tuple[int, int],
-        color: Cell,
-        pattern_keys: tuple[int, ...] | None = None,
-        surrounds: tuple[int, int] | None = None,
-        alpha: float = float("-inf"),
-        beta: float = float("inf"),
-    ) -> float:
-        cached = MyPlayer.EVAL_CACHE.get(state)
-        if cached is not None:
-            return cached if color == Cell.BLACK else -cached
-
-        if pattern_keys is None:
-            pattern_keys = self._pattern_keys_from_state(state)
-        final_dense, final_bias = self._params()[2]
-        
-        if MyPlayer._ensure_evaluate_patterns_tables():
-            pat_score = MyPlayer._evaluate_patterns_func_static(
-                pattern_keys,
-                MyPlayer.EVALUATE_PATTERNS_TABLES,
-                final_bias
-            )
-        else:
-            pat_score = 0.0
-
-        # Additional feature (Mobility + Surround) contribution is mathematically in [-0.96, +0.01]
-        if color == Cell.BLACK:
-            min_score = pat_score - 0.96
-            max_score = pat_score + 0.01
-        else:
-            min_score = -pat_score - 0.01
-            max_score = -pat_score + 0.96
-
-        # Lazy Mobility Cutoff: If guaranteed fail-high or fail-low, skip mobility!
-        if min_score >= beta:
-            return min_score
-        if max_score <= alpha:
-            return max_score
-
-        # Otherwise calculate exact additional feature (Mobility + Surround)
-        add_key = self._additional_key_bits(state, surrounds)
-        add_value = self._add_value(add_key)
-        full_score = pat_score + add_value * final_dense[len(self.PATTERN_SIZES)]
-        
-        cache = MyPlayer.EVAL_CACHE
-        if len(cache) >= self.EVAL_CACHE_MAX_SIZE:
-            cache.clear()
-        cache[state] = full_score
-        return full_score if color == Cell.BLACK else -full_score
+        return None
 
     def _evaluate_for_color_bits(
         self,
@@ -1289,15 +1386,24 @@ class MyPlayer(BasePlayer):
         pattern_keys: tuple[int, ...] | None = None,
         surrounds: tuple[int, int] | None = None,
     ) -> float:
+        import time
+        t0 = time.perf_counter()
+        MyPlayer._nodes_evaluated += 1
+        MyPlayer._eval_cache_gets += 1
         cached = MyPlayer.EVAL_CACHE.get(state)
         
         if cached is not None:
+            MyPlayer._eval_cache_hits += 1
+            dt = time.perf_counter() - t0
+            MyPlayer._accum_eval_time += dt
+            MyPlayer._accum_eval_hit_time += dt
             return cached
 
         if pattern_keys is None:
             pattern_keys = self._pattern_keys_from_state(state)
         final_dense, final_bias = self._params()[2]
         
+        t_pat = time.perf_counter()
         if MyPlayer._ensure_evaluate_patterns_tables():
             result = MyPlayer._evaluate_patterns_func_static(
                 pattern_keys,
@@ -1318,6 +1424,7 @@ class MyPlayer(BasePlayer):
                     else:
                         group_sum += pattern_table[key]
                 result += group_sum * final_dense[pattern_name_to_final_index[name]]
+        MyPlayer._accum_eval_pattern_time += time.perf_counter() - t_pat
         add_key = self._additional_key_bits(state, surrounds)
         add_value = self._add_value(add_key)
         result += add_value * final_dense[len(self.PATTERN_SIZES)]
@@ -1325,6 +1432,7 @@ class MyPlayer(BasePlayer):
         if len(cache) >= self.EVAL_CACHE_MAX_SIZE:
             cache.clear()
         cache[state] = result
+        MyPlayer._accum_eval_time += time.perf_counter() - t0
         return result
 
     @classmethod
@@ -1443,7 +1551,10 @@ class MyPlayer(BasePlayer):
 
     @classmethod
     def _add_value(cls, key: int) -> float:
+        import time
+        t0 = time.perf_counter()
         res = cls._compute_add_value(key)
+        cls._accum_eval_add_mlp_time += time.perf_counter() - t0
         return res
 
     @classmethod
@@ -1652,8 +1763,11 @@ class MyPlayer(BasePlayer):
         return result
 
     def _mobility_diff_bits(self, state: tuple[int, int]) -> int:
+        import time
+        t0 = time.perf_counter()
         black_legal, white_legal = self._combined_legal_masks(state)
         res = black_legal.bit_count() - white_legal.bit_count()
+        MyPlayer._accum_eval_mobility_time += time.perf_counter() - t0
         return res
 
     NEIGHBOR_MASKS = tuple(
@@ -1697,6 +1811,8 @@ class MyPlayer(BasePlayer):
         return s_B, s_W
         
     def _surround_counts_bits(self, state: tuple[int, int]) -> tuple[int, int]:
+        import time
+        t0 = time.perf_counter()
         black_bits, white_bits = state
         occupied = black_bits | white_bits
         empty_bits = self.FULL_MASK ^ occupied
@@ -1705,15 +1821,22 @@ class MyPlayer(BasePlayer):
         for direction in range(8):
             black_count += (empty_bits & self._shift_bits(black_bits, direction)).bit_count()
             white_count += (empty_bits & self._shift_bits(white_bits, direction)).bit_count()
+        MyPlayer._accum_eval_surround_time += time.perf_counter() - t0
         return (black_count, white_count)
 
     def _legal_moves_bits(self, state: tuple[int, int], color: Cell) -> tuple[int, ...]:
+        import time
+        t0 = time.perf_counter()
+        MyPlayer._legal_moves_cache_gets += 1
         key = self._legal_moves_cache_key_bits(state, color)
         cached = MyPlayer.LEGAL_MOVES_CACHE.get(key)
         if cached is not None:
+            MyPlayer._legal_moves_cache_hits += 1
+            MyPlayer._accum_search_movegen_time += time.perf_counter() - t0
             return cached
             
         res = self._legal_moves_bits_inner(state, color)
+        MyPlayer._accum_search_movegen_time += time.perf_counter() - t0
         return res
         
     def _legal_moves_bits_inner(self, state: tuple[int, int], color: Cell) -> tuple[int, ...]:
@@ -1734,8 +1857,10 @@ class MyPlayer(BasePlayer):
         return moves
 
     def _combined_legal_masks(self, state: tuple[int, int]) -> tuple[int, int]:
+        MyPlayer._combined_legal_cache_gets += 1
         cached = MyPlayer.COMBINED_LEGAL_CACHE.get(state)
         if cached is not None:
+            MyPlayer._combined_legal_cache_hits += 1
             return cached
 
         black_bits, white_bits = state
@@ -1904,6 +2029,8 @@ class MyPlayer(BasePlayer):
         pos: int,
         color: Cell,
     ) -> tuple[tuple[int, int], tuple[int, ...], tuple[int, int]]:
+        import time
+        t0 = time.perf_counter()
         if pattern_keys is None:
             pattern_keys = self._pattern_keys_from_state(state)
         if surrounds is None:
@@ -1934,6 +2061,7 @@ class MyPlayer(BasePlayer):
                 bit = bits & -bits
                 MyPlayer.UPDATE_FLIP_WHITE_FUNCS_STATIC[bit.bit_length() - 1](keys)
                 bits ^= bit
+        MyPlayer._accum_search_applymove_time += time.perf_counter() - t0
         return next_state, tuple(keys), next_surrounds
 
     def _flips_bits(self, state: tuple[int, int], pos: int, color: Cell) -> int:
