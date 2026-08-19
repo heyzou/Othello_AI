@@ -1,0 +1,12 @@
+{
+  "createdAt": "2026-08-18T17:41:49",
+  "games": 2,
+  "myPlayerId": "FGYqu2QUz7jzTXvGmOS5",
+  "opponentId": "qZ61Xg3cdvQevP66EEVq",
+  "outputDir": "generated_kihu/for_training/vs_TA_Player_v2_web/20260818_174009",
+  "createdMatchIds": [
+    "8Al7qzqiyxTcJXXGauRZ",
+    "PMOYZ43fYvPhgTvJeO3R"
+  ],
+  "dryRun": false
+}

@@ -697,35 +697,6 @@ class MyPlayer(BasePlayer):
         MyPlayer._precompute_init_evaluation_tables()
         MyPlayer._warm_init_evaluation_table_steps()
 
-    def next_move(self, board: Board) -> Move:
-        self._pattern_bit_specs()
-
-        state = self._board_to_bits(board)
-        pattern_keys = self._pattern_keys_from_state(state)
-        moves = self._legal_moves_bits(state, self.color)
-        if not moves:
-            return None
-        MyPlayer._warm_evaluation_table_steps()
-
-        book_move = self._book_move_bits(state)
-        if book_move is not None and self._move_to_pos(book_move) in moves:
-            return self._pos_to_move(self._move_to_pos(book_move))
-
-        best_move = moves[0]
-        best_score = float("-inf")
-        alpha = float("-inf")
-        beta = float("inf")
-
-        if self._empty_count_bits(state) <= self.ENDGAME_EXACT_EMPTY:
-            ordered_moves = self._order_moves_by_opponent_mobility(state, moves, self.color)
-            for move in ordered_moves:
-                next_state = self._apply_move_bits(state, move, self.color)
-                score = -self._endgame_exact_search(
-                    next_state,
-                    self._opponent_of(self.color),
-                    -65,
-                    65,
-                )
     BOARD_INDEXES = range(8)
     SEARCH_DEPTH = 6
     ENDGAME_EXACT_EMPTY = 12
