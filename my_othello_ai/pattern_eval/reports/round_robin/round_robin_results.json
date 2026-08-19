@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-08-19 10:29:12",
-  "total_matches": 742,
+  "generated_at": "2026-08-19 10:31:51",
+  "total_matches": 756,
   "players": [
     "初級",
     "中級",
@@ -8935,6 +8935,174 @@
       "max_time_white_ms": 1335.9770859824494,
       "avg_time_black_ms": 152.82199956897284,
       "avg_time_white_ms": 237.77802014354103
+    },
+    {
+      "black_player": "v106",
+      "white_player": "v85",
+      "black_score": 40,
+      "white_score": 24,
+      "winner": "black",
+      "diff_black": 16,
+      "max_time_black_ms": 943.5496591031551,
+      "max_time_white_ms": 1303.0484010232612,
+      "avg_time_black_ms": 155.11588239666796,
+      "avg_time_white_ms": 241.49975588882404
+    },
+    {
+      "black_player": "v106",
+      "white_player": "v86",
+      "black_score": 40,
+      "white_score": 24,
+      "winner": "black",
+      "diff_black": 16,
+      "max_time_black_ms": 956.7319770576432,
+      "max_time_white_ms": 1219.5915910415351,
+      "avg_time_black_ms": 155.64772436365246,
+      "avg_time_white_ms": 244.72783365415347
+    },
+    {
+      "black_player": "v106",
+      "white_player": "v87",
+      "black_score": 40,
+      "white_score": 24,
+      "winner": "black",
+      "diff_black": 16,
+      "max_time_black_ms": 966.927962959744,
+      "max_time_white_ms": 1240.6120309606194,
+      "avg_time_black_ms": 152.65490382819647,
+      "avg_time_white_ms": 238.4666205857527
+    },
+    {
+      "black_player": "v106",
+      "white_player": "v88",
+      "black_score": 27,
+      "white_score": 37,
+      "winner": "white",
+      "diff_black": -10,
+      "max_time_black_ms": 935.3450660128146,
+      "max_time_white_ms": 586.1122430069372,
+      "avg_time_black_ms": 137.3569842699605,
+      "avg_time_white_ms": 96.40043593632679
+    },
+    {
+      "black_player": "v106",
+      "white_player": "v89",
+      "black_score": 40,
+      "white_score": 24,
+      "winner": "black",
+      "diff_black": 16,
+      "max_time_black_ms": 948.171787080355,
+      "max_time_white_ms": 1204.317177995108,
+      "avg_time_black_ms": 151.28970442850505,
+      "avg_time_white_ms": 235.87201064821846
+    },
+    {
+      "black_player": "v106",
+      "white_player": "v90_1",
+      "black_score": 40,
+      "white_score": 24,
+      "winner": "black",
+      "diff_black": 16,
+      "max_time_black_ms": 937.1409129817039,
+      "max_time_white_ms": 1220.8896210649982,
+      "avg_time_black_ms": 151.295023069026,
+      "avg_time_white_ms": 239.3340620388887
+    },
+    {
+      "black_player": "v106",
+      "white_player": "v90_2",
+      "black_score": 31,
+      "white_score": 33,
+      "winner": "white",
+      "diff_black": -2,
+      "max_time_black_ms": 1179.56656194292,
+      "max_time_white_ms": 995.2942680101842,
+      "avg_time_black_ms": 192.954499903135,
+      "avg_time_white_ms": 240.024258766789
+    },
+    {
+      "black_player": "v106",
+      "white_player": "v98",
+      "black_score": 33,
+      "white_score": 31,
+      "winner": "black",
+      "diff_black": 2,
+      "max_time_black_ms": 938.7451810762286,
+      "max_time_white_ms": 750.9938559960574,
+      "avg_time_black_ms": 138.05386976098583,
+      "avg_time_white_ms": 110.92509790965967
+    },
+    {
+      "black_player": "v106",
+      "white_player": "v100",
+      "black_score": 27,
+      "white_score": 37,
+      "winner": "white",
+      "diff_black": -10,
+      "max_time_black_ms": 965.4830999206752,
+      "max_time_white_ms": 834.8357890499756,
+      "avg_time_black_ms": 157.13648930735266,
+      "avg_time_white_ms": 133.42389839623743
+    },
+    {
+      "black_player": "v106",
+      "white_player": "v101",
+      "black_score": 35,
+      "white_score": 29,
+      "winner": "black",
+      "diff_black": 6,
+      "max_time_black_ms": 970.984797924757,
+      "max_time_white_ms": 1521.6528839664534,
+      "avg_time_black_ms": 163.13191493197036,
+      "avg_time_white_ms": 291.1778151368101
+    },
+    {
+      "black_player": "v106",
+      "white_player": "v102",
+      "black_score": 35,
+      "white_score": 29,
+      "winner": "black",
+      "diff_black": 6,
+      "max_time_black_ms": 953.2514249440283,
+      "max_time_white_ms": 1607.2041320148855,
+      "avg_time_black_ms": 159.0311618560615,
+      "avg_time_white_ms": 287.93936854150763
+    },
+    {
+      "black_player": "v106",
+      "white_player": "v103",
+      "black_score": 31,
+      "white_score": 33,
+      "winner": "white",
+      "diff_black": -2,
+      "max_time_black_ms": 1170.387772959657,
+      "max_time_white_ms": 897.0065029570833,
+      "avg_time_black_ms": 192.17819709253186,
+      "avg_time_white_ms": 237.15523288507637
+    },
+    {
+      "black_player": "v106",
+      "white_player": "v104",
+      "black_score": 40,
+      "white_score": 24,
+      "winner": "black",
+      "diff_black": 16,
+      "max_time_black_ms": 940.7789160031825,
+      "max_time_white_ms": 1313.979207072407,
+      "avg_time_black_ms": 152.33578206971288,
+      "avg_time_white_ms": 238.48253215968225
+    },
+    {
+      "black_player": "v106",
+      "white_player": "v105",
+      "black_score": 33,
+      "white_score": 31,
+      "winner": "black",
+      "diff_black": 2,
+      "max_time_black_ms": 1266.342379967682,
+      "max_time_white_ms": 1009.5813940279186,
+      "avg_time_black_ms": 179.2448818375687,
+      "avg_time_white_ms": 171.30222414010044
     }
   ]
 }
